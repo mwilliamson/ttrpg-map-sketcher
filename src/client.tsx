@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
 
