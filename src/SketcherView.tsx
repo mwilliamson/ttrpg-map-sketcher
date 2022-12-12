@@ -37,12 +37,12 @@ function DimensionsView(props: DimensionsViewProps) {
   }
 
   return (
-    <p>
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
+      <p>
         <label>Width: <input onChange={event => setWidthText(event.target.value)} value={widthText} /></label>{" "}
         <label>Height: <input onChange={event => setHeightText(event.target.value)} value={heightText} /></label>{" "}
         <button type="submit">Apply</button>
-      </form>
-    </p>
+      </p>
+    </form>
   );
 }
