@@ -1,4 +1,3 @@
-import { range } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
