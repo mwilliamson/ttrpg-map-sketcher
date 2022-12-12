@@ -44,7 +44,7 @@ export default function MapView(props: MapViewProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{width: scale.pixels(mapWidth), height: scale.pixels(mapHeight)}}
+      style={{width: scale.toPixels(mapWidth), height: scale.toPixels(mapHeight)}}
       ref={svgRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -54,7 +54,7 @@ export default function MapView(props: MapViewProps) {
       </g>
       <g>
         {mousePosition !== null && (
-          <circle cx={scale.pixels(mousePosition.x)} cy={scale.pixels(mousePosition.y)} r={5} fill="#96ff00" />
+          <circle cx={scale.toPixels(mousePosition.x)} cy={scale.toPixels(mousePosition.y)} r={5} fill="#96ff00" />
         )}s
       </g>
     </svg>
@@ -64,11 +64,11 @@ export default function MapView(props: MapViewProps) {
 function GridView() {
   return (
     <g stroke="#ccc">
-      {range(scale.pixels(squareWidth), scale.pixels(mapWidth), scale.pixels(squareWidth)).map(x => (
-        <line x1={x} y1={0} x2={x} y2={scale.pixels(mapHeight)} />
+      {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(x => (
+        <line x1={x} y1={0} x2={x} y2={scale.toPixels(mapHeight)} />
       ))}
-      {range(scale.pixels(squareWidth), scale.pixels(mapWidth), scale.pixels(squareWidth)).map(y => (
-        <line x1={0} y1={y} x2={scale.pixels(mapWidth)} y2={y} />
+      {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(y => (
+        <line x1={0} y1={y} x2={scale.toPixels(mapWidth)} y2={y} />
       ))}
     </g>
   );

@@ -51,7 +51,7 @@ export class Scale {
     this.pixelsPerMetre = pixelsPerMetre;
   }
 
-  public pixels(distance: Distance): number {
+  public toPixels(distance: Distance): number {
     return distance.toMetres() * this.pixelsPerMetre;
   }
 
