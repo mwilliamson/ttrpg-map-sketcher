@@ -29,17 +29,20 @@ export default function MapView(props: MapViewProps) {
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
+      const shapeGroup = shapeGroupRef.current;
       const rc = rough.svg(svgRef.current);
-      shapeGroupRef.current.replaceChildren();
-      for (const line of state.lines) {
+      shapeGroup.replaceChildren();
+
+      state.lines.forEach((line, lineIndex) => {
         const lineElement = rc.line(
           renderArea.toPixels(line.start.x),
           renderArea.toPixels(line.start.y),
           renderArea.toPixels(line.end.x),
           renderArea.toPixels(line.end.y),
+          {seed: lineIndex},
         );
-        shapeGroupRef.current.appendChild(lineElement);
-      }
+        shapeGroup.appendChild(lineElement);
+      });
     }
   }, [state.lines]);
 
