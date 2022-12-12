@@ -2,7 +2,7 @@ import { range } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
-import { AppState, Distance, Scale } from "./app";
+import { AppState, Distance, RenderArea, Scale } from "./app";
 
 interface MapViewProps {
   state: AppState;
@@ -12,6 +12,12 @@ const mapWidth = Distance.metres(100);
 const mapHeight = Distance.metres(100);
 const scale = Scale.pixelsPerMetre(8);
 const squareWidth = Distance.metres(5);
+const renderArea = RenderArea.from({
+  scale,
+  padding: squareWidth.divide(2),
+  width: mapWidth,
+  height: mapHeight,
+});
 
 export default function MapView(props: MapViewProps) {
   const { state } = props;
@@ -38,8 +44,8 @@ export default function MapView(props: MapViewProps) {
 
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = scale.fromPixels(event.clientX - rect.left);
-    const y = scale.fromPixels(event.clientY - rect.top);
+    const x = renderArea.fromPixels(event.clientX - rect.left);
+    const y = renderArea.fromPixels(event.clientY - rect.top);
     setMousePosition({x, y});
   }
 
@@ -50,7 +56,7 @@ export default function MapView(props: MapViewProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{width: scale.toPixels(mapWidth), height: scale.toPixels(mapHeight)}}
+      style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels()}}
       ref={svgRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -60,7 +66,7 @@ export default function MapView(props: MapViewProps) {
       </g>
       <g>
         {snapPoint !== null && (
-          <circle cx={scale.toPixels(snapPoint.x)} cy={scale.toPixels(snapPoint.y)} r={5} fill="#96ff00" />
+          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill="#96ff00" />
         )}s
       </g>
     </svg>
@@ -70,11 +76,11 @@ export default function MapView(props: MapViewProps) {
 function GridView() {
   return (
     <g stroke="#ccc">
-      {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(x => (
-        <line key={x} x1={x} y1={0} x2={x} y2={scale.toPixels(mapHeight)} />
+      {Distance.rangeInclusive(Distance.metres(0), mapWidth, squareWidth).map(x => (
+        <line key={x.toMetres()} x1={renderArea.toPixels(x)} y1={0} x2={renderArea.toPixels(x)} y2={renderArea.visibleHeightPixels()} />
       ))}
-      {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(y => (
-        <line key={y} x1={0} y1={y} x2={scale.toPixels(mapWidth)} y2={y} />
+      {Distance.rangeInclusive(Distance.metres(0), mapHeight, squareWidth).map(y => (
+        <line key={y.toMetres()} x1={0} y1={renderArea.toPixels(y)} x2={renderArea.visibleWidthPixels()} y2={renderArea.toPixels(y)} />
       ))}
     </g>
   );
