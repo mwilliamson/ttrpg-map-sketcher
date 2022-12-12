@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "esbuild src/client.tsx --bundle --outfile=public/bundle.js",
+    "build": "esbuild src/client.tsx --bundle --outfile=public/bundle.js --main-fields=module,browser,main",
     "watch": "npm run build -- --watch",
     "check": "tsc"
   },
@@ -13,6 +13,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "roughjs": "^4.5.2",
     "simple-sync": "github:mwilliamson/simple-sync#9335fff"
   },
   "volta": {
