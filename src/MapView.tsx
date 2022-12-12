@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
-import { AppState, Distance, RenderArea, Scale } from "./app";
+import { AppState, Distance, Point, RenderArea, Scale } from "./app";
 
 interface MapViewProps {
   state: AppState;
@@ -23,7 +23,7 @@ export default function MapView(props: MapViewProps) {
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
-  const [mousePosition, setMousePosition] = useState<null | {x: Distance, y: Distance}>(null);
+  const [mousePosition, setMousePosition] = useState<null | Point>(null);
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
@@ -36,16 +36,13 @@ export default function MapView(props: MapViewProps) {
   const snapDistance = squareWidth;
   const snapPoint = mousePosition === null
     ? null
-    : {
-      x: mousePosition.x.roundToMultiple(snapDistance),
-      y: mousePosition.y.roundToMultiple(snapDistance),
-    };
+    : mousePosition.snapTo(snapDistance);
 
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = renderArea.fromPixels(event.clientX - rect.left);
     const y = renderArea.fromPixels(event.clientY - rect.top);
-    setMousePosition({x, y});
+    setMousePosition(Point.from(x, y));
   }
 
   function handleMouseLeave() {

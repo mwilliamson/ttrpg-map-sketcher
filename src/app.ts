@@ -70,6 +70,27 @@ export class Distance {
   }
 }
 
+export class Point {
+  public static from(x: Distance, y: Distance) {
+    return new Point(x, y);
+  }
+
+  public readonly x: Distance;
+  public readonly y: Distance;
+
+  private constructor(x: Distance, y: Distance) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public snapTo(interval: Distance): Point {
+    return new Point(
+      this.x.roundToMultiple(interval),
+      this.y.roundToMultiple(interval),
+    );
+  }
+}
+
 export class Scale {
   public static pixelsPerMetre(pixelsPerMetre: number) {
     return new Scale(pixelsPerMetre);
