@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
-import { AppState, Distance, Point, RenderArea, Scale } from "./app";
+import { AppState, Distance, Line, Point, RenderArea, Scale } from "./app";
 
 interface MapViewProps {
   state: AppState;
@@ -24,14 +24,24 @@ export default function MapView(props: MapViewProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
   const [mousePosition, setMousePosition] = useState<null | Point>(null);
+  const [lineStart, setLineStart] = useState<null | Point>(null);
+  const [lines, setLines] = useState<Array<Line>>([]);
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
       const rc = rough.svg(svgRef.current);
-      const rect = rc.rectangle(100, 100, state.widthMetres, state.heightMetres);
-      shapeGroupRef.current.replaceChildren(rect);
+      shapeGroupRef.current.replaceChildren();
+      for (const line of lines) {
+        const lineElement = rc.line(
+          renderArea.toPixels(line.start.x),
+          renderArea.toPixels(line.start.y),
+          renderArea.toPixels(line.end.x),
+          renderArea.toPixels(line.end.y),
+        );
+        shapeGroupRef.current.appendChild(lineElement);
+      }
     }
-  }, [state]);
+  }, [lines]);
 
   const snapDistance = squareWidth;
   const snapPoint = mousePosition === null
@@ -49,6 +59,19 @@ export default function MapView(props: MapViewProps) {
     setMousePosition(null);
   }
 
+  function handleMouseDown() {
+    setLineStart(snapPoint);
+  }
+
+  function handleMouseUp() {
+    if (lineStart !== null && snapPoint !== null) {
+      setLines([...lines, Line.from(lineStart, snapPoint)]);
+    }
+    setLineStart(null);
+  }
+
+  const draftColor = "#96ff00";
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -56,14 +79,28 @@ export default function MapView(props: MapViewProps) {
       ref={svgRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       <GridView />
       <g ref={shapeGroupRef}>
       </g>
       <g>
         {snapPoint !== null && (
-          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill="#96ff00" />
-        )}s
+          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill={draftColor} />
+        )}
+        {lineStart !== null && (
+          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={5} fill={draftColor} />
+        )}
+        {lineStart !== null && snapPoint !== null && (
+          <line
+            x1={renderArea.toPixels(lineStart.x)}
+            y1={renderArea.toPixels(lineStart.y)}
+            x2={renderArea.toPixels(snapPoint.x)}
+            y2={renderArea.toPixels(snapPoint.y)}
+            stroke={draftColor}
+          />
+        )}
       </g>
     </svg>
   );

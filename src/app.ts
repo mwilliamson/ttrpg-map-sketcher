@@ -91,6 +91,20 @@ export class Point {
   }
 }
 
+export class Line {
+  public static from(start: Point, end: Point) {
+    return new Line(start, end);
+  }
+
+  public readonly start: Point;
+  public readonly end: Point;
+
+  public constructor(start: Point, end: Point) {
+    this.start = start;
+    this.end = end;
+  }
+}
+
 export class Scale {
   public static pixelsPerMetre(pixelsPerMetre: number) {
     return new Scale(pixelsPerMetre);
