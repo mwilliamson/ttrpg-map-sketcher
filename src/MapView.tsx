@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
-import { AppState, Distance, Line, Point, RenderArea, Scale } from "./app";
+import { AppState, AppUpdate, Distance, Line, Point, RenderArea, Scale } from "./app";
 
 interface MapViewProps {
+  sendUpdate: (update: AppUpdate) => void;
   state: AppState;
 }
 
@@ -19,19 +20,18 @@ const renderArea = RenderArea.from({
 });
 
 export default function MapView(props: MapViewProps) {
-  const { state } = props;
+  const { sendUpdate, state } = props;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
   const [mousePosition, setMousePosition] = useState<null | Point>(null);
   const [lineStart, setLineStart] = useState<null | Point>(null);
-  const [lines, setLines] = useState<Array<Line>>([]);
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
       const rc = rough.svg(svgRef.current);
       shapeGroupRef.current.replaceChildren();
-      for (const line of lines) {
+      for (const line of state.lines) {
         const lineElement = rc.line(
           renderArea.toPixels(line.start.x),
           renderArea.toPixels(line.start.y),
@@ -41,7 +41,7 @@ export default function MapView(props: MapViewProps) {
         shapeGroupRef.current.appendChild(lineElement);
       }
     }
-  }, [lines]);
+  }, [state.lines]);
 
   const snapDistance = squareWidth;
   const snapPoint = mousePosition === null
@@ -65,7 +65,7 @@ export default function MapView(props: MapViewProps) {
 
   function handleMouseUp() {
     if (lineStart !== null && snapPoint !== null) {
-      setLines([...lines, Line.from(lineStart, snapPoint)]);
+      sendUpdate({type: "addLine", line: Line.from(lineStart, snapPoint)});
     }
     setLineStart(null);
   }

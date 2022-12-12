@@ -14,7 +14,7 @@ export default function SketcherView(props: SketcherViewProps) {
   return (
     <div>
       <DimensionsView sendUpdate={sendUpdate} state={state} />
-      <MapView state={state} />
+      <MapView sendUpdate={sendUpdate} state={state} />
     </div>
   )
 }

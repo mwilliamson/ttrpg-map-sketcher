@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
 
 import { applyAppUpdate, initialAppState } from "./app";
+import { deserializeAppUpdate, serializeAppUpdate } from "./serialization";
 import SketcherView from "./SketcherView";
 
 function webSocketUri() {
@@ -16,6 +17,9 @@ function Client() {
     applyAppUpdate,
     initialAppState: initialAppState(),
     uri: webSocketUri(),
+
+    serializeAppUpdate,
+    deserializeAppUpdate,
   });
 
   switch (state.type) {

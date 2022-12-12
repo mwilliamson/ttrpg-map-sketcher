@@ -16,7 +16,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "roughjs": "^4.5.2",
-    "simple-sync": "github:mwilliamson/simple-sync#9335fff"
+    "simple-sync": "github:mwilliamson/simple-sync#abfec9b5bb60ede320bb1fdeabf03fb79ac2d60c"
   },
   "volta": {
     "node": "18.12.1",
