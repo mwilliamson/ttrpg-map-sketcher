@@ -5,8 +5,8 @@ export interface AppState {
 
 export function initialAppState(): AppState {
   return {
-    widthMetres: 100,
-    heightMetres: 100,
+    widthMetres: 40,
+    heightMetres: 30,
   };
 }
 

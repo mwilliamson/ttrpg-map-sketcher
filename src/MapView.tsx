@@ -8,10 +8,10 @@ interface MapViewProps {
   state: AppState;
 }
 
-const mapWidth = Distance.metres(100);
-const mapHeight = Distance.metres(100);
-const scale = Scale.pixelsPerMetre(8);
-const squareWidth = Distance.metres(5);
+const mapWidth = Distance.metres(40);
+const mapHeight = Distance.metres(30);
+const scale = Scale.pixelsPerMetre(20);
+const squareWidth = Distance.metres(2);
 const renderArea = RenderArea.from({
   scale,
   padding: squareWidth.divide(2),
