@@ -13,8 +13,6 @@ const mapHeight = Distance.metres(100);
 const scale = Scale.pixelsPerMetre(8);
 const squareWidth = Distance.metres(5);
 
-let count =0;
-
 export default function MapView(props: MapViewProps) {
   const { state } = props;
 
