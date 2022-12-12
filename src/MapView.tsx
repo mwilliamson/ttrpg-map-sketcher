@@ -39,7 +39,7 @@ export default function MapView(props: MapViewProps) {
           renderArea.toPixels(line.start.y),
           renderArea.toPixels(line.end.x),
           renderArea.toPixels(line.end.y),
-          {seed: lineIndex},
+          {seed: lineIndex + 1},
         );
         shapeGroup.appendChild(lineElement);
       });
