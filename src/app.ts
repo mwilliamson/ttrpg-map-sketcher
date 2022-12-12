@@ -54,4 +54,8 @@ export class Scale {
   public pixels(distance: Distance): number {
     return distance.toMetres() * this.pixelsPerMetre;
   }
+
+  public fromPixels(pixels: number): Distance {
+    return Distance.metres(pixels / this.pixelsPerMetre);
+  }
 }
