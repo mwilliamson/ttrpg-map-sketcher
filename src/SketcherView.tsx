@@ -1,8 +1,7 @@
-import { range } from "lodash";
-import { useEffect, useRef, useState } from "react";
-import rough from "roughjs";
+import { useState } from "react";
 
 import { AppState, AppUpdate } from "./app";
+import MapView from "./MapView";
 
 interface SketcherViewProps {
   sendUpdate: (update: AppUpdate) => void;
@@ -12,39 +11,10 @@ interface SketcherViewProps {
 export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
-  const svgRef = useRef<SVGSVGElement>(null);
-  const gridGroupRef = useRef<SVGGElement>(null);
-  const shapeGroupRef = useRef<SVGGElement>(null);
-
-  const mapWidthMetres = 100;
-  const mapHeightMetres = 100;
-  const pixelsPerMetre = 8;
-  const squareWidthMetres = 5;
-
-  useEffect(() => {
-    if (svgRef.current !== null && shapeGroupRef.current !== null) {
-      const rc = rough.svg(svgRef.current);
-      const rect = rc.rectangle(100, 100, state.widthMetres, state.heightMetres);
-      shapeGroupRef.current.replaceChildren(rect);
-    }
-    console.log("222");
-  }, [state]);
-
   return (
     <div>
       <DimensionsView sendUpdate={sendUpdate} state={state} />
-      <svg xmlns="http://www.w3.org/2000/svg" style={{width: mapWidthMetres * pixelsPerMetre, height: mapHeightMetres * pixelsPerMetre}} ref={svgRef}>
-        <g ref={gridGroupRef} stroke="#ccc">
-          {range(squareWidthMetres, mapWidthMetres, squareWidthMetres).map(x => (
-            <line x1={x * pixelsPerMetre} y1={0} x2={x * pixelsPerMetre} y2={mapHeightMetres * pixelsPerMetre} />
-          ))}
-          {range(squareWidthMetres, mapWidthMetres, squareWidthMetres).map(y => (
-            <line x1={0} y1={y * pixelsPerMetre} x2={mapWidthMetres * pixelsPerMetre} y2={y * pixelsPerMetre} />
-          ))}
-        </g>
-        <g ref={shapeGroupRef}>
-        </g>
-      </svg>
+      <MapView state={state} />
     </div>
   )
 }
