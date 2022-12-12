@@ -38,6 +38,10 @@ export class Distance {
   public toMetres(): number {
     return this.metres;
   }
+
+  public roundToMultiple(interval: Distance): Distance {
+    return new Distance(Math.round(this.metres / interval.metres) * interval.metres);
+  }
 }
 
 export class Scale {

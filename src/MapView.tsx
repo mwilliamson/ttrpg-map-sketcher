@@ -28,6 +28,14 @@ export default function MapView(props: MapViewProps) {
     }
   }, [state]);
 
+  const snapDistance = squareWidth;
+  const snapPoint = mousePosition === null
+    ? null
+    : {
+      x: mousePosition.x.roundToMultiple(snapDistance),
+      y: mousePosition.y.roundToMultiple(snapDistance),
+    };
+
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = scale.fromPixels(event.clientX - rect.left);
@@ -51,8 +59,8 @@ export default function MapView(props: MapViewProps) {
       <g ref={shapeGroupRef}>
       </g>
       <g>
-        {mousePosition !== null && (
-          <circle cx={scale.toPixels(mousePosition.x)} cy={scale.toPixels(mousePosition.y)} r={5} fill="#96ff00" />
+        {snapPoint !== null && (
+          <circle cx={scale.toPixels(snapPoint.x)} cy={scale.toPixels(snapPoint.y)} r={5} fill="#96ff00" />
         )}s
       </g>
     </svg>
