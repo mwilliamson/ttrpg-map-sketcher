@@ -71,10 +71,10 @@ function GridView() {
   return (
     <g stroke="#ccc">
       {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(x => (
-        <line x1={x} y1={0} x2={x} y2={scale.toPixels(mapHeight)} />
+        <line key={x} x1={x} y1={0} x2={x} y2={scale.toPixels(mapHeight)} />
       ))}
       {range(scale.toPixels(squareWidth), scale.toPixels(mapWidth), scale.toPixels(squareWidth)).map(y => (
-        <line x1={0} y1={y} x2={scale.toPixels(mapWidth)} y2={y} />
+        <line key={y} x1={0} y1={y} x2={scale.toPixels(mapWidth)} y2={y} />
       ))}
     </g>
   );
