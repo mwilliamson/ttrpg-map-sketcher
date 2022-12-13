@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
-import { AppState, AppUpdate, Distance, Point, RenderArea, Scale, Tool } from "./app";
+import { AppState, AppUpdate, Distance, LineObject, Point, RenderArea, Tool } from "./app";
+import { draftColor } from "./app/colors";
 
 interface MapViewProps {
   renderArea: RenderArea,
@@ -9,10 +10,11 @@ interface MapViewProps {
   state: AppState;
   tool: Tool;
   onToolChange: (newTool: Tool) => void;
+  highlightObject: LineObject | null;
 }
 
 export default function MapView(props: MapViewProps) {
-  const { renderArea, state, tool, onToolChange } = props;
+  const { renderArea, state, tool, onToolChange, highlightObject } = props;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
@@ -67,6 +69,16 @@ export default function MapView(props: MapViewProps) {
       onMouseUp={handleMouseUp}
     >
       <GridView renderArea={renderArea} />
+      {highlightObject !== null && (
+        <line
+          stroke={draftColor}
+          strokeWidth={5}
+          x1={renderArea.toPixels(highlightObject.line.start.x)}
+          y1={renderArea.toPixels(highlightObject.line.start.y)}
+          x2={renderArea.toPixels(highlightObject.line.end.x)}
+          y2={renderArea.toPixels(highlightObject.line.end.y)}
+        />
+      )}
       <g ref={shapeGroupRef}>
       </g>
       {tool.render(renderArea)}

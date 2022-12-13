@@ -1,4 +1,5 @@
 import { AppUpdate } from ".";
+import { draftColor } from "./colors";
 import { Distance, Line, Point } from "./geometry";
 import { RenderArea } from "./rendering";
 
@@ -98,8 +99,6 @@ class LineTool implements Tool<"Line"> {
 
   public render(renderArea: RenderArea) {
     const { lineStart, snapPoint } = this.state;
-
-    const draftColor = "#96ff00";
 
     return (
       <g>

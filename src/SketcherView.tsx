@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool } from "./app";
+import { AppState, AppUpdate, Distance, LineObject,RenderArea, Scale, Tool, noneTool } from "./app";
 import MapView from "./MapView";
 import ToolsView from "./ToolsView";
 
@@ -20,6 +20,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
   const [tool, setTool] = useState<Tool>(noneTool);
+  const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
 
   return (
     <div>
@@ -33,12 +34,15 @@ export default function SketcherView(props: SketcherViewProps) {
             state={state}
             tool={tool}
             onToolChange={newTool => setTool(newTool)}
+            highlightObject={hoveredObject}
           />
         </div>
         <div style={{flex: "0 0 auto", width: 400}}>
           {state.lines.map(lineObject => (
             <div
               key={lineObject.id}
+              onMouseEnter={() => setHoveredObject(lineObject)}
+              onMouseLeave={() => setHoveredObject(lineObject)}
               style={{
                 border: "1px solid #ccc",
                 display: "flex",
@@ -47,7 +51,13 @@ export default function SketcherView(props: SketcherViewProps) {
               }}
             >
               <div>Line</div>
-              <button onClick={() => sendUpdate({type: "deleteObject", id: lineObject.id})}>Delete</button>
+              <button
+                onClick={() => {
+                  sendUpdate({type: "deleteObject", id: lineObject.id});
+                  // TODO: more elegant way of dealing with hovered object?
+                  setHoveredObject(null);
+                }}
+              >Delete</button>
             </div>
           ))}
         </div>
