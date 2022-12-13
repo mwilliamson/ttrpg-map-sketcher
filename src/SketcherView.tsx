@@ -25,13 +25,33 @@ export default function SketcherView(props: SketcherViewProps) {
     <div>
       <DimensionsView sendUpdate={sendUpdate} state={state} />
       <ToolsView onChange={newTool => setTool(newTool)} toolContext={{sendUpdate, squareWidth: renderArea.squareWidth}} value={tool} />
-      <MapView
-        renderArea={renderArea}
-        sendUpdate={sendUpdate}
-        state={state}
-        tool={tool}
-        onToolChange={newTool => setTool(newTool)}
-      />
+      <div style={{display: "flex", flexDirection: "row"}}>
+        <div style={{flex: "1 1 0"}}>
+          <MapView
+            renderArea={renderArea}
+            sendUpdate={sendUpdate}
+            state={state}
+            tool={tool}
+            onToolChange={newTool => setTool(newTool)}
+          />
+        </div>
+        <div style={{flex: "0 0 auto", width: 400}}>
+          {state.lines.map(lineObject => (
+            <div
+              key={lineObject.id}
+              style={{
+                border: "1px solid #ccc",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>Line</div>
+              <button onClick={() => sendUpdate({type: "deleteObject", id: lineObject.id})}>Delete</button>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

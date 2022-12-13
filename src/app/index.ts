@@ -18,7 +18,8 @@ export function initialAppState(): AppState {
 
 export type AppUpdate =
   | {type: "setDimensions", widthMetres: number, heightMetres: number}
-  | {type: "addLine", lineObject: LineObject};
+  | {type: "addLine", lineObject: LineObject}
+  | {type: "deleteObject", id: string};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
   switch (update.type) {
@@ -32,7 +33,12 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
       return {
         ...state,
         lines: [...state.lines, update.lineObject],
-      }
+      };
+    case "deleteObject":
+      return {
+        ...state,
+        lines: state.lines.filter(line => line.id !== update.id),
+      };
   }
 }
 
