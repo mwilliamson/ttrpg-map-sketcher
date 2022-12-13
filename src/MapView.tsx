@@ -4,25 +4,15 @@ import rough from "roughjs";
 import { AppState, AppUpdate, Distance, Point, RenderArea, Scale, Tool } from "./app";
 
 interface MapViewProps {
+  renderArea: RenderArea,
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
   tool: Tool;
   onToolChange: (newTool: Tool) => void;
 }
 
-const mapWidth = Distance.metres(40);
-const mapHeight = Distance.metres(30);
-const scale = Scale.pixelsPerMetre(20);
-const squareWidth = Distance.metres(2);
-const renderArea = RenderArea.from({
-  scale,
-  padding: squareWidth.divide(2),
-  width: mapWidth,
-  height: mapHeight,
-});
-
 export default function MapView(props: MapViewProps) {
-  const { state, tool, onToolChange } = props;
+  const { renderArea, state, tool, onToolChange } = props;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
@@ -75,7 +65,7 @@ export default function MapView(props: MapViewProps) {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <GridView />
+      <GridView renderArea={renderArea} />
       <g ref={shapeGroupRef}>
       </g>
       {tool.render(renderArea)}
@@ -83,13 +73,19 @@ export default function MapView(props: MapViewProps) {
   );
 }
 
-function GridView() {
+interface GridViewProps {
+  renderArea: RenderArea,
+}
+
+function GridView(props: GridViewProps) {
+  const { renderArea } = props;
+
   return (
     <g stroke="#ccc">
-      {Distance.rangeInclusive(Distance.metres(0), mapWidth, squareWidth).map(x => (
+      {Distance.rangeInclusive(Distance.metres(0), renderArea.mapWidth, renderArea.squareWidth).map(x => (
         <line key={x.toMetres()} x1={renderArea.toPixels(x)} y1={0} x2={renderArea.toPixels(x)} y2={renderArea.visibleHeightPixels()} />
       ))}
-      {Distance.rangeInclusive(Distance.metres(0), mapHeight, squareWidth).map(y => (
+      {Distance.rangeInclusive(Distance.metres(0), renderArea.mapHeight, renderArea.squareWidth).map(y => (
         <line key={y.toMetres()} x1={0} y1={renderArea.toPixels(y)} x2={renderArea.visibleWidthPixels()} y2={renderArea.toPixels(y)} />
       ))}
     </g>

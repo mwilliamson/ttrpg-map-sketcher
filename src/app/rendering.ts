@@ -23,36 +23,39 @@ export class Scale {
 export class RenderArea {
   public static from(options: {
     scale: Scale,
-    padding: Distance,
-    width: Distance,
-    height: Distance,
+    mapWidth: Distance,
+    mapHeight: Distance,
+    squareWidth: Distance,
   }) {
-    return new RenderArea(options);
+    return new RenderArea({...options, padding: options.squareWidth.divide(2)});
   }
 
   private readonly scale: Scale;
   private readonly padding: Distance;
-  private readonly width: Distance;
-  private readonly height: Distance;
+  public readonly mapWidth: Distance;
+  public readonly mapHeight: Distance;
+  public readonly squareWidth: Distance;
 
-  private constructor({scale, padding, width, height}: {
+  private constructor({scale, padding, mapWidth, mapHeight, squareWidth}: {
     scale: Scale,
     padding: Distance,
-    width: Distance,
-    height: Distance,
+    mapWidth: Distance,
+    mapHeight: Distance,
+    squareWidth: Distance,
   }) {
     this.scale = scale;
     this.padding = padding;
-    this.width = width;
-    this.height = height;
+    this.mapWidth = mapWidth;
+    this.mapHeight = mapHeight;
+    this.squareWidth = squareWidth;
   }
 
   public visibleWidthPixels(): number {
-    return this.scale.toPixels(this.width.add(this.padding.multiply(2)));
+    return this.scale.toPixels(this.mapWidth.add(this.padding.multiply(2)));
   }
 
   public visibleHeightPixels(): number {
-    return this.scale.toPixels(this.height.add(this.padding.multiply(2)));
+    return this.scale.toPixels(this.mapHeight.add(this.padding.multiply(2)));
   }
 
   public toPixels(distance: Distance): number {
