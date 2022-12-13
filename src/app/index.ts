@@ -5,7 +5,7 @@ import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 export interface AppState {
   widthMetres: number;
   heightMetres: number;
-  lines: ReadonlyArray<Line>;
+  lines: ReadonlyArray<LineObject>;
 };
 
 export function initialAppState(): AppState {
@@ -18,7 +18,7 @@ export function initialAppState(): AppState {
 
 export type AppUpdate =
   | {type: "setDimensions", widthMetres: number, heightMetres: number}
-  | {type: "addLine", line: Line};
+  | {type: "addLine", lineObject: LineObject};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
   switch (update.type) {
@@ -31,9 +31,14 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
     case "addLine":
       return {
         ...state,
-        lines: [...state.lines, update.line],
+        lines: [...state.lines, update.lineObject],
       }
   }
+}
+
+export interface LineObject {
+  id: string;
+  line: Line;
 }
 
 export { Distance, Line, Point };

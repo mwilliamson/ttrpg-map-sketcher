@@ -85,7 +85,10 @@ class LineTool implements Tool<"Line"> {
   public onMouseUp(): LineTool {
     const { lineStart, snapPoint } = this.state;
     if (lineStart !== null && snapPoint !== null) {
-      this.context.sendUpdate({type: "addLine", line: Line.from(lineStart, snapPoint)});
+      const id = crypto.randomUUID();
+      const line = Line.from(lineStart, snapPoint);
+      const lineObject = {id, line};
+      this.context.sendUpdate({type: "addLine", lineObject});
     }
     return new LineTool({
       ...this.state,

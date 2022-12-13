@@ -23,7 +23,7 @@ export default function MapView(props: MapViewProps) {
       const rc = rough.svg(svgRef.current);
       shapeGroup.replaceChildren();
 
-      state.lines.forEach((line, lineIndex) => {
+      state.lines.forEach(({line}, lineIndex) => {
         const lineElement = rc.line(
           renderArea.toPixels(line.start.x),
           renderArea.toPixels(line.start.y),
