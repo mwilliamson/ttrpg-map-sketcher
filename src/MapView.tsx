@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
-import { AppState, AppUpdate, Distance, Line, Point, RenderArea, Scale, Tool } from "./app";
+import { AppState, AppUpdate, Distance, Point, RenderArea, Scale, Tool } from "./app";
 
 interface MapViewProps {
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
   tool: Tool;
+  onToolChange: (newTool: Tool) => void;
 }
 
 const mapWidth = Distance.metres(40);
@@ -21,14 +22,10 @@ const renderArea = RenderArea.from({
 });
 
 export default function MapView(props: MapViewProps) {
-  const { sendUpdate, state, tool } = props;
-
-  // TODO: handle tool state properly
+  const { state, tool, onToolChange } = props;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
-  const [mousePosition, setMousePosition] = useState<null | Point>(null);
-  const [lineStart, setLineStart] = useState<null | Point>(null);
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
@@ -49,38 +46,24 @@ export default function MapView(props: MapViewProps) {
     }
   }, [state.lines]);
 
-  const snapDistance = squareWidth;
-  const snapPoint = mousePosition === null
-    ? null
-    : mousePosition.snapTo(snapDistance);
-
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = renderArea.fromPixels(event.clientX - rect.left);
     const y = renderArea.fromPixels(event.clientY - rect.top);
-    setMousePosition(Point.from(x, y));
+    onToolChange(tool.onMouseMove(Point.from(x, y)));
   }
 
   function handleMouseLeave() {
-    setMousePosition(null);
+    onToolChange(tool.onMouseLeave());
   }
 
   function handleMouseDown() {
-    if (tool === "line") {
-      setLineStart(snapPoint);
-    }
+    onToolChange(tool.onMouseDown());
   }
 
   function handleMouseUp() {
-    if (tool === "line") {
-      if (lineStart !== null && snapPoint !== null) {
-        sendUpdate({type: "addLine", line: Line.from(lineStart, snapPoint)});
-      }
-      setLineStart(null);
-    }
+    onToolChange(tool.onMouseUp());
   }
-
-  const draftColor = "#96ff00";
 
   return (
     <svg
@@ -95,23 +78,7 @@ export default function MapView(props: MapViewProps) {
       <GridView />
       <g ref={shapeGroupRef}>
       </g>
-      {tool === "line" && <g>
-        {snapPoint !== null && (
-          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill={draftColor} />
-        )}
-        {lineStart !== null && (
-          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={5} fill={draftColor} />
-        )}
-        {lineStart !== null && snapPoint !== null && (
-          <line
-            x1={renderArea.toPixels(lineStart.x)}
-            y1={renderArea.toPixels(lineStart.y)}
-            x2={renderArea.toPixels(snapPoint.x)}
-            y2={renderArea.toPixels(snapPoint.y)}
-            stroke={draftColor}
-          />
-        )}
-      </g>}
+      {tool.render(renderArea)}
     </svg>
   );
 }

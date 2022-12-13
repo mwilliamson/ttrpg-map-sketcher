@@ -1,32 +1,34 @@
-import { Tool, allTools } from "./app";
+import { Tool, ToolContext, allToolTypes } from "./app";
 
 interface ToolsViewProps {
   onChange: (value: Tool) => void;
+  toolContext: ToolContext;
   value: Tool;
 }
 
 export default function ToolsView(props: ToolsViewProps) {
-  const { onChange, value } = props;
+  const { onChange, toolContext, value } = props;
 
   // TODO: uniquify
   const htmlName = "tool";
 
   return (
     <p>
-      {allTools.map(tool => (
-        <label key={tool} style={{display: "inline-block", marginRight: "2em"}}>
+      {allToolTypes.map(toolType => (
+        <label key={toolType.name} style={{display: "inline-block", marginRight: "2em"}}>
           <input
             type="radio"
-            value={tool}
-            checked={value === tool}
+            name={htmlName}
+            value={toolType.name}
+            checked={value.type === toolType}
             onChange={event => {
               if (event.target.checked) {
-                onChange(tool);
+                onChange(toolType.create(toolContext));
               }
             }}
           />
           {" "}
-          {tool}
+          {toolType.name}
         </label>
       ))}
     </p>

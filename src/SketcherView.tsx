@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Tool } from "./app";
+import { AppState, AppUpdate, Distance, Tool, noneTool } from "./app";
 import MapView from "./MapView";
 import ToolsView from "./ToolsView";
 
@@ -12,13 +12,15 @@ interface SketcherViewProps {
 export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
-  const [tool, setTool] = useState<Tool>("none");
+  const [tool, setTool] = useState<Tool>(noneTool);
+
+  // TODO: don't duplicate squareWidth
 
   return (
     <div>
       <DimensionsView sendUpdate={sendUpdate} state={state} />
-      <ToolsView onChange={newTool => setTool(newTool)} value={tool} />
-      <MapView sendUpdate={sendUpdate} state={state} tool={tool} />
+      <ToolsView onChange={newTool => setTool(newTool)} toolContext={{sendUpdate, squareWidth: Distance.metres(2)}} value={tool} />
+      <MapView sendUpdate={sendUpdate} state={state} tool={tool} onToolChange={newTool => setTool(newTool)} />
     </div>
   )
 }

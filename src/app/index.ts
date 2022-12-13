@@ -1,6 +1,6 @@
 import { Distance, Line, Point } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
-import { Tool, allTools } from "./tools";
+import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
   widthMetres: number;
@@ -38,4 +38,4 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
 
 export { Distance, Line, Point };
 export { RenderArea, Scale };
-export { Tool, allTools };
+export { Tool, ToolContext, allToolTypes, noneTool };
