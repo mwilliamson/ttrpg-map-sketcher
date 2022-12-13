@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 
-import { AppState, AppUpdate, Distance, Line, Point, RenderArea, Scale } from "./app";
+import { AppState, AppUpdate, Distance, Line, Point, RenderArea, Scale, Tool } from "./app";
 
 interface MapViewProps {
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
+  tool: Tool;
 }
 
 const mapWidth = Distance.metres(40);
@@ -20,7 +21,9 @@ const renderArea = RenderArea.from({
 });
 
 export default function MapView(props: MapViewProps) {
-  const { sendUpdate, state } = props;
+  const { sendUpdate, state, tool } = props;
+
+  // TODO: handle tool state properly
 
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
@@ -63,14 +66,18 @@ export default function MapView(props: MapViewProps) {
   }
 
   function handleMouseDown() {
-    setLineStart(snapPoint);
+    if (tool === "line") {
+      setLineStart(snapPoint);
+    }
   }
 
   function handleMouseUp() {
-    if (lineStart !== null && snapPoint !== null) {
-      sendUpdate({type: "addLine", line: Line.from(lineStart, snapPoint)});
+    if (tool === "line") {
+      if (lineStart !== null && snapPoint !== null) {
+        sendUpdate({type: "addLine", line: Line.from(lineStart, snapPoint)});
+      }
+      setLineStart(null);
     }
-    setLineStart(null);
   }
 
   const draftColor = "#96ff00";
@@ -88,7 +95,7 @@ export default function MapView(props: MapViewProps) {
       <GridView />
       <g ref={shapeGroupRef}>
       </g>
-      <g>
+      {tool === "line" && <g>
         {snapPoint !== null && (
           <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill={draftColor} />
         )}
@@ -104,7 +111,7 @@ export default function MapView(props: MapViewProps) {
             stroke={draftColor}
           />
         )}
-      </g>
+      </g>}
     </svg>
   );
 }
