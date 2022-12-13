@@ -29,6 +29,7 @@ export default function MapView(props: MapViewProps) {
           renderArea.toPixels(line.start.y),
           renderArea.toPixels(line.end.x),
           renderArea.toPixels(line.end.y),
+          // TODO: this is unstable when lines are removed
           {seed: lineIndex + 1},
         );
         shapeGroup.appendChild(lineElement);
