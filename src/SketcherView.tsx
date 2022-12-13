@@ -42,7 +42,7 @@ export default function SketcherView(props: SketcherViewProps) {
             <div
               key={lineObject.id}
               onMouseEnter={() => setHoveredObject(lineObject)}
-              onMouseLeave={() => setHoveredObject(lineObject)}
+              onMouseLeave={() => setHoveredObject(null)}
               style={{
                 border: "1px solid #ccc",
                 display: "flex",
