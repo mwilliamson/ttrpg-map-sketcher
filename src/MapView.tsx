@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
@@ -59,30 +60,32 @@ export default function MapView(props: MapViewProps) {
   }
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels()}}
-      ref={svgRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-    >
-      <GridView renderArea={renderArea} />
-      {highlightObject !== null && (
-        <line
-          stroke={draftColor}
-          strokeWidth={5}
-          x1={renderArea.toPixels(highlightObject.line.start.x)}
-          y1={renderArea.toPixels(highlightObject.line.start.y)}
-          x2={renderArea.toPixels(highlightObject.line.end.x)}
-          y2={renderArea.toPixels(highlightObject.line.end.y)}
-        />
-      )}
-      <g ref={shapeGroupRef}>
-      </g>
-      {tool.render(renderArea)}
-    </svg>
+    <Box height="100%" overflow="auto">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
+        ref={svgRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+      >
+        <GridView renderArea={renderArea} />
+        {highlightObject !== null && (
+          <line
+            stroke={draftColor}
+            strokeWidth={5}
+            x1={renderArea.toPixels(highlightObject.line.start.x)}
+            y1={renderArea.toPixels(highlightObject.line.start.y)}
+            x2={renderArea.toPixels(highlightObject.line.end.x)}
+            y2={renderArea.toPixels(highlightObject.line.end.y)}
+          />
+        )}
+        <g ref={shapeGroupRef}>
+        </g>
+        {tool.render(renderArea)}
+      </svg>
+    </Box>
   );
 }
 

@@ -25,11 +25,11 @@ export default function SketcherView(props: SketcherViewProps) {
   const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
 
   return (
-    <Flex flexDirection="row">
-      <Box flex="0 0 auto">
+    <Flex flexDirection="row" height="100%">
+      <Box flex="0 0 auto" height="100%">
         <ToolsView onChange={newTool => setTool(newTool)} toolContext={{sendUpdate, squareWidth: renderArea.squareWidth}} value={tool} />
       </Box>
-      <Box flex="1 1 0">
+      <Box flex="1 1 0" minWidth={0} height="100%">
         <MapView
           renderArea={renderArea}
           sendUpdate={sendUpdate}
@@ -39,7 +39,7 @@ export default function SketcherView(props: SketcherViewProps) {
           highlightObject={hoveredObject}
         />
       </Box>
-      <Box flex="0 0 auto" width={400}>
+      <Box flex="0 0 auto" width={400} height="100%">
         <ObjectsView
           onHighlightObject={setHoveredObject}
           sendUpdate={sendUpdate}
