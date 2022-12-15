@@ -1,3 +1,4 @@
+import { Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
 import { Tool, ToolContext, allToolTypes } from "./app";
 
 interface ToolsViewProps {
@@ -9,28 +10,19 @@ interface ToolsViewProps {
 export default function ToolsView(props: ToolsViewProps) {
   const { onChange, toolContext, value } = props;
 
-  // TODO: uniquify
-  const htmlName = "tool";
-
   return (
-    <p>
+    <Stack width={100} padding={1}>
+      <Heading size="md" textAlign="center">Tools</Heading>
       {allToolTypes.map(toolType => (
-        <label key={toolType.name} style={{display: "inline-block", marginRight: "2em"}}>
-          <input
-            type="radio"
-            name={htmlName}
-            value={toolType.name}
-            checked={value.type === toolType}
-            onChange={event => {
-              if (event.target.checked) {
-                onChange(toolType.create(toolContext));
-              }
-            }}
-          />
-          {" "}
+        <Button
+          key={toolType.name}
+          colorScheme="blue"
+          onClick={() => onChange(toolType.create(toolContext))}
+          variant={value.type === toolType ? "solid" : "outline"}
+        >
           {toolType.name}
-        </label>
+        </Button>
       ))}
-    </p>
+    </Stack>
   )
 }

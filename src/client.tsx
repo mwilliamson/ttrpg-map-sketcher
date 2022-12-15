@@ -1,3 +1,4 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
@@ -44,6 +45,8 @@ function Client() {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Client />
+    <ChakraProvider>
+      <Client />
+    </ChakraProvider>
   </React.StrictMode>,
 );

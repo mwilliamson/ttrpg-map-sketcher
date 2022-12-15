@@ -1,3 +1,4 @@
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AppState, AppUpdate, Distance, LineObject,RenderArea, Scale, Tool, noneTool } from "./app";
@@ -23,44 +24,48 @@ export default function SketcherView(props: SketcherViewProps) {
   const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
 
   return (
-    <div>
-      <ToolsView onChange={newTool => setTool(newTool)} toolContext={{sendUpdate, squareWidth: renderArea.squareWidth}} value={tool} />
-      <div style={{display: "flex", flexDirection: "row"}}>
-        <div style={{flex: "1 1 0"}}>
-          <MapView
-            renderArea={renderArea}
-            sendUpdate={sendUpdate}
-            state={state}
-            tool={tool}
-            onToolChange={newTool => setTool(newTool)}
-            highlightObject={hoveredObject}
-          />
-        </div>
-        <div style={{flex: "0 0 auto", width: 400}}>
-          {state.lines.map(lineObject => (
-            <div
-              key={lineObject.id}
-              onMouseEnter={() => setHoveredObject(lineObject)}
-              onMouseLeave={() => setHoveredObject(null)}
-              style={{
-                border: "1px solid #ccc",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+    <Flex flexDirection="row">
+      <Box flex="0 0 auto">
+        <ToolsView onChange={newTool => setTool(newTool)} toolContext={{sendUpdate, squareWidth: renderArea.squareWidth}} value={tool} />
+      </Box>
+      <Box flex="1 1 0">
+        <MapView
+          renderArea={renderArea}
+          sendUpdate={sendUpdate}
+          state={state}
+          tool={tool}
+          onToolChange={newTool => setTool(newTool)}
+          highlightObject={hoveredObject}
+        />
+      </Box>
+      <Box flex="0 0 auto" width={400}>
+        {state.lines.map(lineObject => (
+          <div
+            key={lineObject.id}
+            onMouseEnter={() => setHoveredObject(lineObject)}
+            onMouseLeave={() => setHoveredObject(null)}
+            style={{
+              border: "1px solid #ccc",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>Line</div>
+            <Button
+              onClick={() => {
+                sendUpdate({type: "deleteObject", id: lineObject.id});
+                // TODO: more elegant way of dealing with hovered object?
+                setHoveredObject(null);
               }}
+              size="sm"
+              variant="link"
             >
-              <div>Line</div>
-              <button
-                onClick={() => {
-                  sendUpdate({type: "deleteObject", id: lineObject.id});
-                  // TODO: more elegant way of dealing with hovered object?
-                  setHoveredObject(null);
-                }}
-              >Delete</button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+              Delete
+            </Button>
+          </div>
+        ))}
+      </Box>
+    </Flex>
   )
 }
