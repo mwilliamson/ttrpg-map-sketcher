@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 
 import { AppState, AppUpdate, LineObject } from "./app";
 
@@ -13,6 +13,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
 
   return (
     <div>
+      <Heading size="md">Objects</Heading>
       {state.lines.map(lineObject => (
         <div
           key={lineObject.id}
