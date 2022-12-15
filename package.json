@@ -2,7 +2,9 @@
   "scripts": {
     "build": "esbuild src/client.tsx --bundle --outfile=public/bundle.js --main-fields=module,browser,main",
     "watch": "npm run build -- --watch",
-    "check": "tsc"
+    "check": "tsc",
+    "check-watch": "npm run check -- --watch",
+    "start": "node node_modules/simple-sync/lib/server.js public/"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.191",
+    "express": "^4.18.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
