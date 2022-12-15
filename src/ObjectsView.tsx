@@ -1,4 +1,4 @@
-import { Button, Heading } from "@chakra-ui/react";
+import { Box, Button, Heading } from "@chakra-ui/react";
 
 import { AppState, AppUpdate, LineObject } from "./app";
 
@@ -12,7 +12,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
   const { onHighlightObject, sendUpdate, state } = props;
 
   return (
-    <div>
+    <Box height="100%" overflow="auto">
       <Heading size="md">Objects</Heading>
       {state.lines.map(lineObject => (
         <div
@@ -40,6 +40,6 @@ export default function ObjectsView(props: ObjectsViewProps) {
           </Button>
         </div>
       ))}
-    </div>
+    </Box>
   );
 }
