@@ -1,3 +1,5 @@
+import * as uuid from "uuid";
+
 import { AppUpdate } from ".";
 import { draftColor } from "./colors";
 import { Distance, Line, Point } from "./geometry";
@@ -86,7 +88,7 @@ class LineTool implements Tool<"Line"> {
   public onMouseUp(): LineTool {
     const { lineStart, snapPoint } = this.state;
     if (lineStart !== null && snapPoint !== null) {
-      const id = crypto.randomUUID();
+      const id = uuid.v4();
       const line = Line.from(lineStart, snapPoint);
       const lineObject = {id, line};
       this.context.sendUpdate({type: "addLine", lineObject});
