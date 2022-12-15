@@ -63,6 +63,10 @@ export class Point {
       this.y.roundToMultiple(interval),
     );
   }
+
+  public equals(other: Point): boolean {
+    return this.x === other.x && this.y === other.y;
+  }
 }
 
 export class Line {
