@@ -1,7 +1,6 @@
 import { AppUpdate, Distance, Line, LineObject, Point } from "./app";
 
 type SerializedAppUpdate =
-  | {type: "setDimensions", widthMetres: number, heightMetres: number}
   | {type: "addLine", lineObject: SerializedLineObject}
   | {type: "deleteObject", id: string};
 
@@ -24,8 +23,6 @@ type SerializedDistance = number;
 
 export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
   switch (update.type) {
-    case "setDimensions":
-      return update;
     case "addLine":
       return {
         type: "addLine",
@@ -39,8 +36,6 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
 export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
   const update = untypedUpdate as SerializedAppUpdate;
   switch (update.type) {
-    case "setDimensions":
-      return update;
     case "addLine":
       return {
         "type": "addLine",
