@@ -51,12 +51,16 @@ export default function MapView(props: MapViewProps) {
     onToolChange(tool.onMouseLeave());
   }
 
-  function handleMouseDown() {
-    onToolChange(tool.onMouseDown());
+  function handleMouseDown(event: React.MouseEvent) {
+    if (event.button === 0) {
+      onToolChange(tool.onMouseLeftDown());
+    }
   }
 
-  function handleMouseUp() {
-    onToolChange(tool.onMouseUp());
+  function handleMouseUp(event: React.MouseEvent) {
+    if (event.button === 0) {
+      onToolChange(tool.onMouseLeftUp());
+    }
   }
 
   return (

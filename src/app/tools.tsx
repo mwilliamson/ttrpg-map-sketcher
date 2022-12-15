@@ -19,8 +19,8 @@ export interface Tool<TName extends string = string> {
   type: ToolType<TName>;
   onMouseMove: (mousePosition: Point) => Tool<TName>,
   onMouseLeave: () => Tool<TName>,
-  onMouseDown: () => Tool<TName>,
-  onMouseUp: () => Tool<TName>,
+  onMouseLeftDown: () => Tool<TName>,
+  onMouseLeftUp: () => Tool<TName>,
   render: (renderArea: RenderArea) => React.ReactNode,
 }
 
@@ -33,8 +33,8 @@ export const noneTool: Tool<"None"> = {
   type: noneToolType,
   onMouseMove: () => noneTool,
   onMouseLeave: () => noneTool,
-  onMouseDown: () => noneTool,
-  onMouseUp: () => noneTool,
+  onMouseLeftDown: () => noneTool,
+  onMouseLeftUp: () => noneTool,
   render: () => null,
 }
 
@@ -78,14 +78,14 @@ class LineTool implements Tool<"Line"> {
     }, this.context);
   }
 
-  public onMouseDown(): LineTool {
+  public onMouseLeftDown(): LineTool {
     return new LineTool({
       ...this.state,
       lineStart: this.state.snapPoint,
     }, this.context);
   }
 
-  public onMouseUp(): LineTool {
+  public onMouseLeftUp(): LineTool {
     const { lineStart, snapPoint } = this.state;
     if (lineStart !== null && snapPoint !== null && !lineStart.equals(snapPoint)) {
       const id = uuid.v4();
