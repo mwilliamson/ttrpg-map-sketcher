@@ -1,13 +1,8 @@
-import { AppUpdate, Distance, Line, LineObject, Point } from "./app";
+import { AppUpdate, Distance, Line, Point } from "./app";
 
 type SerializedAppUpdate =
-  | {type: "addLine", lineObject: SerializedLineObject}
+  | {type: "addLine", objectId: string, line: SerializedLine}
   | {type: "deleteObject", id: string};
-
-interface SerializedLineObject {
-  id: string;
-  line: SerializedLine;
-}
 
 interface SerializedLine {
   start: SerializedPoint;
@@ -26,7 +21,8 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
     case "addLine":
       return {
         type: "addLine",
-        lineObject: serializeLineObject(update.lineObject),
+        objectId: update.objectId,
+        line: serializeLine(update.line),
       }
     case "deleteObject":
       return update;
@@ -39,25 +35,12 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
     case "addLine":
       return {
         "type": "addLine",
-        lineObject: deserializeLineObject(update.lineObject),
+        objectId: update.objectId,
+        line: deserializeLine(update.line),
       };
     case "deleteObject":
       return update;
   }
-}
-
-function serializeLineObject(lineObject: LineObject): SerializedLineObject {
-  return {
-    id: lineObject.id,
-    line: serializeLine(lineObject.line),
-  };
-}
-
-function deserializeLineObject(lineObject: SerializedLineObject): LineObject {
-  return {
-    id: lineObject.id,
-    line: deserializeLine(lineObject.line),
-  };
 }
 
 function serializeLine(line: Line): SerializedLine {

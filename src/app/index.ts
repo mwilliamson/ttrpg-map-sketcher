@@ -6,6 +6,7 @@ export interface AppState {
   widthMetres: number;
   heightMetres: number;
   lines: ReadonlyArray<LineObject>;
+  nextObjectIndex: number;
 };
 
 export function initialAppState(): AppState {
@@ -13,11 +14,12 @@ export function initialAppState(): AppState {
     widthMetres: 40,
     heightMetres: 30,
     lines: [],
+    nextObjectIndex: 0,
   };
 }
 
 export type AppUpdate =
-  | {type: "addLine", lineObject: LineObject}
+  | {type: "addLine", objectId: string, line: Line}
   | {type: "deleteObject", id: string};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
@@ -25,7 +27,11 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
     case "addLine":
       return {
         ...state,
-        lines: [...state.lines, update.lineObject],
+        lines: [
+          ...state.lines,
+          {id: update.objectId, index: state.nextObjectIndex, line: update.line},
+        ],
+        nextObjectIndex: state.nextObjectIndex + 1,
       };
     case "deleteObject":
       return {
@@ -37,6 +43,7 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
 
 export interface LineObject {
   id: string;
+  index: number;
   line: Line;
 }
 

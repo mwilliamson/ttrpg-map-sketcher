@@ -26,14 +26,14 @@ export default function MapView(props: MapViewProps) {
       const rc = rough.svg(svgRef.current);
       shapeGroup.replaceChildren();
 
-      state.lines.forEach(({line}, lineIndex) => {
+      state.lines.forEach(({index, line}) => {
+        console.log(index);
         const lineElement = rc.line(
           renderArea.toPixels(line.start.x),
           renderArea.toPixels(line.start.y),
           renderArea.toPixels(line.end.x),
           renderArea.toPixels(line.end.y),
-          // TODO: this is unstable when lines are removed
-          {seed: lineIndex + 1},
+          {seed: index + 1},
         );
         shapeGroup.appendChild(lineElement);
       });
