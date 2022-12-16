@@ -1,7 +1,8 @@
 import { Box, Flex } from "@chakra-ui/react";
+import { last } from "lodash";
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, LineObject,RenderArea, Scale, Tool, noneTool } from "./app";
+import { AppState, AppUpdate, Distance, LineObject, RenderArea, Scale, Tool, noneTool, createUpdateToUndo } from "./app";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import ToolsView from "./ToolsView";
@@ -23,13 +24,32 @@ export default function SketcherView(props: SketcherViewProps) {
 
   const [tool, setTool] = useState<Tool>(noneTool);
   const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
+  const [undoStack, setUndoStack] = useState<Array<AppUpdate>>([]);
+
+  function handleSendUpdate(update: AppUpdate) {
+    setUndoStack(undoStack => [...undoStack, update]);
+    sendUpdate(update);
+  }
 
   function handleRedo() {
 
   }
 
   function handleUndo() {
+    if (undoStack.length === 0) {
+      return;
+    }
 
+    const lastUpdate = last(undoStack);
+    if (lastUpdate === undefined) {
+      return;
+    }
+
+    const updateUndo = createUpdateToUndo(state, lastUpdate);
+    if (updateUndo !== null) {
+      sendUpdate(updateUndo);
+      setUndoStack(undoStack.slice(0, undoStack.length - 1));
+    }
   }
 
   return (
@@ -39,14 +59,14 @@ export default function SketcherView(props: SketcherViewProps) {
           onChange={newTool => setTool(newTool)}
           onRedo={handleRedo}
           onUndo={handleUndo}
-          toolContext={{sendUpdate, squareWidth: renderArea.squareWidth}}
+          toolContext={{sendUpdate: handleSendUpdate, squareWidth: renderArea.squareWidth}}
           value={tool}
         />
       </Box>
       <Box flex="1 1 0" minWidth={0} height="100%">
         <MapView
           renderArea={renderArea}
-          sendUpdate={sendUpdate}
+          sendUpdate={handleSendUpdate}
           state={state}
           tool={tool}
           onToolChange={newTool => setTool(newTool)}
@@ -56,7 +76,7 @@ export default function SketcherView(props: SketcherViewProps) {
       <Box flex="0 0 auto" width={400} height="100%">
         <ObjectsView
           onHighlightObject={setHoveredObject}
-          sendUpdate={sendUpdate}
+          sendUpdate={handleSendUpdate}
           state={state}
         />
       </Box>

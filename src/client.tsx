@@ -1,9 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
 
-import { applyAppUpdate, initialAppState } from "./app";
+import { applyAppUpdate, AppUpdate, initialAppState } from "./app";
 import { deserializeAppUpdate, serializeAppUpdate } from "./serialization";
 import SketcherView from "./SketcherView";
 
