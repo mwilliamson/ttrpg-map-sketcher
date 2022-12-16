@@ -73,7 +73,6 @@ export default function MapView(props: MapViewProps) {
     if (event.button === 0) {
       onToolChange(tool.onMouseLeftDown());
     } else if (event.button === 2) {
-      console.log("!!");
       event.preventDefault();
       if (containerRef.current !== null) {
         lastDragMousePosition.current = {
