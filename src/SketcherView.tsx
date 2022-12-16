@@ -40,7 +40,11 @@ export default function SketcherView(props: SketcherViewProps) {
   }
 
   function handleRedo() {
-
+    if (undoStack.index < undoStack.updates.length) {
+      const update = undoStack.updates[undoStack.index];
+      setUndoStack({...undoStack, index: undoStack.index + 1})
+      sendUpdate(update);
+    }
   }
 
   function handleUndo() {
