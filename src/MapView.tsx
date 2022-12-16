@@ -27,7 +27,6 @@ export default function MapView(props: MapViewProps) {
       shapeGroup.replaceChildren();
 
       state.lines.forEach(({index, line}) => {
-        console.log(index);
         const lineElement = rc.line(
           renderArea.toPixels(line.start.x),
           renderArea.toPixels(line.start.y),
