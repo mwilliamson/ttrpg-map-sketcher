@@ -19,15 +19,23 @@ interface SketcherViewProps {
   state: AppState;
 }
 
+interface UndoStack {
+  readonly index: number;
+  readonly updates: ReadonlyArray<AppUpdate>;
+}
+
 export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
   const [tool, setTool] = useState<Tool>(noneTool);
   const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
-  const [undoStack, setUndoStack] = useState<Array<AppUpdate>>([]);
+  const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
   function handleSendUpdate(update: AppUpdate) {
-    setUndoStack(undoStack => [...undoStack, update]);
+    setUndoStack(undoStack => ({
+      index: undoStack.index + 1,
+      updates: [...undoStack.updates.slice(0, undoStack.index), update],
+    }));
     sendUpdate(update);
   }
 
@@ -36,11 +44,11 @@ export default function SketcherView(props: SketcherViewProps) {
   }
 
   function handleUndo() {
-    if (undoStack.length === 0) {
+    if (undoStack.index === 0) {
       return;
     }
 
-    const lastUpdate = last(undoStack);
+    const lastUpdate = undoStack.updates[undoStack.index - 1];
     if (lastUpdate === undefined) {
       return;
     }
@@ -48,7 +56,7 @@ export default function SketcherView(props: SketcherViewProps) {
     const updateUndo = createUpdateToUndo(state, lastUpdate);
     if (updateUndo !== null) {
       sendUpdate(updateUndo);
-      setUndoStack(undoStack.slice(0, undoStack.length - 1));
+      setUndoStack({...undoStack, index: undoStack.index - 1  });
     }
   }
 
