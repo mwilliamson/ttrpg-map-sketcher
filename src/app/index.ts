@@ -3,16 +3,12 @@ import { RenderArea, Scale } from "./rendering";
 import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
-  widthMetres: number;
-  heightMetres: number;
   lines: ReadonlyArray<LineObject>;
   nextObjectIndex: number;
 };
 
 export function initialAppState(): AppState {
   return {
-    widthMetres: 40,
-    heightMetres: 30,
     lines: [],
     nextObjectIndex: 0,
   };
