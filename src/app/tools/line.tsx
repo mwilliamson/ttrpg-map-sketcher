@@ -1,44 +1,9 @@
 import * as uuid from "uuid";
 
-import { AppUpdate } from ".";
-import { draftColor } from "./colors";
-import { Distance, Line, Point } from "./geometry";
-import { RenderArea } from "./rendering";
-
-export interface ToolContext {
-  sendUpdate: (update: AppUpdate) => void;
-  squareWidth: Distance,
-}
-
-export interface ToolType<TName extends string> {
-  name: TName;
-  create: (context: ToolContext) => Tool<TName>;
-}
-
-export interface Tool<TName extends string = string> {
-  type: ToolType<TName>;
-  onMouseMove: (mousePosition: Point) => Tool<TName>,
-  onMouseLeave: () => Tool<TName>,
-  onMouseLeftDown: () => Tool<TName>,
-  onMouseLeftUp: () => Tool<TName>,
-  render: (renderArea: RenderArea) => React.ReactNode,
-}
-
-export const noneToolType: ToolType<"None"> = {
-  name: "None",
-  create: () => noneTool,
-};
-
-export const noneTool: Tool<"None"> = {
-  type: noneToolType,
-  onMouseMove: () => noneTool,
-  onMouseLeave: () => noneTool,
-  onMouseLeftDown: () => noneTool,
-  onMouseLeftUp: () => noneTool,
-  render: () => null,
-}
-
-export type NoneTool = typeof noneTool;
+import { draftColor } from "../colors";
+import { Line, Point } from "../geometry";
+import { RenderArea } from "../rendering";
+import { Tool, ToolContext, ToolType } from "./base";
 
 export const lineToolType: ToolType<"Line"> = {
   name: "Line",
@@ -122,6 +87,3 @@ class LineTool implements Tool<"Line"> {
     );
   }
 }
-
-export const allToolTypes: ReadonlyArray<ToolType<string>> = [noneToolType, lineToolType];
-
