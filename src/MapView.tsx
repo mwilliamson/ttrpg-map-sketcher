@@ -17,8 +17,11 @@ interface MapViewProps {
 export default function MapView(props: MapViewProps) {
   const { renderArea, state, tool, onToolChange, highlightObject } = props;
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
+
+  const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
   useEffect(() => {
     if (svgRef.current !== null && shapeGroupRef.current !== null) {
@@ -39,11 +42,27 @@ export default function MapView(props: MapViewProps) {
     }
   }, [state.lines]);
 
+  function handleContextMenu(event: React.SyntheticEvent) {
+    event.preventDefault();
+  }
+
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = renderArea.fromPixels(event.clientX - rect.left);
     const y = renderArea.fromPixels(event.clientY - rect.top);
     onToolChange(tool.onMouseMove(Point.from(x, y)));
+
+    const container = containerRef.current;
+    if (lastDragMousePosition.current !== null && container !== null) {
+      const deltaX = lastDragMousePosition.current.x - event.clientX;
+      const deltaY = lastDragMousePosition.current.y - event.clientY;
+      lastDragMousePosition.current = {
+        x: event.clientX,
+        y: event.clientY,
+      }
+
+      container.scrollBy(deltaX, deltaY);
+    }
   }
 
   function handleMouseLeave() {
@@ -53,21 +72,33 @@ export default function MapView(props: MapViewProps) {
   function handleMouseDown(event: React.MouseEvent) {
     if (event.button === 0) {
       onToolChange(tool.onMouseLeftDown());
+    } else if (event.button === 2) {
+      console.log("!!");
+      event.preventDefault();
+      if (containerRef.current !== null) {
+        lastDragMousePosition.current = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+      }
     }
   }
 
   function handleMouseUp(event: React.MouseEvent) {
     if (event.button === 0) {
       onToolChange(tool.onMouseLeftUp());
+    } else if (event.button === 2) {
+      lastDragMousePosition.current = null;
     }
   }
 
   return (
-    <Box height="100%" overflow="auto">
+    <Box height="100%" overflow="auto" ref={containerRef}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
         ref={svgRef}
+        onContextMenu={handleContextMenu}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseDown={handleMouseDown}
