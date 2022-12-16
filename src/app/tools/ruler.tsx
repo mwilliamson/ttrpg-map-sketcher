@@ -27,7 +27,7 @@ class RulerTool implements Tool<"Ruler"> {
   }
 
   public onMouseMove(mousePosition: Point): RulerTool {
-    const snapDistance = this.context.squareWidth;
+    const snapDistance = this.context.squareWidth.divide(2);
     return new RulerTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
