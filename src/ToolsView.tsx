@@ -3,8 +3,8 @@ import { Tool, ToolContext, allToolTypes } from "./app";
 
 interface ToolsViewProps {
   onChange: (value: Tool) => void;
-  onRedo: () => void;
-  onUndo: () => void;
+  onRedo: (() => void) | null;
+  onUndo: (() => void) | null;
   toolContext: ToolContext;
   value: Tool;
 }
@@ -30,10 +30,10 @@ export default function ToolsView(props: ToolsViewProps) {
         ))}
       </Stack>
       <ButtonGroup colorScheme="blue" variant="outline" orientation="vertical" padding={padding}>
-        <Button onClick={onUndo}>
+        <Button disabled={onUndo === null} onClick={onUndo === null ? undefined : onUndo}>
           Undo
         </Button>
-        <Button onClick={onRedo}>
+        <Button disabled={onRedo === null} onClick={onRedo === null ? undefined : onRedo}>
           Redo
         </Button>
       </ButtonGroup>

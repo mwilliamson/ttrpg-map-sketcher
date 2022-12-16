@@ -39,25 +39,37 @@ export default function SketcherView(props: SketcherViewProps) {
     sendUpdate(update);
   }
 
-  function handleRedo() {
+  function updateToRedo() {
     if (undoStack.index < undoStack.updates.length) {
-      const update = undoStack.updates[undoStack.index];
+      return undoStack.updates[undoStack.index];
+    } else {
+      return null;
+    }
+  }
+
+  function handleRedo() {
+    const update = updateToRedo();
+    if (update !== null) {
       setUndoStack({...undoStack, index: undoStack.index + 1})
       sendUpdate(update);
     }
   }
 
-  function handleUndo() {
+  function updateToUndo() {
     if (undoStack.index === 0) {
+      return null;
+    } else {
+      return undoStack.updates[undoStack.index - 1];
+    }
+  }
+
+  function handleUndo() {
+    const update = updateToUndo();
+    if (update === null) {
       return;
     }
 
-    const lastUpdate = undoStack.updates[undoStack.index - 1];
-    if (lastUpdate === undefined) {
-      return;
-    }
-
-    const updateUndo = createUpdateToUndo(state, lastUpdate);
+    const updateUndo = createUpdateToUndo(state, update);
     if (updateUndo !== null) {
       sendUpdate(updateUndo);
       setUndoStack({...undoStack, index: undoStack.index - 1  });
@@ -69,8 +81,8 @@ export default function SketcherView(props: SketcherViewProps) {
       <Box flex="0 0 auto" height="100%">
         <ToolsView
           onChange={newTool => setTool(newTool)}
-          onRedo={handleRedo}
-          onUndo={handleUndo}
+          onRedo={updateToRedo() === null ? null : handleRedo}
+          onUndo={updateToUndo() === null ? null : handleUndo}
           toolContext={{sendUpdate: handleSendUpdate, squareWidth: renderArea.squareWidth}}
           value={tool}
         />
