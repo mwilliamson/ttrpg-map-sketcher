@@ -115,7 +115,6 @@ function DistanceTooltip(props: DistanceTooltipProps) {
     }
 
     const {width, height, y} = textElement.getBBox();
-    console.log("top", y);
 
     setTextDimensions({width, height, top: y});
 
