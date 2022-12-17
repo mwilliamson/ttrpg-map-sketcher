@@ -42,6 +42,10 @@ export class Distance {
   public roundToMultiple(interval: Distance): Distance {
     return new Distance(Math.round(this.metres / interval.metres) * interval.metres);
   }
+
+  public equals(other: Distance): boolean {
+    return this.metres === other.metres;
+  }
 }
 
 export class Point {
@@ -65,7 +69,7 @@ export class Point {
   }
 
   public equals(other: Point): boolean {
-    return this.x === other.x && this.y === other.y;
+    return this.x.equals(other.x) && this.y.equals(other.y);
   }
 }
 
