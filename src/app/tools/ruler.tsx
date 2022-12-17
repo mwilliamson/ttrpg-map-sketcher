@@ -1,5 +1,5 @@
 import { rulerColor } from "../colors";
-import { Point } from "../geometry";
+import { Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
 import { Tool, ToolContext, ToolType } from "./base";
 
@@ -58,6 +58,10 @@ class RulerTool implements Tool<"Ruler"> {
   public render(renderArea: RenderArea) {
     const { lineStart, snapPoint } = this.state;
 
+    const distance = lineStart === null || snapPoint === null
+      ? false
+      : Line.from(lineStart, snapPoint).length().toMetres().toFixed(1);
+
     return (
       <g>
         {snapPoint !== null && (
@@ -67,13 +71,25 @@ class RulerTool implements Tool<"Ruler"> {
           <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={5} fill={rulerColor} />
         )}
         {lineStart !== null && snapPoint !== null && (
-          <line
-            x1={renderArea.toPixels(lineStart.x)}
-            y1={renderArea.toPixels(lineStart.y)}
-            x2={renderArea.toPixels(snapPoint.x)}
-            y2={renderArea.toPixels(snapPoint.y)}
-            stroke={rulerColor}
-          />
+          <>
+            <line
+              x1={renderArea.toPixels(lineStart.x)}
+              y1={renderArea.toPixels(lineStart.y)}
+              x2={renderArea.toPixels(snapPoint.x)}
+              y2={renderArea.toPixels(snapPoint.y)}
+              stroke={rulerColor}
+            />
+            <rect
+              x={renderArea.toPixels(snapPoint.x) + 5}
+              y={renderArea.toPixels(snapPoint.y) - 15}
+              width={50}
+              height={30}
+              fill="#fff"
+            />
+            <text x={renderArea.toPixels(snapPoint.x) + 10} y={renderArea.toPixels(snapPoint.y)}>
+              {distance}m
+            </text>
+          </>
         )}
       </g>
     );

@@ -81,4 +81,10 @@ export class Line {
     this.start = start;
     this.end = end;
   }
+
+  public length(): Distance {
+    const x = this.start.x.toMetres() - this.end.x.toMetres();
+    const y = this.start.y.toMetres() - this.end.y.toMetres();
+    return Distance.metres(Math.sqrt(x * x + y * y));
+  }
 }
