@@ -1,5 +1,5 @@
 import { rulerColor } from "../colors";
-import { Line, Point } from "../geometry";
+import { Distance, Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
 import { Tool, ToolContext, ToolType } from "./base";
 
@@ -59,8 +59,8 @@ class RulerTool implements Tool<"Ruler"> {
     const { lineStart, snapPoint } = this.state;
 
     const distance = lineStart === null || snapPoint === null
-      ? false
-      : Line.from(lineStart, snapPoint).length().toMetres().toFixed(1);
+      ? null
+      : Line.from(lineStart, snapPoint).length();
 
     return (
       <g>
@@ -79,19 +79,49 @@ class RulerTool implements Tool<"Ruler"> {
               y2={renderArea.toPixels(snapPoint.y)}
               stroke={rulerColor}
             />
-            <rect
-              x={renderArea.toPixels(snapPoint.x) + 5}
-              y={renderArea.toPixels(snapPoint.y) - 15}
-              width={50}
-              height={30}
-              fill="#fff"
-            />
-            <text x={renderArea.toPixels(snapPoint.x) + 10} y={renderArea.toPixels(snapPoint.y)}>
-              {distance}m
-            </text>
+            {distance !== null && (
+              <DistanceTooltip
+                distance={distance}
+                renderArea={renderArea}
+                snapPoint={snapPoint}
+              />
+            )}
           </>
         )}
       </g>
     );
   }
+}
+
+interface DistanceTooltipProps {
+  distance: Distance;
+  renderArea: RenderArea;
+  snapPoint: Point;
+}
+
+function DistanceTooltip(props: DistanceTooltipProps) {
+  const { distance, renderArea, snapPoint } = props;
+
+  const distanceXPadding = 5;
+  const distanceWidth = 80;
+
+  const displayOnLeft = renderArea.toPixels(snapPoint.x) + distanceXPadding + distanceWidth < renderArea.visibleWidthPixels();
+  const left = displayOnLeft
+    ? renderArea.toPixels(snapPoint.x) + distanceXPadding
+    : renderArea.toPixels(snapPoint.x) - distanceWidth - distanceXPadding;
+
+  return (
+    <>
+      <rect
+        x={left}
+        y={renderArea.toPixels(snapPoint.y) - 15}
+        width={distanceWidth}
+        height={30}
+        fill="#fff"
+      />
+      <text x={left + distanceXPadding * 2} y={renderArea.toPixels(snapPoint.y)}>
+        {distance.toMetres().toFixed(1)}m
+      </text>
+    </>
+  );
 }
