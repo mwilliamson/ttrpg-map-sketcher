@@ -43,7 +43,14 @@ export default function MapView(props: MapViewProps) {
             shapeGroup.appendChild(lineElement);
             return;
           case "polygon":
-            // TODO:
+            const polygonElement = rc.polygon(
+              shape.polygon.points.map(point => [
+                renderArea.toPixels(point.x),
+                renderArea.toPixels(point.y),
+              ]),
+              {seed: index + 1},
+            );
+            shapeGroup.appendChild(polygonElement);
             return;
           default:
             return assertNever(shape, "unhanded shape type");
@@ -168,8 +175,19 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
         />
       );
     case "polygon":
-      // TODO:
-      return null;
+      const pointsString = object.shape.polygon.points.map(point => {
+        const x = renderArea.toPixels(point.x);
+        const y = renderArea.toPixels(point.y);
+        return `${x},${y}`;
+      }).join(" ");
+      return (
+        <polygon
+          stroke={draftColor}
+          strokeWidth={5}
+          fill="none"
+          points={pointsString}
+        />
+      );
     default:
       return assertNever(object.shape, "unhandled shape type");
   }
