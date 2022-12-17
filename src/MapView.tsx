@@ -48,7 +48,7 @@ export default function MapView(props: MapViewProps) {
                 renderArea.toPixels(point.x),
                 renderArea.toPixels(point.y),
               ]),
-              {seed: index + 1},
+              {seed: index + 1, fill: "red"},
             );
             shapeGroup.appendChild(polygonElement);
             return;
