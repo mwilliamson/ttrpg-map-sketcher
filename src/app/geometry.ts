@@ -88,3 +88,15 @@ export class Line {
     return Distance.metres(Math.sqrt(x * x + y * y));
   }
 }
+
+export class Polygon {
+  public static from(points: ReadonlyArray<Point>) {
+    return new Polygon(points);
+  }
+
+  public readonly points: ReadonlyArray<Point>;
+
+  private constructor(points: ReadonlyArray<Point>) {
+    this.points = points;
+  }
+}

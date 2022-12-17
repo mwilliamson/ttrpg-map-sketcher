@@ -55,7 +55,7 @@ class LineTool implements Tool<"Line"> {
     if (lineStart !== null && snapPoint !== null && !lineStart.equals(snapPoint)) {
       const id = uuid.v4();
       const line = Line.from(lineStart, snapPoint);
-      this.context.sendUpdate({type: "addLine", objectId: id, line});
+      this.context.sendUpdate({type: "addObject", object: {id, shape: {type: "line", line}}});
     }
     return new LineTool({
       ...this.state,

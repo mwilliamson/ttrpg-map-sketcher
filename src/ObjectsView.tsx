@@ -1,9 +1,9 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 
-import { AppState, AppUpdate, LineObject } from "./app";
+import { AppState, AppUpdate, MapObject } from "./app";
 
 interface ObjectsViewProps {
-  onHighlightObject: (object: LineObject | null) => void;
+  onHighlightObject: (object: MapObject | null) => void;
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
 }
@@ -14,7 +14,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
   return (
     <Box height="100%" overflow="auto">
       <Heading size="md">Objects</Heading>
-      {state.lines.map(lineObject => (
+      {state.objects.map(lineObject => (
         <div
           key={lineObject.id}
           onMouseEnter={() => onHighlightObject(lineObject)}
@@ -26,7 +26,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
             justifyContent: "space-between",
           }}
         >
-          <div>Line</div>
+          <div>{lineObject.shape.type}</div>
           <Button
             onClick={() => {
               sendUpdate({type: "deleteObject", id: lineObject.id});

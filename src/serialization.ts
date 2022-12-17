@@ -1,12 +1,26 @@
-import { AppUpdate, Distance, Line, Point } from "./app";
+import { AppUpdate, Distance, Line, MapObject, Point, Polygon, Shape } from "./app";
+import assertNever from "./assertNever";
 
 type SerializedAppUpdate =
-  | {type: "addLine", objectId: string, line: SerializedLine}
+  | {type: "addObject", object: SerializedMapObject}
   | {type: "deleteObject", id: string};
+
+interface SerializedMapObject {
+  id: string;
+  shape: SerializedShape;
+}
+
+type SerializedShape =
+  | {type: "line", line: SerializedLine}
+  | {type: "polygon", polygon: SerializedPolygon};
 
 interface SerializedLine {
   start: SerializedPoint;
   end: SerializedPoint;
+}
+
+interface SerializedPolygon {
+  points: ReadonlyArray<SerializedPoint>;
 }
 
 interface SerializedPoint {
@@ -18,11 +32,10 @@ type SerializedDistance = number;
 
 export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
   switch (update.type) {
-    case "addLine":
+    case "addObject":
       return {
-        type: "addLine",
-        objectId: update.objectId,
-        line: serializeLine(update.line),
+        type: "addObject",
+        object: serializeMapObject(update.object),
       }
     case "deleteObject":
       return update;
@@ -32,14 +45,61 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
 export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
   const update = untypedUpdate as SerializedAppUpdate;
   switch (update.type) {
-    case "addLine":
+    case "addObject":
       return {
-        "type": "addLine",
-        objectId: update.objectId,
-        line: deserializeLine(update.line),
+        type: "addObject",
+        object: deserializeMapObject(update.object),
       };
     case "deleteObject":
       return update;
+  }
+}
+
+function serializeMapObject(object: MapObject): SerializedMapObject {
+  return {
+    id: object.id,
+    shape: serializeShape(object.shape),
+  };
+}
+
+function deserializeMapObject(object: SerializedMapObject): MapObject {
+  return {
+    id: object.id,
+    shape: deserializeShape(object.shape),
+  };
+}
+
+function serializeShape(shape: Shape): SerializedShape {
+  switch (shape.type) {
+    case "line":
+      return {
+        type: "line",
+        line: serializeLine(shape.line),
+      };
+    case "polygon":
+      return {
+        type: "polygon",
+        polygon: serializePolygon(shape.polygon),
+      };
+    default:
+      return assertNever(shape, "unhandled shape type");
+  }
+}
+
+function deserializeShape(shape: SerializedShape): Shape {
+  switch (shape.type) {
+    case "line":
+      return {
+        type: "line",
+        line: deserializeLine(shape.line),
+      };
+    case "polygon":
+      return {
+        type: "polygon",
+        polygon: deserializePolygon(shape.polygon),
+      };
+    default:
+      return assertNever(shape, "unhandled shape type");
   }
 }
 
@@ -55,6 +115,16 @@ function deserializeLine(line: SerializedLine): Line {
     deserializePoint(line.start),
     deserializePoint(line.end),
   );
+}
+
+function serializePolygon(polygon: Polygon): SerializedPolygon {
+  return {
+    points: polygon.points.map(point => serializePoint(point)),
+  };
+}
+
+function deserializePolygon(polygon: SerializedPolygon): Polygon {
+  return Polygon.from(polygon.points.map(point => deserializePoint(point)));
 }
 
 function serializePoint(point: Point): SerializedPoint {

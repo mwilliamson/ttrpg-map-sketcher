@@ -1,8 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { last } from "lodash";
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, LineObject, RenderArea, Scale, Tool, noneTool, createUpdateToUndo } from "./app";
+import { AppState, AppUpdate, Distance, MapObject, RenderArea, Scale, Tool, noneTool, createUpdateToUndo } from "./app";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import ToolsView from "./ToolsView";
@@ -28,7 +27,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
   const [tool, setTool] = useState<Tool>(noneTool);
-  const [hoveredObject, setHoveredObject] = useState<LineObject | null>(null);
+  const [hoveredObject, setHoveredObject] = useState<MapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
   function handleSendUpdate(update: AppUpdate) {

@@ -1,25 +1,25 @@
 import { findLast } from "lodash";
 
-import { Distance, Line, Point } from "./geometry";
+import { Distance, Line, Point, Polygon } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
 import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
-  lines: ReadonlyArray<LineObject>;
+  objects: ReadonlyArray<IndexedMapObject>;
   nextObjectIndex: number;
   updates: ReadonlyArray<AppUpdate>;
 };
 
 export function initialAppState(): AppState {
   return {
-    lines: [],
+    objects: [],
     nextObjectIndex: 0,
     updates: [],
   };
 }
 
 export type AppUpdate =
-  | {type: "addLine", objectId: string, line: Line}
+  | {type: "addObject", object: MapObject}
   | {type: "deleteObject", id: string};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
@@ -31,44 +31,49 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
 
 function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
   switch (update.type) {
-    case "addLine":
+    case "addObject":
       return {
         ...state,
-        lines: [
-          ...state.lines,
-          {id: update.objectId, index: state.nextObjectIndex, line: update.line},
+        objects: [
+          ...state.objects,
+          {...update.object, index: state.nextObjectIndex},
         ],
         nextObjectIndex: state.nextObjectIndex + 1,
       };
     case "deleteObject":
       return {
         ...state,
-        lines: state.lines.filter(line => line.id !== update.id),
+        objects: state.objects.filter(object => object.id !== update.id),
       };
   }
 }
 
 export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdate | null {
   switch (update.type) {
-    case "addLine":
+    case "addObject":
       return {
         type: "deleteObject",
-        id: update.objectId,
+        id: update.object.id,
       };
     case "deleteObject":
       return findLast(
         state.updates,
-        updateAdd => updateAdd.type === "addLine" && updateAdd.objectId === update.id,
+        updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.id,
       ) || null;
   }
 }
 
-export interface LineObject {
+export interface MapObject {
   id: string;
-  index: number;
-  line: Line;
+  shape: Shape;
 }
 
-export { Distance, Line, Point };
+export interface IndexedMapObject extends MapObject {
+  index: number;
+}
+
+export type Shape = {type: "line", line: Line} | {type: "polygon", polygon: Polygon};
+
+export { Distance, Line, Point, Polygon };
 export { RenderArea, Scale };
 export { Tool, ToolContext, allToolTypes, noneTool };

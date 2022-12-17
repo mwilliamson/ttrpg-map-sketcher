@@ -2,8 +2,9 @@ import { Box } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
-import { AppState, AppUpdate, Distance, LineObject, Point, RenderArea, Tool } from "./app";
+import { AppState, AppUpdate, Distance, MapObject, Point, RenderArea, Tool } from "./app";
 import { draftColor } from "./app/colors";
+import assertNever from "./assertNever";
 
 interface MapViewProps {
   renderArea: RenderArea,
@@ -11,7 +12,7 @@ interface MapViewProps {
   state: AppState;
   tool: Tool;
   onToolChange: (newTool: Tool) => void;
-  highlightObject: LineObject | null;
+  highlightObject: MapObject | null;
 }
 
 export default function MapView(props: MapViewProps) {
@@ -29,18 +30,27 @@ export default function MapView(props: MapViewProps) {
       const rc = rough.svg(svgRef.current);
       shapeGroup.replaceChildren();
 
-      state.lines.forEach(({index, line}) => {
-        const lineElement = rc.line(
-          renderArea.toPixels(line.start.x),
-          renderArea.toPixels(line.start.y),
-          renderArea.toPixels(line.end.x),
-          renderArea.toPixels(line.end.y),
-          {seed: index + 1},
-        );
-        shapeGroup.appendChild(lineElement);
+      state.objects.forEach(({index, shape}) => {
+        switch (shape.type) {
+          case "line":
+            const lineElement = rc.line(
+              renderArea.toPixels(shape.line.start.x),
+              renderArea.toPixels(shape.line.start.y),
+              renderArea.toPixels(shape.line.end.x),
+              renderArea.toPixels(shape.line.end.y),
+              {seed: index + 1},
+            );
+            shapeGroup.appendChild(lineElement);
+            return;
+          case "polygon":
+            // TODO:
+            return;
+          default:
+            return assertNever(shape, "unhanded shape type");
+        }
       });
     }
-  }, [state.lines]);
+  }, [state.objects]);
 
   function handleContextMenu(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -105,13 +115,9 @@ export default function MapView(props: MapViewProps) {
       >
         <GridView renderArea={renderArea} />
         {highlightObject !== null && (
-          <line
-            stroke={draftColor}
-            strokeWidth={5}
-            x1={renderArea.toPixels(highlightObject.line.start.x)}
-            y1={renderArea.toPixels(highlightObject.line.start.y)}
-            x2={renderArea.toPixels(highlightObject.line.end.x)}
-            y2={renderArea.toPixels(highlightObject.line.end.y)}
+          <HighlightedObjectView
+            object={highlightObject}
+            renderArea={renderArea}
           />
         )}
         <g ref={shapeGroupRef}>
@@ -139,4 +145,32 @@ function GridView(props: GridViewProps) {
       ))}
     </g>
   );
+}
+
+interface HighlightedObjectViewProps {
+  object: MapObject;
+  renderArea: RenderArea;
+}
+
+function HighlightedObjectView(props: HighlightedObjectViewProps) {
+  const { object, renderArea } = props;
+
+  switch (object.shape.type) {
+    case "line":
+      return (
+        <line
+          stroke={draftColor}
+          strokeWidth={5}
+          x1={renderArea.toPixels(object.shape.line.start.x)}
+          y1={renderArea.toPixels(object.shape.line.start.y)}
+          x2={renderArea.toPixels(object.shape.line.end.x)}
+          y2={renderArea.toPixels(object.shape.line.end.y)}
+        />
+      );
+    case "polygon":
+      // TODO:
+      return null;
+    default:
+      return assertNever(object.shape, "unhandled shape type");
+  }
 }
