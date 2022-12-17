@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { rulerColor } from "../colors";
 import { Distance, Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -65,10 +66,10 @@ class RulerTool implements Tool<"Ruler"> {
     return (
       <g>
         {snapPoint !== null && (
-          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill={rulerColor} />
+          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={pointRadius} fill={rulerColor} />
         )}
         {lineStart !== null && (
-          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={5} fill={rulerColor} />
+          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={pointRadius} fill={rulerColor} />
         )}
         {lineStart !== null && snapPoint !== null && (
           <>
@@ -93,6 +94,8 @@ class RulerTool implements Tool<"Ruler"> {
   }
 }
 
+const pointRadius = 5;
+
 interface DistanceTooltipProps {
   distance: Distance;
   renderArea: RenderArea;
@@ -102,24 +105,40 @@ interface DistanceTooltipProps {
 function DistanceTooltip(props: DistanceTooltipProps) {
   const { distance, renderArea, snapPoint } = props;
 
-  const distanceXPadding = 5;
-  const distanceWidth = 80;
+  const textRef = useRef<SVGTextElement>(null);
+  const [textDimensions, setTextDimensions] = useState({width: 0, height: 0, top: 0});
 
-  const displayOnLeft = renderArea.toPixels(snapPoint.x) + distanceXPadding + distanceWidth < renderArea.visibleWidthPixels();
+  useLayoutEffect(() => {
+    const textElement = textRef.current;
+    if (textElement === null) {
+      return;
+    }
+
+    const {width, height, y} = textElement.getBBox();
+    console.log("top", y);
+
+    setTextDimensions({width, height, top: y});
+
+  }, [distance]);
+
+  const padding = 5;
+  const boxWidth = textDimensions.width + padding * 2;
+
+  const displayOnLeft = renderArea.toPixels(snapPoint.x) + padding + boxWidth < renderArea.visibleWidthPixels();
   const left = displayOnLeft
-    ? renderArea.toPixels(snapPoint.x) + distanceXPadding
-    : renderArea.toPixels(snapPoint.x) - distanceWidth - distanceXPadding;
+    ? renderArea.toPixels(snapPoint.x) + pointRadius + padding
+    : renderArea.toPixels(snapPoint.x) - pointRadius - padding - boxWidth;
 
   return (
     <>
       <rect
         x={left}
-        y={renderArea.toPixels(snapPoint.y) - 15}
-        width={distanceWidth}
-        height={30}
-        fill="#fff"
+        y={textDimensions.top - padding}
+        width={boxWidth}
+        height={textDimensions.height + padding * 2}
+        fill="#eee"
       />
-      <text x={left + distanceXPadding * 2} y={renderArea.toPixels(snapPoint.y)}>
+      <text x={left + padding} y={renderArea.toPixels(snapPoint.y)} ref={textRef}>
         {distance.toMetres().toFixed(1)}m
       </text>
     </>
