@@ -92,7 +92,6 @@ export default function SketcherView(props: SketcherViewProps) {
       <Box flex="0 0 auto" height="100%">
         <ToolsView
           onChange={newTool => setTool(newTool)}
-          onSelectColor={newColor => handleSelectColor(newColor)}
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
           toolContext={{
@@ -101,6 +100,9 @@ export default function SketcherView(props: SketcherViewProps) {
             squareWidth: renderArea.squareWidth,
           }}
           value={tool}
+
+          selectedColor={selectedColor}
+          onSelectColor={newColor => handleSelectColor(newColor)}
         />
       </Box>
       <Box flex="1 1 0" minWidth={0} height="100%">

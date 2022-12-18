@@ -4,15 +4,17 @@ import { fillColors } from "./app/colors";
 
 interface ToolsViewProps {
   onChange: (value: Tool) => void;
-  onSelectColor: (color: string) => void;
   onRedo: (() => void) | null;
   onUndo: (() => void) | null;
   toolContext: ToolContext;
   value: Tool;
+
+  selectedColor: string;
+  onSelectColor: (color: string) => void;
 }
 
 export default function ToolsView(props: ToolsViewProps) {
-  const { onChange, onSelectColor, onRedo, onUndo, toolContext, value } = props;
+  const { onChange, onRedo, onUndo, toolContext, value, selectedColor, onSelectColor } = props;
 
   const padding = 1;
 
@@ -31,6 +33,7 @@ export default function ToolsView(props: ToolsViewProps) {
           </Button>
         ))}
         <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5}}>
+          <div style={{height: 40, backgroundColor: selectedColor, border: "1px solid #000", gridColumn: "1 / span 3"}}></div>
           {fillColors.map(fillColor => (
             <div
               key={fillColor}
