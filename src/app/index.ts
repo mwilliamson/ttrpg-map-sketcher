@@ -6,14 +6,14 @@ import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
   objects: ReadonlyArray<IndexedMapObject>;
-  nextObjectIndex: number;
+  nextObjectNumber: number;
   updates: ReadonlyArray<AppUpdate>;
 };
 
 export function initialAppState(): AppState {
   return {
     objects: [],
-    nextObjectIndex: 0,
+    nextObjectNumber: 1,
     updates: [],
   };
 }
@@ -36,9 +36,9 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
         ...state,
         objects: [
           ...state.objects,
-          {...update.object, index: state.nextObjectIndex},
+          {...update.object, objectNumber: state.nextObjectNumber},
         ],
-        nextObjectIndex: state.nextObjectIndex + 1,
+        nextObjectNumber: state.nextObjectNumber + 1,
       };
     case "deleteObject":
       return {
@@ -69,7 +69,7 @@ export interface MapObject {
 }
 
 export interface IndexedMapObject extends MapObject {
-  index: number;
+  objectNumber: number;
 }
 
 export type Shape = {type: "line", line: Line} | {type: "polygon", polygon: Polygon};

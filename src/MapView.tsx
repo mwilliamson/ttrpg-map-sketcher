@@ -30,7 +30,7 @@ export default function MapView(props: MapViewProps) {
       const rc = rough.svg(svgRef.current);
       shapeGroup.replaceChildren();
 
-      state.objects.forEach(({index, shape}) => {
+      state.objects.forEach(({objectNumber, shape}) => {
         switch (shape.type) {
           case "line":
             const lineElement = rc.line(
@@ -38,7 +38,7 @@ export default function MapView(props: MapViewProps) {
               renderArea.toPixels(shape.line.start.y),
               renderArea.toPixels(shape.line.end.x),
               renderArea.toPixels(shape.line.end.y),
-              {seed: index + 1},
+              {seed: objectNumber},
             );
             shapeGroup.appendChild(lineElement);
             return;
@@ -48,7 +48,7 @@ export default function MapView(props: MapViewProps) {
                 renderArea.toPixels(point.x),
                 renderArea.toPixels(point.y),
               ]),
-              {seed: index + 1, fill: "red"},
+              {seed: objectNumber, fill: "red"},
             );
             shapeGroup.appendChild(polygonElement);
             return;
