@@ -12,7 +12,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
   const { onHighlightObject, sendUpdate, state } = props;
 
   return (
-    <Box height="100%" overflow="auto">
+    <Box height="100%" overflowY="scroll">
       <Heading size="md">Objects</Heading>
       {state.objects.map(lineObject => (
         <div
