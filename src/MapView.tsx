@@ -24,20 +24,25 @@ export default function MapView(props: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const shapeGroupRef = useRef<SVGGElement>(null);
+  const annotationGroupRef = useRef<SVGGElement>(null);
 
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
   useEffect(() => {
-    if (svgRef.current !== null && shapeGroupRef.current !== null) {
-      const shapeGroup = shapeGroupRef.current;
-      const rc = rough.svg(svgRef.current);
+    const svg = svgRef.current;
+    const shapeGroup = shapeGroupRef.current;
+    const annotationGroup = annotationGroupRef.current;
+
+    if (svg !== null && shapeGroup !== null && annotationGroup) {
+      const rc = rough.svg(svg);
       shapeGroup.replaceChildren();
+      annotationGroup.replaceChildren();
 
       state.objects.forEach(({objectNumber, shape}) => {
         switch (shape.type) {
           case "cross":
             for (const crossLine of crossLines(shape.cross, renderArea)) {
-              shapeGroup.appendChild(rc.line(
+              annotationGroup.appendChild(rc.line(
                 renderArea.toPixels(crossLine.start.x),
                 renderArea.toPixels(crossLine.start.y),
                 renderArea.toPixels(crossLine.end.x),
@@ -142,6 +147,8 @@ export default function MapView(props: MapViewProps) {
           />
         )}
         <g ref={shapeGroupRef}>
+        </g>
+        <g ref={annotationGroupRef}>
         </g>
         {tool.render(renderArea)}
       </svg>
