@@ -4,6 +4,7 @@ import { fillColors } from "./app/colors";
 
 interface ToolsViewProps {
   onChange: (value: Tool) => void;
+  onSelectColor: (color: string) => void;
   onRedo: (() => void) | null;
   onUndo: (() => void) | null;
   toolContext: ToolContext;
@@ -11,7 +12,7 @@ interface ToolsViewProps {
 }
 
 export default function ToolsView(props: ToolsViewProps) {
-  const { onChange, onRedo, onUndo, toolContext, value } = props;
+  const { onChange, onSelectColor, onRedo, onUndo, toolContext, value } = props;
 
   const padding = 1;
 
@@ -38,6 +39,7 @@ export default function ToolsView(props: ToolsViewProps) {
                 aspectRatio: 1,
                 border: "1px solid #000",
               }}
+              onClick={() => onSelectColor(fillColor)}
             >
             </div>
           ))}
