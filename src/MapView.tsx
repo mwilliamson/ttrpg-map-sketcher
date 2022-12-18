@@ -47,7 +47,7 @@ export default function MapView(props: MapViewProps) {
                 renderArea.toPixels(crossLine.start.y),
                 renderArea.toPixels(crossLine.end.x),
                 renderArea.toPixels(crossLine.end.y),
-                {seed: objectNumber, stroke: "red", strokeWidth: crossStrokeWidth},
+                {seed: objectNumber, stroke: shape.cross.color, strokeWidth: crossStrokeWidth},
               ));
             }
             return;
@@ -67,7 +67,7 @@ export default function MapView(props: MapViewProps) {
                 renderArea.toPixels(point.x),
                 renderArea.toPixels(point.y),
               ]),
-              {seed: objectNumber, fill: "red"},
+              {seed: objectNumber, fill: shape.polygon.fillColor},
             );
             shapeGroup.appendChild(polygonElement);
             return;

@@ -49,7 +49,7 @@ class PolygonTool implements Tool<"Polygon"> {
       return this;
     } else if (this.state.points.length > 0 && this.state.snapPoint.equals(this.state.points[0])) {
         const id = uuid.v4();
-        const polygon = Polygon.from(this.state.points);
+        const polygon = Polygon.from(this.state.points, this.context.selectedColor);
         const shape = {type: "polygon" as const, polygon};
         const object = {id, shape};
         this.context.sendUpdate({type: "addObject", object});

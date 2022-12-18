@@ -49,7 +49,7 @@ class CrossTool implements Tool<"Cross"> {
     const { snapPoint } = this.state;
     if (snapPoint !== null) {
       const id = uuid.v4();
-      const cross = Cross.from(snapPoint);
+      const cross = Cross.from(snapPoint, this.context.selectedColor);
       this.context.sendUpdate({type: "addObject", object: {id, shape: {type: "cross", cross}}});
     }
     return new CrossTool({
@@ -60,9 +60,10 @@ class CrossTool implements Tool<"Cross"> {
   public render(renderArea: RenderArea) {
     const { snapPoint } = this.state;
 
+    // TODO: color is meaningless in this context. Split map shapes from geometry?
     return snapPoint !== null && (
       <g stroke={draftColor} strokeWidth={3} strokeLinecap="round">
-        {crossLines(Cross.from(snapPoint), renderArea).map((line, crossLineIndex) => (
+        {crossLines(Cross.from(snapPoint, "black"), renderArea).map((line, crossLineIndex) => (
           <line
             key={crossLineIndex}
             x1={renderArea.toPixels(line.start.x)}

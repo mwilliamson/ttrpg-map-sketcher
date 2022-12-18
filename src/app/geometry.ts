@@ -94,25 +94,29 @@ export class Line {
 }
 
 export class Polygon {
-  public static from(points: ReadonlyArray<Point>) {
-    return new Polygon(points);
+  public static from(points: ReadonlyArray<Point>, fillColor: string) {
+    return new Polygon(points, fillColor);
   }
 
   public readonly points: ReadonlyArray<Point>;
+  public readonly fillColor: string;
 
-  private constructor(points: ReadonlyArray<Point>) {
+  private constructor(points: ReadonlyArray<Point>, fillColor: string) {
     this.points = points;
+    this.fillColor = fillColor;
   }
 }
 
 export class Cross {
-  public static from(center: Point) {
-    return new Cross(center);
+  public static from(center: Point, color: string) {
+    return new Cross(center, color);
   }
 
   public readonly center: Point;
+  public readonly color: string;
 
-  private constructor(center: Point) {
+  private constructor(center: Point, color: string) {
     this.center = center;
+    this.color = color;
   }
 }

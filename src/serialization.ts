@@ -19,6 +19,7 @@ type SerializedShape =
 
 interface SerializedCross {
   center: SerializedPoint;
+  color: string;
 }
 
 interface SerializedLine {
@@ -28,6 +29,7 @@ interface SerializedLine {
 
 interface SerializedPolygon {
   points: ReadonlyArray<SerializedPoint>;
+  fillColor: string;
 }
 
 interface SerializedPoint {
@@ -123,12 +125,14 @@ function deserializeShape(shape: SerializedShape): Shape {
 function serializeCross(cross: Cross): SerializedCross {
   return {
     center: serializePoint(cross.center),
+    color: cross.color,
   };
 }
 
 function deserializeCross(cross: SerializedCross): Cross {
   return Cross.from(
     deserializePoint(cross.center),
+    cross.color,
   );
 }
 
@@ -149,11 +153,15 @@ function deserializeLine(line: SerializedLine): Line {
 function serializePolygon(polygon: Polygon): SerializedPolygon {
   return {
     points: polygon.points.map(point => serializePoint(point)),
+    fillColor: polygon.fillColor,
   };
 }
 
 function deserializePolygon(polygon: SerializedPolygon): Polygon {
-  return Polygon.from(polygon.points.map(point => deserializePoint(point)));
+  return Polygon.from(
+    polygon.points.map(point => deserializePoint(point)),
+    polygon.fillColor,
+  );
 }
 
 function serializePoint(point: Point): SerializedPoint {

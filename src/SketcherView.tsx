@@ -82,7 +82,11 @@ export default function SketcherView(props: SketcherViewProps) {
           onChange={newTool => setTool(newTool)}
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
-          toolContext={{sendUpdate: handleSendUpdate, squareWidth: renderArea.squareWidth}}
+          toolContext={{
+            selectedColor: "red",
+            sendUpdate: handleSendUpdate,
+            squareWidth: renderArea.squareWidth,
+          }}
           value={tool}
         />
       </Box>
