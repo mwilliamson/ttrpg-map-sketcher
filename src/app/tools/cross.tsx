@@ -12,15 +12,15 @@ export const crossToolType: ToolType<"Cross"> = {
   }),
 }
 
-interface LineToolState {
+interface CrossToolState {
   snapPoint: Point | null;
 }
 
 class CrossTool implements Tool<"Cross"> {
   public readonly type = crossToolType;
-  private readonly state: LineToolState;
+  private readonly state: CrossToolState;
 
-  public constructor(state: LineToolState) {
+  public constructor(state: CrossToolState) {
     this.state = state;
   }
 
