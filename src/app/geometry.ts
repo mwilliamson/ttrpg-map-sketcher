@@ -104,3 +104,15 @@ export class Polygon {
     this.points = points;
   }
 }
+
+export class Cross {
+  public static from(center: Point) {
+    return new Cross(center);
+  }
+
+  public readonly center: Point;
+
+  private constructor(center: Point) {
+    this.center = center;
+  }
+}

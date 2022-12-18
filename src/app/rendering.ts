@@ -1,4 +1,4 @@
-import { Distance } from "./geometry";
+import { Cross, Distance, Line, Point } from "./geometry";
 
 export class Scale {
   public static pixelsPerMetre(pixelsPerMetre: number) {
@@ -65,4 +65,32 @@ export class RenderArea {
   public fromPixels(pixels: number): Distance {
     return this.scale.fromPixels(pixels).subtract(this.padding);
   }
+}
+
+export function crossLines(cross: Cross, renderArea: RenderArea): ReadonlyArray<Line> {
+  const radius = renderArea.squareWidth.divide(2);
+  const {center} = cross;
+
+  return [
+    Line.from(
+      Point.from(
+        center.x.subtract(radius),
+        center.y.subtract(radius),
+      ),
+      Point.from(
+        center.x.add(radius),
+        center.y.add(radius),
+      ),
+    ),
+    Line.from(
+      Point.from(
+        center.x.subtract(radius),
+        center.y.add(radius),
+      ),
+      Point.from(
+        center.x.add(radius),
+        center.y.subtract(radius),
+      ),
+    ),
+  ];
 }

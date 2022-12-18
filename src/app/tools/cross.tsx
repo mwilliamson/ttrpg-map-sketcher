@@ -1,8 +1,8 @@
 import * as uuid from "uuid";
 
 import { draftColor } from "../colors";
-import { Line, Point } from "../geometry";
-import { RenderArea } from "../rendering";
+import { Cross, Point } from "../geometry";
+import { crossLines, RenderArea } from "../rendering";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const crossToolType: ToolType<"Cross"> = {
@@ -46,28 +46,31 @@ class CrossTool implements Tool<"Cross"> {
   }
 
   public onMouseLeftUp(): CrossTool {
-    return this;
+    const { snapPoint } = this.state;
+    if (snapPoint !== null) {
+      const id = uuid.v4();
+      const cross = Cross.from(snapPoint);
+      this.context.sendUpdate({type: "addObject", object: {id, shape: {type: "cross", cross}}});
+    }
+    return new CrossTool({
+      ...this.state,
+    }, this.context);
   }
 
   public render(renderArea: RenderArea) {
     const { snapPoint } = this.state;
 
-    const radius = this.context.squareWidth.divide(2);
-
     return snapPoint !== null && (
       <g stroke={draftColor} strokeWidth={3} strokeLinecap="round">
-        <line
-          x1={renderArea.toPixels(snapPoint.x.subtract(radius))}
-          y1={renderArea.toPixels(snapPoint.y.subtract(radius))}
-          x2={renderArea.toPixels(snapPoint.x.add(radius))}
-          y2={renderArea.toPixels(snapPoint.y.add(radius))}
-        />
-        <line
-          x1={renderArea.toPixels(snapPoint.x.subtract(radius))}
-          y1={renderArea.toPixels(snapPoint.y.add(radius))}
-          x2={renderArea.toPixels(snapPoint.x.add(radius))}
-          y2={renderArea.toPixels(snapPoint.y.subtract(radius))}
-        />
+        {crossLines(Cross.from(snapPoint), renderArea).map((line, crossLineIndex) => (
+          <line
+            key={crossLineIndex}
+            x1={renderArea.toPixels(line.start.x)}
+            y1={renderArea.toPixels(line.start.y)}
+            x2={renderArea.toPixels(line.end.x)}
+            y2={renderArea.toPixels(line.end.y)}
+          />
+        ))}
       </g>
     );
   }

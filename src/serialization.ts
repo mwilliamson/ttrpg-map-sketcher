@@ -1,4 +1,5 @@
 import { AppUpdate, Distance, Line, MapObject, Point, Polygon, Shape } from "./app";
+import { Cross } from "./app/geometry";
 import assertNever from "./assertNever";
 
 type SerializedAppUpdate =
@@ -11,8 +12,14 @@ interface SerializedMapObject {
 }
 
 type SerializedShape =
+  | {type: "cross", cross: SerializedCross}
   | {type: "line", line: SerializedLine}
   | {type: "polygon", polygon: SerializedPolygon};
+
+
+interface SerializedCross {
+  center: SerializedPoint;
+}
 
 interface SerializedLine {
   start: SerializedPoint;
@@ -71,6 +78,11 @@ function deserializeMapObject(object: SerializedMapObject): MapObject {
 
 function serializeShape(shape: Shape): SerializedShape {
   switch (shape.type) {
+    case "cross":
+      return {
+        type: "cross",
+        cross: serializeCross(shape.cross),
+      };
     case "line":
       return {
         type: "line",
@@ -88,6 +100,11 @@ function serializeShape(shape: Shape): SerializedShape {
 
 function deserializeShape(shape: SerializedShape): Shape {
   switch (shape.type) {
+    case "cross":
+      return {
+        type: "cross",
+        cross: deserializeCross(shape.cross),
+      };
     case "line":
       return {
         type: "line",
@@ -101,6 +118,18 @@ function deserializeShape(shape: SerializedShape): Shape {
     default:
       return assertNever(shape, "unhandled shape type");
   }
+}
+
+function serializeCross(cross: Cross): SerializedCross {
+  return {
+    center: serializePoint(cross.center),
+  };
+}
+
+function deserializeCross(cross: SerializedCross): Cross {
+  return Cross.from(
+    deserializePoint(cross.center),
+  );
 }
 
 function serializeLine(line: Line): SerializedLine {

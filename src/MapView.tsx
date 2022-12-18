@@ -4,6 +4,7 @@ import rough from "roughjs";
 
 import { AppState, AppUpdate, Distance, MapObject, Point, RenderArea, Tool } from "./app";
 import { draftColor } from "./app/colors";
+import { crossLines } from "./app/rendering";
 import assertNever from "./assertNever";
 
 interface MapViewProps {
@@ -14,6 +15,8 @@ interface MapViewProps {
   onToolChange: (newTool: Tool) => void;
   highlightObject: MapObject | null;
 }
+
+const crossStrokeWidth = 3;
 
 export default function MapView(props: MapViewProps) {
   const { renderArea, state, tool, onToolChange, highlightObject } = props;
@@ -32,6 +35,17 @@ export default function MapView(props: MapViewProps) {
 
       state.objects.forEach(({objectNumber, shape}) => {
         switch (shape.type) {
+          case "cross":
+            for (const crossLine of crossLines(shape.cross, renderArea)) {
+              shapeGroup.appendChild(rc.line(
+                renderArea.toPixels(crossLine.start.x),
+                renderArea.toPixels(crossLine.start.y),
+                renderArea.toPixels(crossLine.end.x),
+                renderArea.toPixels(crossLine.end.y),
+                {seed: objectNumber, stroke: "red", strokeWidth: crossStrokeWidth},
+              ));
+            }
+            return;
           case "line":
             const lineElement = rc.line(
               renderArea.toPixels(shape.line.start.x),
@@ -163,6 +177,22 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
   const { object, renderArea } = props;
 
   switch (object.shape.type) {
+    case "cross":
+      return (
+        <>
+          {crossLines(object.shape.cross, renderArea).map((crossLine, crossLineIndex) => (
+            <line
+              key={crossLineIndex}
+              stroke={draftColor}
+              strokeWidth={crossStrokeWidth * 5}
+              x1={renderArea.toPixels(crossLine.start.x)}
+              y1={renderArea.toPixels(crossLine.start.y)}
+              x2={renderArea.toPixels(crossLine.end.x)}
+              y2={renderArea.toPixels(crossLine.end.y)}
+            />
+          ))}
+        </>
+      );
     case "line":
       return (
         <line
