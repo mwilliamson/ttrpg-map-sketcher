@@ -1,8 +1,8 @@
 import * as uuid from "uuid";
 
 import { draftColor } from "../colors";
-import { Cross, Point } from "../geometry";
-import { crossLines, RenderArea } from "../rendering";
+import { Point, Token } from "../geometry";
+import { RenderArea } from "../rendering";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const tokenToolType: ToolType<"Token"> = {
@@ -44,6 +44,12 @@ class TokenTool implements Tool<"Token"> {
   }
 
   public onMouseLeftUp(context: ToolContext): TokenTool {
+    const { snapPoint } = this.state;
+    if (snapPoint !== null) {
+      const id = uuid.v4();
+      const token = Token.from(snapPoint, context.selectedColor);
+      context.sendUpdate({type: "addObject", object: {id, shape: {type: "token", token}}});
+    }
     return this;
   }
 

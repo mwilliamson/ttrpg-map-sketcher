@@ -120,3 +120,17 @@ export class Cross {
     this.color = color;
   }
 }
+
+export class Token {
+  public static from(center: Point, color: string) {
+    return new Token(center, color);
+  }
+
+  public readonly center: Point;
+  public readonly color: string;
+
+  private constructor(center: Point, color: string) {
+    this.center = center;
+    this.color = color;
+  }
+}

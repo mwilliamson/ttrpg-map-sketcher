@@ -1,6 +1,6 @@
 import { findLast } from "lodash";
 
-import { Cross, Distance, Line, Point, Polygon } from "./geometry";
+import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
 import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
@@ -75,8 +75,9 @@ export interface IndexedMapObject extends MapObject {
 export type Shape =
   | {type: "cross", cross: Cross}
   | {type: "line", line: Line}
-  | {type: "polygon", polygon: Polygon};
+  | {type: "polygon", polygon: Polygon}
+  | {type: "token", token: Token};
 
-export { Distance, Line, Point, Polygon };
+export { Cross, Distance, Line, Point, Polygon, Token };
 export { RenderArea, Scale };
 export { Tool, ToolContext, allToolTypes, noneTool };

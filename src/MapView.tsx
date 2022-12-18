@@ -72,6 +72,16 @@ export default function MapView(props: MapViewProps) {
             );
             shapeGroup.appendChild(polygonElement);
             return;
+          case "token":
+            const circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circleElement.setAttribute("stroke", "#000");
+            circleElement.setAttribute("stroke-width", "3");
+            circleElement.setAttribute("fill", shape.token.color);
+            circleElement.setAttribute("cx", renderArea.toPixels(shape.token.center.x).toString());
+            circleElement.setAttribute("cy", renderArea.toPixels(shape.token.center.y).toString())
+            circleElement.setAttribute("r", renderArea.scale.toPixels(renderArea.squareWidth.divide(2)).toString())
+            shapeGroup.appendChild(circleElement);
+            return;
           default:
             return assertNever(shape, "unhanded shape type");
         }
@@ -224,6 +234,16 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
           strokeWidth={5}
           fill="none"
           points={pointsString}
+        />
+      );
+    case "token":
+      // TODO: remove duplication of circle radius (and probably other measurements in other shapes too)
+      return (
+        <circle
+          fill={draftColor}
+          cx={renderArea.toPixels(object.shape.token.center.x)}
+          cy={renderArea.toPixels(object.shape.token.center.y)}
+          r={renderArea.scale.toPixels(renderArea.squareWidth.divide(2)) + 10}
         />
       );
     default:

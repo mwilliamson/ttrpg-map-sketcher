@@ -1,5 +1,4 @@
-import { AppUpdate, Distance, Line, MapObject, Point, Polygon, Shape } from "./app";
-import { Cross } from "./app/geometry";
+import { AppUpdate, Cross, Distance, Line, MapObject, Point, Polygon, Shape, Token } from "./app";
 import assertNever from "./assertNever";
 
 type SerializedAppUpdate =
@@ -14,8 +13,8 @@ interface SerializedMapObject {
 type SerializedShape =
   | {type: "cross", cross: SerializedCross}
   | {type: "line", line: SerializedLine}
-  | {type: "polygon", polygon: SerializedPolygon};
-
+  | {type: "polygon", polygon: SerializedPolygon}
+  | {type: "token", token: SerializedToken};
 
 interface SerializedCross {
   center: SerializedPoint;
@@ -30,6 +29,11 @@ interface SerializedLine {
 interface SerializedPolygon {
   points: ReadonlyArray<SerializedPoint>;
   fillColor: string;
+}
+
+interface SerializedToken {
+  center: SerializedPoint;
+  color: string;
 }
 
 interface SerializedPoint {
@@ -95,6 +99,11 @@ function serializeShape(shape: Shape): SerializedShape {
         type: "polygon",
         polygon: serializePolygon(shape.polygon),
       };
+    case "token":
+      return {
+        type: "token",
+        token: serializeToken(shape.token),
+      };
     default:
       return assertNever(shape, "unhandled shape type");
   }
@@ -117,6 +126,11 @@ function deserializeShape(shape: SerializedShape): Shape {
         type: "polygon",
         polygon: deserializePolygon(shape.polygon),
       };
+      case "token":
+        return {
+          type: "token",
+          token: deserializeToken(shape.token),
+        };
     default:
       return assertNever(shape, "unhandled shape type");
   }
@@ -161,6 +175,20 @@ function deserializePolygon(polygon: SerializedPolygon): Polygon {
   return Polygon.from(
     polygon.points.map(point => deserializePoint(point)),
     polygon.fillColor,
+  );
+}
+
+function serializeToken(token: Token): SerializedToken {
+  return {
+    center: serializePoint(token.center),
+    color: token.color,
+  };
+}
+
+function deserializeToken(token: SerializedToken): Token {
+  return Token.from(
+    deserializePoint(token.center),
+    token.color,
   );
 }
 
