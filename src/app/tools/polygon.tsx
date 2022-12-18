@@ -8,10 +8,10 @@ import { Tool, ToolContext, ToolType } from "./base";
 
 export const polygonToolType: ToolType<"Polygon"> = {
   name: "Polygon",
-  create: (context) => new PolygonTool({
+  create: () => new PolygonTool({
     points: [],
     snapPoint: null,
-  }, context),
+  }),
 }
 
 interface PolygonToolState {
@@ -22,47 +22,45 @@ interface PolygonToolState {
 class PolygonTool implements Tool<"Polygon"> {
   public readonly type = polygonToolType;
   private readonly state: PolygonToolState;
-  private readonly context: ToolContext;
 
-  public constructor(state: PolygonToolState, context: ToolContext) {
+  public constructor(state: PolygonToolState) {
     this.state = state;
-    this.context = context;
   }
 
-  public onMouseMove(mousePosition: Point): PolygonTool {
-    const snapDistance = this.context.squareWidth;
+  public onMouseMove(mousePosition: Point, context: ToolContext): PolygonTool {
+    const snapDistance = context.squareWidth;
     return new PolygonTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
-    }, this.context);
+    });
   }
 
   public onMouseLeave(): PolygonTool {
     return new PolygonTool({
       ...this.state,
       snapPoint: null,
-    }, this.context);
+    });
   }
 
-  public onMouseLeftDown(): PolygonTool {
+  public onMouseLeftDown(context: ToolContext): PolygonTool {
     if (this.state.snapPoint === null) {
       return this;
     } else if (this.state.points.length > 0 && this.state.snapPoint.equals(this.state.points[0])) {
         const id = uuid.v4();
-        const polygon = Polygon.from(this.state.points, this.context.selectedColor);
+        const polygon = Polygon.from(this.state.points, context.selectedColor);
         const shape = {type: "polygon" as const, polygon};
         const object = {id, shape};
-        this.context.sendUpdate({type: "addObject", object});
+        context.sendUpdate({type: "addObject", object});
 
         return new PolygonTool({
           ...this.state,
           points: [],
-        }, this.context);
+        });
     } else {
       return new PolygonTool({
           ...this.state,
           points: [...this.state.points, this.state.snapPoint],
-        }, this.context);
+        });
     }
   }
 
@@ -99,9 +97,5 @@ class PolygonTool implements Tool<"Polygon"> {
         ))}
       </g>
     );
-  }
-
-  public withContext(context: ToolContext): PolygonTool {
-    return new PolygonTool(this.state, context);
   }
 }

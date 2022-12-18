@@ -2,7 +2,8 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AppState, AppUpdate, Distance, MapObject, RenderArea, Scale, Tool, noneTool, createUpdateToUndo } from "./app";
-import { defaultFillColor, fillColors } from "./app/colors";
+import { defaultFillColor } from "./app/colors";
+import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import ToolsView from "./ToolsView";
@@ -32,14 +33,22 @@ export default function SketcherView(props: SketcherViewProps) {
   const [hoveredObject, setHoveredObject] = useState<MapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
+  const toolContext = {
+    selectedColor: selectedColor,
+    sendUpdate: handleSendUpdate,
+    squareWidth: renderArea.squareWidth,
+  };
+
+  function handleSelectToolType(newToolType: ToolType) {
+    if (newToolType === tool.type) {
+      return;
+    }
+    const newTool = newToolType.create();
+    setTool(newTool);
+  }
+
   function handleSelectColor(newColor: string) {
-    // TODO: make this entirely part of tool state? At the moment, we have duplicate state.
     setSelectedColor(newColor);
-    setTool(tool.withContext({
-      selectedColor: newColor,
-      sendUpdate: handleSendUpdate,
-      squareWidth: renderArea.squareWidth,
-    }))
   }
 
   function handleSendUpdate(update: AppUpdate) {
@@ -91,15 +100,11 @@ export default function SketcherView(props: SketcherViewProps) {
     <Flex flexDirection="row" height="100%">
       <Box flex="0 0 auto" height="100%">
         <ToolsView
-          onChange={newTool => setTool(newTool)}
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
-          toolContext={{
-            selectedColor: selectedColor,
-            sendUpdate: handleSendUpdate,
-            squareWidth: renderArea.squareWidth,
-          }}
-          value={tool}
+
+          selectedToolType={tool.type}
+          onSelectToolType={newToolType => handleSelectToolType(newToolType)}
 
           selectedColor={selectedColor}
           onSelectColor={newColor => handleSelectColor(newColor)}
@@ -112,6 +117,7 @@ export default function SketcherView(props: SketcherViewProps) {
           state={state}
           tool={tool}
           onToolChange={newTool => setTool(newTool)}
+          toolContext={toolContext}
           highlightObject={hoveredObject}
         />
       </Box>

@@ -12,7 +12,6 @@ export const noneTool: Tool<"None"> = {
   onMouseLeftDown: () => noneTool,
   onMouseLeftUp: () => noneTool,
   render: () => null,
-  withContext: () => noneTool,
 }
 
 export type NoneTool = typeof noneTool;

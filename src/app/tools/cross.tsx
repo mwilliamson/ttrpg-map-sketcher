@@ -7,9 +7,9 @@ import { Tool, ToolContext, ToolType } from "./base";
 
 export const crossToolType: ToolType<"Cross"> = {
   name: "Cross",
-  create: (context) => new CrossTool({
+  create: () => new CrossTool({
     snapPoint: null,
-  }, context),
+  }),
 }
 
 interface LineToolState {
@@ -19,42 +19,38 @@ interface LineToolState {
 class CrossTool implements Tool<"Cross"> {
   public readonly type = crossToolType;
   private readonly state: LineToolState;
-  private readonly context: ToolContext;
 
-  public constructor(state: LineToolState, context: ToolContext) {
+  public constructor(state: LineToolState) {
     this.state = state;
-    this.context = context;
   }
 
-  public onMouseMove(mousePosition: Point): CrossTool {
-    const snapDistance = this.context.squareWidth.divide(2);
+  public onMouseMove(mousePosition: Point, context: ToolContext): CrossTool {
+    const snapDistance = context.squareWidth.divide(2);
     return new CrossTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
-    }, this.context);
+    });
   }
 
   public onMouseLeave(): CrossTool {
     return new CrossTool({
       ...this.state,
       snapPoint: null,
-    }, this.context);
+    });
   }
 
   public onMouseLeftDown(): CrossTool {
     return this;
   }
 
-  public onMouseLeftUp(): CrossTool {
+  public onMouseLeftUp(context: ToolContext): CrossTool {
     const { snapPoint } = this.state;
     if (snapPoint !== null) {
       const id = uuid.v4();
-      const cross = Cross.from(snapPoint, this.context.selectedColor);
-      this.context.sendUpdate({type: "addObject", object: {id, shape: {type: "cross", cross}}});
+      const cross = Cross.from(snapPoint, context.selectedColor);
+      context.sendUpdate({type: "addObject", object: {id, shape: {type: "cross", cross}}});
     }
-    return new CrossTool({
-      ...this.state,
-    }, this.context);
+    return this;
   }
 
   public render(renderArea: RenderArea) {
@@ -73,9 +69,5 @@ class CrossTool implements Tool<"Cross"> {
         ))}
       </g>
     );
-  }
-
-  public withContext(context: ToolContext): CrossTool {
-    return new CrossTool(this.state, context);
   }
 }

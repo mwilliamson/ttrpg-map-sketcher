@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
-import { AppState, AppUpdate, Distance, MapObject, Point, RenderArea, Tool } from "./app";
+import { AppState, AppUpdate, Distance, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { draftColor } from "./app/colors";
 import { crossLines } from "./app/rendering";
 import assertNever from "./assertNever";
@@ -12,6 +12,7 @@ interface MapViewProps {
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
   tool: Tool;
+  toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
   highlightObject: MapObject | null;
 }
@@ -19,7 +20,7 @@ interface MapViewProps {
 const crossStrokeWidth = 3;
 
 export default function MapView(props: MapViewProps) {
-  const { renderArea, state, tool, onToolChange, highlightObject } = props;
+  const { renderArea, state, tool, onToolChange, toolContext, highlightObject } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -86,7 +87,7 @@ export default function MapView(props: MapViewProps) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = renderArea.fromPixels(event.clientX - rect.left);
     const y = renderArea.fromPixels(event.clientY - rect.top);
-    onToolChange(tool.onMouseMove(Point.from(x, y)));
+    onToolChange(tool.onMouseMove(Point.from(x, y), toolContext));
 
     const container = containerRef.current;
     if (lastDragMousePosition.current !== null && container !== null) {
@@ -102,12 +103,12 @@ export default function MapView(props: MapViewProps) {
   }
 
   function handleMouseLeave() {
-    onToolChange(tool.onMouseLeave());
+    onToolChange(tool.onMouseLeave(toolContext));
   }
 
   function handleMouseDown(event: React.MouseEvent) {
     if (event.button === 0) {
-      onToolChange(tool.onMouseLeftDown());
+      onToolChange(tool.onMouseLeftDown(toolContext));
     } else if (event.button === 2) {
       event.preventDefault();
       if (containerRef.current !== null) {
@@ -121,7 +122,7 @@ export default function MapView(props: MapViewProps) {
 
   function handleMouseUp(event: React.MouseEvent) {
     if (event.button === 0) {
-      onToolChange(tool.onMouseLeftUp());
+      onToolChange(tool.onMouseLeftUp(toolContext));
     } else if (event.button === 2) {
       lastDragMousePosition.current = null;
     }

@@ -7,10 +7,10 @@ import { Tool, ToolContext, ToolType } from "./base";
 
 export const lineToolType: ToolType<"Line"> = {
   name: "Line",
-  create: (context) => new LineTool({
+  create: () => new LineTool({
     lineStart: null,
     snapPoint: null,
-  }, context),
+  }),
 }
 
 interface LineToolState {
@@ -21,46 +21,44 @@ interface LineToolState {
 class LineTool implements Tool<"Line"> {
   public readonly type = lineToolType;
   private readonly state: LineToolState;
-  private readonly context: ToolContext;
 
-  public constructor(state: LineToolState, context: ToolContext) {
+  public constructor(state: LineToolState) {
     this.state = state;
-    this.context = context;
   }
 
-  public onMouseMove(mousePosition: Point): LineTool {
-    const snapDistance = this.context.squareWidth;
+  public onMouseMove(mousePosition: Point, context: ToolContext): LineTool {
+    const snapDistance = context.squareWidth;
     return new LineTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
-    }, this.context);
+    });
   }
 
   public onMouseLeave(): LineTool {
     return new LineTool({
       ...this.state,
       snapPoint: null,
-    }, this.context);
+    });
   }
 
   public onMouseLeftDown(): LineTool {
     return new LineTool({
       ...this.state,
       lineStart: this.state.snapPoint,
-    }, this.context);
+    });
   }
 
-  public onMouseLeftUp(): LineTool {
+  public onMouseLeftUp(context: ToolContext): LineTool {
     const { lineStart, snapPoint } = this.state;
     if (lineStart !== null && snapPoint !== null && !lineStart.equals(snapPoint)) {
       const id = uuid.v4();
       const line = Line.from(lineStart, snapPoint);
-      this.context.sendUpdate({type: "addObject", object: {id, shape: {type: "line", line}}});
+      context.sendUpdate({type: "addObject", object: {id, shape: {type: "line", line}}});
     }
     return new LineTool({
       ...this.state,
       lineStart: null,
-    }, this.context);
+    });
   }
 
   public render(renderArea: RenderArea) {
@@ -85,9 +83,5 @@ class LineTool implements Tool<"Line"> {
         )}
       </g>
     );
-  }
-
-  public withContext(context: ToolContext): LineTool {
-    return new LineTool(this.state, context);
   }
 }

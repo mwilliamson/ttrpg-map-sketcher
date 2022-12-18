@@ -6,10 +6,10 @@ import { Tool, ToolContext, ToolType } from "./base";
 
 export const rulerToolType: ToolType<"Ruler"> = {
   name: "Ruler",
-  create: (context) => new RulerTool({
+  create: () => new RulerTool({
     lineStart: null,
     snapPoint: null,
-  }, context),
+  }),
 }
 
 interface RulerToolState {
@@ -20,40 +20,38 @@ interface RulerToolState {
 class RulerTool implements Tool<"Ruler"> {
   public readonly type = rulerToolType;
   private readonly state: RulerToolState;
-  private readonly context: ToolContext;
 
-  public constructor(state: RulerToolState, context: ToolContext) {
+  public constructor(state: RulerToolState) {
     this.state = state;
-    this.context = context;
   }
 
-  public onMouseMove(mousePosition: Point): RulerTool {
-    const snapDistance = this.context.squareWidth.divide(2);
+  public onMouseMove(mousePosition: Point, context: ToolContext): RulerTool {
+    const snapDistance = context.squareWidth.divide(2);
     return new RulerTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
-    }, this.context);
+    });
   }
 
   public onMouseLeave(): RulerTool {
     return new RulerTool({
       ...this.state,
       snapPoint: null,
-    }, this.context);
+    });
   }
 
   public onMouseLeftDown(): RulerTool {
     return new RulerTool({
       ...this.state,
       lineStart: this.state.snapPoint,
-    }, this.context);
+    });
   }
 
   public onMouseLeftUp(): RulerTool {
     return new RulerTool({
       ...this.state,
       lineStart: null,
-    }, this.context);
+    });
   }
 
   public render(renderArea: RenderArea) {
@@ -91,10 +89,6 @@ class RulerTool implements Tool<"Ruler"> {
         )}
       </g>
     );
-  }
-
-  public withContext(context: ToolContext): RulerTool {
-    return new RulerTool(this.state, context);
   }
 }
 

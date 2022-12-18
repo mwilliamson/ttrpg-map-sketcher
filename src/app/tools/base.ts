@@ -6,17 +6,16 @@ export interface ToolContext {
   squareWidth: Distance,
 }
 
-export interface ToolType<TName extends string> {
+export interface ToolType<TName extends string = string> {
   name: TName;
-  create: (context: ToolContext) => Tool<TName>;
+  create: () => Tool<TName>;
 }
 
 export interface Tool<TName extends string = string> {
   type: ToolType<TName>;
-  onMouseMove: (mousePosition: Point) => Tool<TName>,
-  onMouseLeave: () => Tool<TName>,
-  onMouseLeftDown: () => Tool<TName>,
-  onMouseLeftUp: () => Tool<TName>,
+  onMouseMove: (mousePosition: Point, context: ToolContext) => Tool<TName>,
+  onMouseLeave: (context: ToolContext) => Tool<TName>,
+  onMouseLeftDown: (context: ToolContext) => Tool<TName>,
+  onMouseLeftUp: (context: ToolContext) => Tool<TName>,
   render: (renderArea: RenderArea) => React.ReactNode,
-  withContext: (context: ToolContext) => Tool<TName>,
 }

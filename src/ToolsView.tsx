@@ -1,20 +1,21 @@
 import { Button, ButtonGroup, Flex, Heading, Stack } from "@chakra-ui/react";
-import { Tool, ToolContext, allToolTypes } from "./app";
+import { Tool, allToolTypes } from "./app";
 import { fillColors } from "./app/colors";
+import { ToolType } from "./app/tools/base";
 
 interface ToolsViewProps {
-  onChange: (value: Tool) => void;
   onRedo: (() => void) | null;
   onUndo: (() => void) | null;
-  toolContext: ToolContext;
-  value: Tool;
+
+  selectedToolType: ToolType;
+  onSelectToolType: (toolType: ToolType) => void;
 
   selectedColor: string;
   onSelectColor: (color: string) => void;
 }
 
 export default function ToolsView(props: ToolsViewProps) {
-  const { onChange, onRedo, onUndo, toolContext, value, selectedColor, onSelectColor } = props;
+  const { onRedo, onUndo, selectedToolType, onSelectToolType, selectedColor, onSelectColor } = props;
 
   const padding = 1;
 
@@ -26,8 +27,8 @@ export default function ToolsView(props: ToolsViewProps) {
           <Button
             key={toolType.name}
             colorScheme="blue"
-            onClick={() => onChange(toolType.create(toolContext))}
-            variant={value.type === toolType ? "solid" : "outline"}
+            onClick={() => onSelectToolType(toolType)}
+            variant={selectedToolType === toolType ? "solid" : "outline"}
           >
             {toolType.name}
           </Button>
