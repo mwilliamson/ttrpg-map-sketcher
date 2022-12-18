@@ -30,7 +30,8 @@ export class RenderArea {
     return new RenderArea({...options, padding: options.squareWidth.divide(2)});
   }
 
-  private readonly scale: Scale;
+  // TODO: make private
+  public readonly scale: Scale;
   private readonly padding: Distance;
   public readonly mapWidth: Distance;
   public readonly mapHeight: Distance;
