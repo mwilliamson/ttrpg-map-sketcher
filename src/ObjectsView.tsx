@@ -26,7 +26,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
             justifyContent: "space-between",
           }}
         >
-          <div>{lineObject.shape.type}</div>
+          <div>{lineObject.shape.type} #{lineObject.objectNumber}</div>
           <Button
             onClick={() => {
               sendUpdate({type: "deleteObject", id: lineObject.id});
