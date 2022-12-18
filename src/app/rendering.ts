@@ -67,9 +67,8 @@ export class RenderArea {
   }
 }
 
-export function crossLines(cross: Cross, renderArea: RenderArea): ReadonlyArray<Line> {
+export function crossLines(center: Point, renderArea: RenderArea): ReadonlyArray<Line> {
   const radius = renderArea.squareWidth.divide(2);
-  const {center} = cross;
 
   return [
     Line.from(

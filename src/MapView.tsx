@@ -41,7 +41,7 @@ export default function MapView(props: MapViewProps) {
       state.objects.forEach(({objectNumber, shape}) => {
         switch (shape.type) {
           case "cross":
-            for (const crossLine of crossLines(shape.cross, renderArea)) {
+            for (const crossLine of crossLines(shape.cross.center, renderArea)) {
               annotationGroup.appendChild(rc.line(
                 renderArea.toPixels(crossLine.start.x),
                 renderArea.toPixels(crossLine.start.y),
@@ -187,7 +187,7 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
     case "cross":
       return (
         <>
-          {crossLines(object.shape.cross, renderArea).map((crossLine, crossLineIndex) => (
+          {crossLines(object.shape.cross.center, renderArea).map((crossLine, crossLineIndex) => (
             <line
               key={crossLineIndex}
               stroke={draftColor}
