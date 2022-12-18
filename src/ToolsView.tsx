@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, Flex, Heading, Stack } from "@chakra-ui/react";
 import { Tool, ToolContext, allToolTypes } from "./app";
+import { fillColors } from "./app/colors";
 
 interface ToolsViewProps {
   onChange: (value: Tool) => void;
@@ -28,6 +29,19 @@ export default function ToolsView(props: ToolsViewProps) {
             {toolType.name}
           </Button>
         ))}
+        <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5}}>
+          {fillColors.map(fillColor => (
+            <div
+              key={fillColor}
+              style={{
+                backgroundColor: fillColor,
+                aspectRatio: 1,
+                border: "1px solid #000",
+              }}
+            >
+            </div>
+          ))}
+        </div>
       </Stack>
       <ButtonGroup colorScheme="blue" variant="outline" orientation="vertical" padding={padding}>
         <Button disabled={onUndo === null} onClick={onUndo === null ? undefined : onUndo}>
