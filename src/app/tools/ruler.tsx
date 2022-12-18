@@ -92,6 +92,10 @@ class RulerTool implements Tool<"Ruler"> {
       </g>
     );
   }
+
+  public withContext(context: ToolContext): RulerTool {
+    return new RulerTool(this.state, context);
+  }
 }
 
 const pointRadius = 5;

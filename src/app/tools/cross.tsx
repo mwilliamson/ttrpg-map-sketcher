@@ -74,4 +74,8 @@ class CrossTool implements Tool<"Cross"> {
       </g>
     );
   }
+
+  public withContext(context: ToolContext): CrossTool {
+    return new CrossTool(this.state, context);
+  }
 }

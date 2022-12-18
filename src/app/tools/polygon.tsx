@@ -100,4 +100,8 @@ class PolygonTool implements Tool<"Polygon"> {
       </g>
     );
   }
+
+  public withContext(context: ToolContext): PolygonTool {
+    return new PolygonTool(this.state, context);
+  }
 }

@@ -86,4 +86,8 @@ class LineTool implements Tool<"Line"> {
       </g>
     );
   }
+
+  public withContext(context: ToolContext): LineTool {
+    return new LineTool(this.state, context);
+  }
 }

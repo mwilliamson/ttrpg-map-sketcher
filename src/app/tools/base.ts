@@ -17,4 +17,5 @@ export interface Tool<TName extends string = string> {
   onMouseLeftDown: () => Tool<TName>,
   onMouseLeftUp: () => Tool<TName>,
   render: (renderArea: RenderArea) => React.ReactNode,
+  withContext: (context: ToolContext) => Tool<TName>,
 }
