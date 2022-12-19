@@ -1,6 +1,7 @@
 import { RenderArea } from ".";
-import { highlightColor } from "../colors";
-import { Polygon } from "../geometry";
+import slidingPairs from "../../slidingPairs";
+import { draftColor, highlightColor } from "../colors";
+import { Point, Polygon } from "../geometry";
 import { RoughPolygon } from "../rough";
 
 interface PolygonViewProps {
@@ -46,5 +47,39 @@ export function PolygonHighlightView(props: PolygonHighlightViewProps) {
       fill="none"
       points={pointsString}
     />
+  );
+}
+
+interface PolygonDraftViewProps {
+  points: ReadonlyArray<Point>;
+  renderArea: RenderArea;
+}
+
+export function PolygonDraftView(props: PolygonDraftViewProps) {
+  const { points, renderArea } = props;
+
+  return (
+    <g>
+      {points.map((point, pointIndex) => (
+        <circle
+          key={pointIndex}
+          cx={renderArea.toPixelCoordinate(point.x)}
+          cy={renderArea.toPixelCoordinate(point.y)}
+          r={5}
+          fill={draftColor}
+          />
+      ))}
+
+      {slidingPairs(points).map(([start, end], lineIndex) => (
+        <line
+          key={lineIndex}
+          x1={renderArea.toPixelCoordinate(start.x)}
+          y1={renderArea.toPixelCoordinate(start.y)}
+          x2={renderArea.toPixelCoordinate(end.x)}
+          y2={renderArea.toPixelCoordinate(end.y)}
+          stroke={draftColor}
+        />
+      ))}
+    </g>
   );
 }

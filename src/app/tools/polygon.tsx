@@ -4,6 +4,7 @@ import slidingPairs from "../../slidingPairs";
 import { draftColor } from "../colors";
 import { Polygon, Point } from "../geometry";
 import { RenderArea } from "../rendering";
+import { PolygonDraftView } from "../rendering/polygon";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const polygonToolType: ToolType<"Polygon"> = {
@@ -74,28 +75,10 @@ class PolygonTool implements Tool<"Polygon"> {
     const allPoints = snapPoint === null ? points : [...points, snapPoint];
 
     return (
-      <g>
-        {allPoints.map((point, pointIndex) => (
-          <circle
-            key={pointIndex}
-            cx={renderArea.toPixelCoordinate(point.x)}
-            cy={renderArea.toPixelCoordinate(point.y)}
-            r={5}
-            fill={draftColor}
-            />
-        ))}
-
-        {slidingPairs(allPoints).map(([start, end], lineIndex) => (
-          <line
-            key={lineIndex}
-            x1={renderArea.toPixelCoordinate(start.x)}
-            y1={renderArea.toPixelCoordinate(start.y)}
-            x2={renderArea.toPixelCoordinate(end.x)}
-            y2={renderArea.toPixelCoordinate(end.y)}
-            stroke={draftColor}
-          />
-        ))}
-      </g>
+      <PolygonDraftView
+        points={allPoints}
+        renderArea={renderArea}
+      />
     );
   }
 }
