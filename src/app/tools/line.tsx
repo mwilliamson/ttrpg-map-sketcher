@@ -3,6 +3,7 @@ import * as uuid from "uuid";
 import { draftColor } from "../colors";
 import { Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
+import { LineDraftView } from "../rendering/line";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const lineToolType: ToolType<"Line"> = {
@@ -65,23 +66,11 @@ class LineTool implements Tool<"Line"> {
     const { lineStart, snapPoint } = this.state;
 
     return (
-      <g>
-        {snapPoint !== null && (
-          <circle cx={renderArea.toPixelCoordinate(snapPoint.x)} cy={renderArea.toPixelCoordinate(snapPoint.y)} r={5} fill={draftColor} />
-        )}
-        {lineStart !== null && (
-          <circle cx={renderArea.toPixelCoordinate(lineStart.x)} cy={renderArea.toPixelCoordinate(lineStart.y)} r={5} fill={draftColor} />
-        )}
-        {lineStart !== null && snapPoint !== null && (
-          <line
-            x1={renderArea.toPixelCoordinate(lineStart.x)}
-            y1={renderArea.toPixelCoordinate(lineStart.y)}
-            x2={renderArea.toPixelCoordinate(snapPoint.x)}
-            y2={renderArea.toPixelCoordinate(snapPoint.y)}
-            stroke={draftColor}
-          />
-        )}
-      </g>
+      <LineDraftView
+        start={lineStart === null ? snapPoint : lineStart}
+        end={lineStart === null ? null : snapPoint}
+        renderArea={renderArea}
+      />
     );
   }
 }
