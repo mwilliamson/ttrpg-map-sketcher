@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useLayoutEffect, useRef } from "react";
 import { RoughSVG } from "roughjs/bin/svg";
 
 const RoughSvgContext = createContext<RoughSVG | null>(null);
@@ -21,7 +21,7 @@ export function RoughLine(props: RoughLineProps) {
   const rc = useContext(RoughSvgContext);
   const containerRef = useRef<SVGGElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (rc !== null && containerRef.current !== null) {
       const element = rc.line(x1, y1, x2, y2, {seed, stroke: strokeColor, strokeWidth});
       containerRef.current.replaceChildren(element);
@@ -45,7 +45,7 @@ export function RoughPolygon(props: RoughPolygonProps) {
   const rc = useContext(RoughSvgContext);
   const containerRef = useRef<SVGGElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (rc !== null && containerRef.current !== null) {
       const element = rc.polygon(points.map(({x, y}) => [x, y]), {seed, fill: fillColor});
       containerRef.current.replaceChildren(element);
