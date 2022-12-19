@@ -44,20 +44,20 @@ export default function MapView(props: MapViewProps) {
           case "cross":
             for (const crossLine of crossLines(shape.cross.center, renderArea)) {
               annotationGroup.appendChild(rc.line(
-                renderArea.toPixels(crossLine.start.x),
-                renderArea.toPixels(crossLine.start.y),
-                renderArea.toPixels(crossLine.end.x),
-                renderArea.toPixels(crossLine.end.y),
+                renderArea.toPixelCoordinate(crossLine.start.x),
+                renderArea.toPixelCoordinate(crossLine.start.y),
+                renderArea.toPixelCoordinate(crossLine.end.x),
+                renderArea.toPixelCoordinate(crossLine.end.y),
                 {seed: objectNumber, stroke: shape.cross.color, strokeWidth: crossStrokeWidth},
               ));
             }
             return;
           case "line":
             const lineElement = rc.line(
-              renderArea.toPixels(shape.line.start.x),
-              renderArea.toPixels(shape.line.start.y),
-              renderArea.toPixels(shape.line.end.x),
-              renderArea.toPixels(shape.line.end.y),
+              renderArea.toPixelCoordinate(shape.line.start.x),
+              renderArea.toPixelCoordinate(shape.line.start.y),
+              renderArea.toPixelCoordinate(shape.line.end.x),
+              renderArea.toPixelCoordinate(shape.line.end.y),
               {seed: objectNumber},
             );
             shapeGroup.appendChild(lineElement);
@@ -65,8 +65,8 @@ export default function MapView(props: MapViewProps) {
           case "polygon":
             const polygonElement = rc.polygon(
               shape.polygon.points.map(point => [
-                renderArea.toPixels(point.x),
-                renderArea.toPixels(point.y),
+                renderArea.toPixelCoordinate(point.x),
+                renderArea.toPixelCoordinate(point.y),
               ]),
               {seed: objectNumber, fill: shape.polygon.fillColor},
             );
@@ -77,9 +77,9 @@ export default function MapView(props: MapViewProps) {
             circleElement.setAttribute("stroke", "#000");
             circleElement.setAttribute("stroke-width", "3");
             circleElement.setAttribute("fill", shape.token.color);
-            circleElement.setAttribute("cx", renderArea.toPixels(shape.token.center.x).toString());
-            circleElement.setAttribute("cy", renderArea.toPixels(shape.token.center.y).toString())
-            circleElement.setAttribute("r", renderArea.scale.toPixels(renderArea.squareWidth.divide(2)).toString())
+            circleElement.setAttribute("cx", renderArea.toPixelCoordinate(shape.token.center.x).toString());
+            circleElement.setAttribute("cy", renderArea.toPixelCoordinate(shape.token.center.y).toString())
+            circleElement.setAttribute("r", renderArea.distanceToPixels(renderArea.squareWidth.divide(2)).toString())
             shapeGroup.appendChild(circleElement);
             return;
           default:
@@ -95,8 +95,8 @@ export default function MapView(props: MapViewProps) {
 
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = renderArea.fromPixels(event.clientX - rect.left);
-    const y = renderArea.fromPixels(event.clientY - rect.top);
+    const x = renderArea.fromPixelCoordinate(event.clientX - rect.left);
+    const y = renderArea.fromPixelCoordinate(event.clientY - rect.top);
     onToolChange(tool.onMouseMove(Point.from(x, y), toolContext));
 
     const container = containerRef.current;
@@ -177,10 +177,10 @@ function GridView(props: GridViewProps) {
   return (
     <g stroke="#ccc">
       {Distance.rangeInclusive(Distance.metres(0), renderArea.mapWidth, renderArea.squareWidth).map(x => (
-        <line key={x.toMetres()} x1={renderArea.toPixels(x)} y1={0} x2={renderArea.toPixels(x)} y2={renderArea.visibleHeightPixels()} />
+        <line key={x.toMetres()} x1={renderArea.toPixelCoordinate(x)} y1={0} x2={renderArea.toPixelCoordinate(x)} y2={renderArea.visibleHeightPixels()} />
       ))}
       {Distance.rangeInclusive(Distance.metres(0), renderArea.mapHeight, renderArea.squareWidth).map(y => (
-        <line key={y.toMetres()} x1={0} y1={renderArea.toPixels(y)} x2={renderArea.visibleWidthPixels()} y2={renderArea.toPixels(y)} />
+        <line key={y.toMetres()} x1={0} y1={renderArea.toPixelCoordinate(y)} x2={renderArea.visibleWidthPixels()} y2={renderArea.toPixelCoordinate(y)} />
       ))}
     </g>
   );
@@ -203,10 +203,10 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
               key={crossLineIndex}
               stroke={draftColor}
               strokeWidth={crossStrokeWidth * 5}
-              x1={renderArea.toPixels(crossLine.start.x)}
-              y1={renderArea.toPixels(crossLine.start.y)}
-              x2={renderArea.toPixels(crossLine.end.x)}
-              y2={renderArea.toPixels(crossLine.end.y)}
+              x1={renderArea.toPixelCoordinate(crossLine.start.x)}
+              y1={renderArea.toPixelCoordinate(crossLine.start.y)}
+              x2={renderArea.toPixelCoordinate(crossLine.end.x)}
+              y2={renderArea.toPixelCoordinate(crossLine.end.y)}
             />
           ))}
         </>
@@ -216,16 +216,16 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
         <line
           stroke={draftColor}
           strokeWidth={5}
-          x1={renderArea.toPixels(object.shape.line.start.x)}
-          y1={renderArea.toPixels(object.shape.line.start.y)}
-          x2={renderArea.toPixels(object.shape.line.end.x)}
-          y2={renderArea.toPixels(object.shape.line.end.y)}
+          x1={renderArea.toPixelCoordinate(object.shape.line.start.x)}
+          y1={renderArea.toPixelCoordinate(object.shape.line.start.y)}
+          x2={renderArea.toPixelCoordinate(object.shape.line.end.x)}
+          y2={renderArea.toPixelCoordinate(object.shape.line.end.y)}
         />
       );
     case "polygon":
       const pointsString = object.shape.polygon.points.map(point => {
-        const x = renderArea.toPixels(point.x);
-        const y = renderArea.toPixels(point.y);
+        const x = renderArea.toPixelCoordinate(point.x);
+        const y = renderArea.toPixelCoordinate(point.y);
         return `${x},${y}`;
       }).join(" ");
       return (
@@ -241,9 +241,9 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
       return (
         <circle
           fill={draftColor}
-          cx={renderArea.toPixels(object.shape.token.center.x)}
-          cy={renderArea.toPixels(object.shape.token.center.y)}
-          r={renderArea.scale.toPixels(renderArea.squareWidth.divide(2)) + 10}
+          cx={renderArea.toPixelCoordinate(object.shape.token.center.x)}
+          cy={renderArea.toPixelCoordinate(object.shape.token.center.y)}
+          r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2)) + 10}
         />
       );
     default:

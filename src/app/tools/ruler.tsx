@@ -64,18 +64,18 @@ class RulerTool implements Tool<"Ruler"> {
     return (
       <g>
         {snapPoint !== null && (
-          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={pointRadius} fill={rulerColor} />
+          <circle cx={renderArea.toPixelCoordinate(snapPoint.x)} cy={renderArea.toPixelCoordinate(snapPoint.y)} r={pointRadius} fill={rulerColor} />
         )}
         {lineStart !== null && (
-          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={pointRadius} fill={rulerColor} />
+          <circle cx={renderArea.toPixelCoordinate(lineStart.x)} cy={renderArea.toPixelCoordinate(lineStart.y)} r={pointRadius} fill={rulerColor} />
         )}
         {lineStart !== null && snapPoint !== null && (
           <>
             <line
-              x1={renderArea.toPixels(lineStart.x)}
-              y1={renderArea.toPixels(lineStart.y)}
-              x2={renderArea.toPixels(snapPoint.x)}
-              y2={renderArea.toPixels(snapPoint.y)}
+              x1={renderArea.toPixelCoordinate(lineStart.x)}
+              y1={renderArea.toPixelCoordinate(lineStart.y)}
+              x2={renderArea.toPixelCoordinate(snapPoint.x)}
+              y2={renderArea.toPixelCoordinate(snapPoint.y)}
               stroke={rulerColor}
             />
             {distance !== null && (
@@ -121,10 +121,10 @@ function DistanceTooltip(props: DistanceTooltipProps) {
   const padding = 5;
   const boxWidth = textDimensions.width + padding * 2;
 
-  const displayOnLeft = renderArea.toPixels(snapPoint.x) + padding + boxWidth < renderArea.visibleWidthPixels();
+  const displayOnLeft = renderArea.toPixelCoordinate(snapPoint.x) + padding + boxWidth < renderArea.visibleWidthPixels();
   const left = displayOnLeft
-    ? renderArea.toPixels(snapPoint.x) + pointRadius + padding
-    : renderArea.toPixels(snapPoint.x) - pointRadius - padding - boxWidth;
+    ? renderArea.toPixelCoordinate(snapPoint.x) + pointRadius + padding
+    : renderArea.toPixelCoordinate(snapPoint.x) - pointRadius - padding - boxWidth;
 
   return (
     <>
@@ -135,7 +135,7 @@ function DistanceTooltip(props: DistanceTooltipProps) {
         height={textDimensions.height + padding * 2}
         fill="#eee"
       />
-      <text x={left + padding} y={renderArea.toPixels(snapPoint.y)} ref={textRef}>
+      <text x={left + padding} y={renderArea.toPixelCoordinate(snapPoint.y)} ref={textRef}>
         {distance.toMetres().toFixed(1)}m
       </text>
     </>

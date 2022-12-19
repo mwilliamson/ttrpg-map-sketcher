@@ -67,17 +67,17 @@ class LineTool implements Tool<"Line"> {
     return (
       <g>
         {snapPoint !== null && (
-          <circle cx={renderArea.toPixels(snapPoint.x)} cy={renderArea.toPixels(snapPoint.y)} r={5} fill={draftColor} />
+          <circle cx={renderArea.toPixelCoordinate(snapPoint.x)} cy={renderArea.toPixelCoordinate(snapPoint.y)} r={5} fill={draftColor} />
         )}
         {lineStart !== null && (
-          <circle cx={renderArea.toPixels(lineStart.x)} cy={renderArea.toPixels(lineStart.y)} r={5} fill={draftColor} />
+          <circle cx={renderArea.toPixelCoordinate(lineStart.x)} cy={renderArea.toPixelCoordinate(lineStart.y)} r={5} fill={draftColor} />
         )}
         {lineStart !== null && snapPoint !== null && (
           <line
-            x1={renderArea.toPixels(lineStart.x)}
-            y1={renderArea.toPixels(lineStart.y)}
-            x2={renderArea.toPixels(snapPoint.x)}
-            y2={renderArea.toPixels(snapPoint.y)}
+            x1={renderArea.toPixelCoordinate(lineStart.x)}
+            y1={renderArea.toPixelCoordinate(lineStart.y)}
+            x2={renderArea.toPixelCoordinate(snapPoint.x)}
+            y2={renderArea.toPixelCoordinate(snapPoint.y)}
             stroke={draftColor}
           />
         )}

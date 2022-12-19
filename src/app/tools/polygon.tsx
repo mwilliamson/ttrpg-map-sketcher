@@ -78,8 +78,8 @@ class PolygonTool implements Tool<"Polygon"> {
         {allPoints.map((point, pointIndex) => (
           <circle
             key={pointIndex}
-            cx={renderArea.toPixels(point.x)}
-            cy={renderArea.toPixels(point.y)}
+            cx={renderArea.toPixelCoordinate(point.x)}
+            cy={renderArea.toPixelCoordinate(point.y)}
             r={5}
             fill={draftColor}
             />
@@ -88,10 +88,10 @@ class PolygonTool implements Tool<"Polygon"> {
         {slidingPairs(allPoints).map(([start, end], lineIndex) => (
           <line
             key={lineIndex}
-            x1={renderArea.toPixels(start.x)}
-            y1={renderArea.toPixels(start.y)}
-            x2={renderArea.toPixels(end.x)}
-            y2={renderArea.toPixels(end.y)}
+            x1={renderArea.toPixelCoordinate(start.x)}
+            y1={renderArea.toPixelCoordinate(start.y)}
+            x2={renderArea.toPixelCoordinate(end.x)}
+            y2={renderArea.toPixelCoordinate(end.y)}
             stroke={draftColor}
           />
         ))}

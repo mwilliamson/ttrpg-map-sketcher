@@ -30,8 +30,7 @@ export class RenderArea {
     return new RenderArea({...options, padding: options.squareWidth.divide(2)});
   }
 
-  // TODO: make private
-  public readonly scale: Scale;
+  private readonly scale: Scale;
   private readonly padding: Distance;
   public readonly mapWidth: Distance;
   public readonly mapHeight: Distance;
@@ -59,11 +58,15 @@ export class RenderArea {
     return this.scale.toPixels(this.mapHeight.add(this.padding.multiply(2)));
   }
 
-  public toPixels(distance: Distance): number {
+  public distanceToPixels(distance: Distance): number {
+    return this.scale.toPixels(distance);
+  }
+
+  public toPixelCoordinate(distance: Distance): number {
     return this.scale.toPixels(distance.add(this.padding));
   }
 
-  public fromPixels(pixels: number): Distance {
+  public fromPixelCoordinate(pixels: number): Distance {
     return this.scale.fromPixels(pixels).subtract(this.padding);
   }
 }

@@ -61,10 +61,10 @@ class CrossTool implements Tool<"Cross"> {
         {crossLines(snapPoint, renderArea).map((line, crossLineIndex) => (
           <line
             key={crossLineIndex}
-            x1={renderArea.toPixels(line.start.x)}
-            y1={renderArea.toPixels(line.start.y)}
-            x2={renderArea.toPixels(line.end.x)}
-            y2={renderArea.toPixels(line.end.y)}
+            x1={renderArea.toPixelCoordinate(line.start.x)}
+            y1={renderArea.toPixelCoordinate(line.start.y)}
+            x2={renderArea.toPixelCoordinate(line.end.x)}
+            y2={renderArea.toPixelCoordinate(line.end.y)}
           />
         ))}
       </g>

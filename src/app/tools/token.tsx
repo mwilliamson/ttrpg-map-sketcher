@@ -56,14 +56,12 @@ class TokenTool implements Tool<"Token"> {
   public render(renderArea: RenderArea) {
     const { snapPoint } = this.state;
 
-    // TODO: use renderArea.toPixels() or similar, differentiate coordinates from distance
-
     return snapPoint !== null && (
       <circle
         fill={draftColor}
-        cx={renderArea.toPixels(snapPoint.x)}
-        cy={renderArea.toPixels(snapPoint.y)}
-        r={renderArea.scale.toPixels(renderArea.squareWidth.divide(2))}
+        cx={renderArea.toPixelCoordinate(snapPoint.x)}
+        cy={renderArea.toPixelCoordinate(snapPoint.y)}
+        r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2))}
       />
     );
   }
