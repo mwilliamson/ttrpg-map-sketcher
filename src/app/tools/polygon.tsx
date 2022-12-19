@@ -1,7 +1,5 @@
 import * as uuid from "uuid";
-import slidingPairs from "../../slidingPairs";
 
-import { draftColor } from "../colors";
 import { Polygon, Point } from "../geometry";
 import { RenderArea } from "../rendering";
 import { PolygonDraftView } from "../rendering/polygon";
