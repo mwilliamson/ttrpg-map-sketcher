@@ -4,11 +4,10 @@ import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
 import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
-import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
-import { tokenRadius, TokenView } from "./app/rendering/token";
+import { TokenHighlightView, tokenRadius, TokenView } from "./app/rendering/token";
 import { RoughSvgProvider } from "./app/rough";
 import assertNever from "./assertNever";
 
@@ -189,11 +188,9 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
       );
     case "token":
       return (
-        <circle
-          fill={highlightColor}
-          cx={renderArea.toPixelCoordinate(object.shape.token.center.x)}
-          cy={renderArea.toPixelCoordinate(object.shape.token.center.y)}
-          r={renderArea.distanceToPixels(tokenRadius(renderArea).multiply(1.5))}
+        <TokenHighlightView
+          renderArea={renderArea}
+          token={object.shape.token}
         />
       );
     default:
