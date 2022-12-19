@@ -6,7 +6,7 @@ import { RoughSVG } from "roughjs/bin/svg";
 import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
-import { LineView } from "./app/rendering/line";
+import { LineHighlightView, LineView } from "./app/rendering/line";
 import { RoughPolygon, RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
@@ -174,13 +174,9 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
       );
     case "line":
       return (
-        <line
-          stroke={highlightColor}
-          strokeWidth={5}
-          x1={renderArea.toPixelCoordinate(object.shape.line.start.x)}
-          y1={renderArea.toPixelCoordinate(object.shape.line.start.y)}
-          x2={renderArea.toPixelCoordinate(object.shape.line.end.x)}
-          y2={renderArea.toPixelCoordinate(object.shape.line.end.y)}
+        <LineHighlightView
+          line={object.shape.line}
+          renderArea={renderArea}
         />
       );
     case "polygon":
