@@ -3,6 +3,7 @@ import * as uuid from "uuid";
 import { draftColor } from "../colors";
 import { Distance, Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
+import { tokenRadius } from "../rendering/token";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const tokenToolType: ToolType<"Token"> = {
@@ -65,8 +66,4 @@ class TokenTool implements Tool<"Token"> {
       />
     );
   }
-}
-
-export function tokenRadius(renderArea: RenderArea): Distance {
-  return renderArea.squareWidth.divide(2);
 }

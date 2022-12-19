@@ -8,8 +8,8 @@ import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
+import { tokenRadius, TokenView } from "./app/rendering/token";
 import { RoughSvgProvider } from "./app/rough";
-import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
 
 interface MapViewProps {
@@ -236,13 +236,9 @@ function ObjectView(props: ObjectViewProps) {
       )
     case "token":
       return (
-        <circle
-          stroke="#000"
-          strokeWidth="3"
-          fill={shape.token.color}
-          cx={renderArea.toPixelCoordinate(shape.token.center.x)}
-          cy={renderArea.toPixelCoordinate(shape.token.center.y)}
-          r={renderArea.distanceToPixels(tokenRadius(renderArea))}
+        <TokenView
+          renderArea={renderArea}
+          token={shape.token}
         />
       );
     default:
