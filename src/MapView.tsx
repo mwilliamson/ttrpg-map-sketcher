@@ -7,6 +7,7 @@ import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, Rend
 import { draftColor } from "./app/colors";
 import { crossLines } from "./app/rendering";
 import { RoughLine, RoughPolygon, RoughSvgProvider } from "./app/rough";
+import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
 
 interface MapViewProps {
@@ -210,13 +211,12 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
         />
       );
     case "token":
-      // TODO: remove duplication of circle radius (and probably other measurements in other shapes too)
       return (
         <circle
           fill={draftColor}
           cx={renderArea.toPixelCoordinate(object.shape.token.center.x)}
           cy={renderArea.toPixelCoordinate(object.shape.token.center.y)}
-          r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2)) + 10}
+          r={renderArea.distanceToPixels(tokenRadius(renderArea).multiply(1.5))}
         />
       );
     default:
@@ -281,7 +281,7 @@ function ObjectView(props: ObjectViewProps) {
           fill={shape.token.color}
           cx={renderArea.toPixelCoordinate(shape.token.center.x)}
           cy={renderArea.toPixelCoordinate(shape.token.center.y)}
-          r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2))}
+          r={renderArea.distanceToPixels(tokenRadius(renderArea))}
         />
       );
     default:

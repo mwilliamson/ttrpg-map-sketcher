@@ -1,7 +1,7 @@
 import * as uuid from "uuid";
 
 import { draftColor } from "../colors";
-import { Point, Token } from "../geometry";
+import { Distance, Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
 import { Tool, ToolContext, ToolType } from "./base";
 
@@ -61,8 +61,12 @@ class TokenTool implements Tool<"Token"> {
         fill={draftColor}
         cx={renderArea.toPixelCoordinate(snapPoint.x)}
         cy={renderArea.toPixelCoordinate(snapPoint.y)}
-        r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2))}
+        r={renderArea.distanceToPixels(tokenRadius(renderArea))}
       />
     );
   }
+}
+
+export function tokenRadius(renderArea: RenderArea): Distance {
+  return renderArea.squareWidth.divide(2);
 }
