@@ -1,9 +1,8 @@
 import * as uuid from "uuid";
 
-import { draftColor } from "../colors";
-import { Distance, Point, Token } from "../geometry";
+import { Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
-import { tokenRadius } from "../rendering/token";
+import { TokenDraftView } from "../rendering/token";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const tokenToolType: ToolType<"Token"> = {
@@ -58,11 +57,9 @@ class TokenTool implements Tool<"Token"> {
     const { snapPoint } = this.state;
 
     return snapPoint !== null && (
-      <circle
-        fill={draftColor}
-        cx={renderArea.toPixelCoordinate(snapPoint.x)}
-        cy={renderArea.toPixelCoordinate(snapPoint.y)}
-        r={renderArea.distanceToPixels(tokenRadius(renderArea))}
+      <TokenDraftView
+        center={snapPoint}
+        renderArea={renderArea}
       />
     );
   }
