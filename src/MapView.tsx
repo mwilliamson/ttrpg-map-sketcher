@@ -7,7 +7,7 @@ import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, Rend
 import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
-import { PolygonView } from "./app/rendering/polygon";
+import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
 import { RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
@@ -181,17 +181,10 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
         />
       );
     case "polygon":
-      const pointsString = object.shape.polygon.points.map(point => {
-        const x = renderArea.toPixelCoordinate(point.x);
-        const y = renderArea.toPixelCoordinate(point.y);
-        return `${x},${y}`;
-      }).join(" ");
       return (
-        <polygon
-          stroke={highlightColor}
-          strokeWidth={5}
-          fill="none"
-          points={pointsString}
+        <PolygonHighlightView
+          polygon={object.shape.polygon}
+          renderArea={renderArea}
         />
       );
     case "token":
