@@ -1,4 +1,4 @@
-import { Cross, Distance, Line, Point } from "./geometry";
+import { Distance, Line, Point } from "../geometry";
 
 export class Scale {
   public static pixelsPerMetre(pixelsPerMetre: number) {
