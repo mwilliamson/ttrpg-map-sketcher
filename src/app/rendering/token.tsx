@@ -1,5 +1,5 @@
 import { RenderArea } from ".";
-import { draftColor } from "../colors";
+import { draftColor, highlightColor } from "../colors";
 import { Distance, Point, Token } from "../geometry";
 
 interface TokenViewProps {
@@ -32,12 +32,10 @@ export function TokenHighlightView(props: TokenHighlightViewProps) {
 
   return (
     <circle
-      stroke="#000"
-      strokeWidth="3"
-      fill={token.color}
+      fill={highlightColor}
       cx={renderArea.toPixelCoordinate(token.center.x)}
       cy={renderArea.toPixelCoordinate(token.center.y)}
-      r={renderArea.distanceToPixels(tokenRadius(renderArea))}
+      r={renderArea.distanceToPixels(tokenRadius(renderArea).multiply(1.5))}
     />
   );
 }
