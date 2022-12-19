@@ -7,7 +7,8 @@ import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, Rend
 import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
-import { RoughPolygon, RoughSvgProvider } from "./app/rough";
+import { PolygonView } from "./app/rendering/polygon";
+import { RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
 
@@ -233,18 +234,13 @@ function ObjectView(props: ObjectViewProps) {
         />
       );
     case "polygon":
-      // TODO: memoise
-      const points = shape.polygon.points.map(point => ({
-        x: renderArea.toPixelCoordinate(point.x),
-        y: renderArea.toPixelCoordinate(point.y),
-      }));
       return (
-        <RoughPolygon
-          points={points}
+        <PolygonView
+          polygon={shape.polygon}
+          renderArea={renderArea}
           seed={objectNumber}
-          fillColor={shape.polygon.fillColor}
         />
-      );
+      )
     case "token":
       return (
         <circle
