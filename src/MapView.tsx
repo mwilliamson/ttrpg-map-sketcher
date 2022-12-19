@@ -1,10 +1,12 @@
 import { Box } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
+import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppState, AppUpdate, Distance, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
+import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { draftColor } from "./app/colors";
 import { crossLines } from "./app/rendering";
+import { RoughLine, RoughPolygon, RoughSvgProvider } from "./app/rough";
 import assertNever from "./assertNever";
 
 interface MapViewProps {
@@ -23,71 +25,34 @@ export default function MapView(props: MapViewProps) {
   const { renderArea, state, tool, onToolChange, toolContext, highlightObject } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const shapeGroupRef = useRef<SVGGElement>(null);
-  const annotationGroupRef = useRef<SVGGElement>(null);
+
+  const [roughSvg, setRoughSvg] = useState<RoughSVG | null>(null);
+
+  const handleSvgRef = useRef((svgElement: SVGSVGElement) => svgElement !== null && setRoughSvg(rough.svg(svgElement)));
 
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
-  useEffect(() => {
-    const svg = svgRef.current;
-    const shapeGroup = shapeGroupRef.current;
-    const annotationGroup = annotationGroupRef.current;
+  const standardObjects: Array<IndexedMapObject> = [];
+  const annotationObjects: Array<IndexedMapObject> = [];
 
-    if (svg !== null && shapeGroup !== null && annotationGroup) {
-      const rc = rough.svg(svg);
-      shapeGroup.replaceChildren();
-      annotationGroup.replaceChildren();
-
-      state.objects.forEach(({objectNumber, shape}) => {
-        switch (shape.type) {
-          case "cross":
-            for (const crossLine of crossLines(shape.cross.center, renderArea)) {
-              annotationGroup.appendChild(rc.line(
-                renderArea.toPixelCoordinate(crossLine.start.x),
-                renderArea.toPixelCoordinate(crossLine.start.y),
-                renderArea.toPixelCoordinate(crossLine.end.x),
-                renderArea.toPixelCoordinate(crossLine.end.y),
-                {seed: objectNumber, stroke: shape.cross.color, strokeWidth: crossStrokeWidth},
-              ));
-            }
-            return;
-          case "line":
-            const lineElement = rc.line(
-              renderArea.toPixelCoordinate(shape.line.start.x),
-              renderArea.toPixelCoordinate(shape.line.start.y),
-              renderArea.toPixelCoordinate(shape.line.end.x),
-              renderArea.toPixelCoordinate(shape.line.end.y),
-              {seed: objectNumber},
-            );
-            shapeGroup.appendChild(lineElement);
-            return;
-          case "polygon":
-            const polygonElement = rc.polygon(
-              shape.polygon.points.map(point => [
-                renderArea.toPixelCoordinate(point.x),
-                renderArea.toPixelCoordinate(point.y),
-              ]),
-              {seed: objectNumber, fill: shape.polygon.fillColor},
-            );
-            shapeGroup.appendChild(polygonElement);
-            return;
-          case "token":
-            const circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circleElement.setAttribute("stroke", "#000");
-            circleElement.setAttribute("stroke-width", "3");
-            circleElement.setAttribute("fill", shape.token.color);
-            circleElement.setAttribute("cx", renderArea.toPixelCoordinate(shape.token.center.x).toString());
-            circleElement.setAttribute("cy", renderArea.toPixelCoordinate(shape.token.center.y).toString())
-            circleElement.setAttribute("r", renderArea.distanceToPixels(renderArea.squareWidth.divide(2)).toString())
-            shapeGroup.appendChild(circleElement);
-            return;
-          default:
-            return assertNever(shape, "unhanded shape type");
-        }
-      });
+  state.objects.forEach(object => {
+    switch (object.shape.type) {
+      case "cross":
+        annotationObjects.push(object);
+        return;
+      case "line":
+        standardObjects.push(object);
+        return;
+      case "polygon":
+        standardObjects.push(object);
+        return;
+      case "token":
+        standardObjects.push(object);
+        return;
+      default:
+        return assertNever(object.shape, "unhanded shape type");
     }
-  }, [state.objects]);
+  });
 
   function handleContextMenu(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -143,25 +108,33 @@ export default function MapView(props: MapViewProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
-        ref={svgRef}
+        ref={handleSvgRef.current}
         onContextMenu={handleContextMenu}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >
-        <GridView renderArea={renderArea} />
-        {highlightObject !== null && (
-          <HighlightedObjectView
-            object={highlightObject}
-            renderArea={renderArea}
-          />
-        )}
-        <g ref={shapeGroupRef}>
-        </g>
-        <g ref={annotationGroupRef}>
-        </g>
+        <RoughSvgProvider value={roughSvg}>
+          <GridView renderArea={renderArea} />
+          {highlightObject !== null && (
+            <HighlightedObjectView
+              object={highlightObject}
+              renderArea={renderArea}
+            />
+          )}
+          <g>
+            {standardObjects.map(object => (
+              <ObjectView key={object.id} object={object} renderArea={renderArea} />
+            ))}
+          </g>
+          <g>
+            {annotationObjects.map(object => (
+              <ObjectView key={object.id} object={object} renderArea={renderArea} />
+            ))}
+          </g>
         {tool.render(renderArea)}
+        </RoughSvgProvider>
       </svg>
     </Box>
   );
@@ -248,5 +221,70 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
       );
     default:
       return assertNever(object.shape, "unhandled shape type");
+  }
+}
+
+interface ObjectViewProps {
+  object: IndexedMapObject;
+  renderArea: RenderArea;
+}
+
+function ObjectView(props: ObjectViewProps) {
+  const { object: { objectNumber, shape }, renderArea } = props;
+
+  switch (shape.type) {
+    case "cross":
+      return (
+        <g>
+          {crossLines(shape.cross.center, renderArea).map((crossLine, crossLineIndex) => (
+            <RoughLine
+              key={crossLineIndex}
+              x1={renderArea.toPixelCoordinate(crossLine.start.x)}
+              y1={renderArea.toPixelCoordinate(crossLine.start.y)}
+              x2={renderArea.toPixelCoordinate(crossLine.end.x)}
+              y2={renderArea.toPixelCoordinate(crossLine.end.y)}
+              seed={objectNumber}
+              strokeColor={shape.cross.color}
+              strokeWidth={crossStrokeWidth}
+            />
+          ))}
+        </g>
+      );
+    case "line":
+      return (
+        <RoughLine
+          x1={renderArea.toPixelCoordinate(shape.line.start.x)}
+          y1={renderArea.toPixelCoordinate(shape.line.start.y)}
+          x2={renderArea.toPixelCoordinate(shape.line.end.x)}
+          y2={renderArea.toPixelCoordinate(shape.line.end.y)}
+          seed={objectNumber}
+        />
+      );
+    case "polygon":
+      // TODO: memoise
+      const points = shape.polygon.points.map(point => ({
+        x: renderArea.toPixelCoordinate(point.x),
+        y: renderArea.toPixelCoordinate(point.y),
+      }));
+      return (
+        <RoughPolygon
+          points={points}
+          seed={objectNumber}
+          fillColor={shape.polygon.fillColor}
+        />
+      );
+    case "token":
+      return (
+        <circle
+          stroke="#000"
+          strokeWidth="3"
+          fill={shape.token.color}
+          cx={renderArea.toPixelCoordinate(shape.token.center.x)}
+          cy={renderArea.toPixelCoordinate(shape.token.center.y)}
+          r={renderArea.distanceToPixels(renderArea.squareWidth.divide(2))}
+        />
+      );
+    default:
+      return assertNever(shape, "unhanded shape type");
   }
 }
