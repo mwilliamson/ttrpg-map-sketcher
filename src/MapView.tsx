@@ -4,7 +4,7 @@ import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
 import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
-import { draftColor } from "./app/colors";
+import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { RoughLine, RoughPolygon, RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
@@ -174,7 +174,7 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
     case "line":
       return (
         <line
-          stroke={draftColor}
+          stroke={highlightColor}
           strokeWidth={5}
           x1={renderArea.toPixelCoordinate(object.shape.line.start.x)}
           y1={renderArea.toPixelCoordinate(object.shape.line.start.y)}
@@ -190,7 +190,7 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
       }).join(" ");
       return (
         <polygon
-          stroke={draftColor}
+          stroke={highlightColor}
           strokeWidth={5}
           fill="none"
           points={pointsString}
@@ -199,7 +199,7 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
     case "token":
       return (
         <circle
-          fill={draftColor}
+          fill={highlightColor}
           cx={renderArea.toPixelCoordinate(object.shape.token.center.x)}
           cy={renderArea.toPixelCoordinate(object.shape.token.center.y)}
           r={renderArea.distanceToPixels(tokenRadius(renderArea).multiply(1.5))}

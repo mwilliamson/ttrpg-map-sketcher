@@ -1,4 +1,5 @@
 export const draftColor = "#96ff00";
+export const highlightColor = draftColor;
 export const rulerColor = "#ff0000";
 
 export const fillColors = [

@@ -1,5 +1,5 @@
 import { RenderArea } from "..";
-import { draftColor } from "../colors";
+import { draftColor, highlightColor } from "../colors";
 import { Cross, Line, Point } from "../geometry";
 import { RoughLine } from "../rough";
 
@@ -43,7 +43,7 @@ export function CrossHighlightView(props: CrossHighlightViewProps) {
       {crossLines(cross.center, renderArea).map((crossLine, crossLineIndex) => (
         <line
           key={crossLineIndex}
-          stroke={draftColor}
+          stroke={highlightColor}
           strokeWidth={crossStrokeWidth * 5}
           x1={renderArea.toPixelCoordinate(crossLine.start.x)}
           y1={renderArea.toPixelCoordinate(crossLine.start.y)}
