@@ -6,7 +6,8 @@ import { RoughSVG } from "roughjs/bin/svg";
 import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { highlightColor } from "./app/colors";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
-import { RoughLine, RoughPolygon, RoughSvgProvider } from "./app/rough";
+import { LineView } from "./app/rendering/line";
+import { RoughPolygon, RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
 
@@ -229,11 +230,9 @@ function ObjectView(props: ObjectViewProps) {
       );
     case "line":
       return (
-        <RoughLine
-          x1={renderArea.toPixelCoordinate(shape.line.start.x)}
-          y1={renderArea.toPixelCoordinate(shape.line.start.y)}
-          x2={renderArea.toPixelCoordinate(shape.line.end.x)}
-          y2={renderArea.toPixelCoordinate(shape.line.end.y)}
+        <LineView
+          line={shape.line}
+          renderArea={renderArea}
           seed={objectNumber}
         />
       );
