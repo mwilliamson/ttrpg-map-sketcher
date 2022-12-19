@@ -1,9 +1,9 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 
-import { AppState, AppUpdate, MapObject } from "./app";
+import { AppState, AppUpdate, IndexedMapObject } from "./app";
 
 interface ObjectsViewProps {
-  onHighlightObject: (object: MapObject | null) => void;
+  onHighlightObject: (object: IndexedMapObject | null) => void;
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
 }

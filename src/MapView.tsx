@@ -18,7 +18,7 @@ interface MapViewProps {
   tool: Tool;
   toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
-  highlightObject: MapObject | null;
+  highlightObject: IndexedMapObject | null;
 }
 
 export default function MapView(props: MapViewProps) {
@@ -36,6 +36,9 @@ export default function MapView(props: MapViewProps) {
   const annotationObjects: Array<IndexedMapObject> = [];
 
   state.objects.forEach(object => {
+    if (highlightObject !== null && object.id === highlightObject.id) {
+      return;
+    }
     switch (object.shape.type) {
       case "cross":
         annotationObjects.push(object);
@@ -117,12 +120,6 @@ export default function MapView(props: MapViewProps) {
       >
         <RoughSvgProvider value={roughSvg}>
           <GridView renderArea={renderArea} />
-          {highlightObject !== null && (
-            <HighlightedObjectView
-              object={highlightObject}
-              renderArea={renderArea}
-            />
-          )}
           <g>
             {standardObjects.map(object => (
               <ObjectView key={object.id} object={object} renderArea={renderArea} />
@@ -133,7 +130,18 @@ export default function MapView(props: MapViewProps) {
               <ObjectView key={object.id} object={object} renderArea={renderArea} />
             ))}
           </g>
-        {tool.render(renderArea)}
+
+          {highlightObject !== null && (
+            <g>
+              <HighlightedObjectView
+                object={highlightObject}
+                renderArea={renderArea}
+              />
+              <ObjectView object={highlightObject} renderArea={renderArea} />
+            </g>
+          )}
+
+          {tool.render(renderArea)}
         </RoughSvgProvider>
       </svg>
     </Box>
