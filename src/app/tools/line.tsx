@@ -1,6 +1,5 @@
 import * as uuid from "uuid";
 
-import { draftColor } from "../colors";
 import { Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
 import { LineDraftView } from "../rendering/line";
