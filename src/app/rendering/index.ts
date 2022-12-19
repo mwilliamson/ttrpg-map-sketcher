@@ -70,30 +70,3 @@ export class RenderArea {
     return this.scale.fromPixels(pixels).subtract(this.padding);
   }
 }
-
-export function crossLines(center: Point, renderArea: RenderArea): ReadonlyArray<Line> {
-  const radius = renderArea.squareWidth.divide(2);
-
-  return [
-    Line.from(
-      Point.from(
-        center.x.subtract(radius),
-        center.y.subtract(radius),
-      ),
-      Point.from(
-        center.x.add(radius),
-        center.y.add(radius),
-      ),
-    ),
-    Line.from(
-      Point.from(
-        center.x.subtract(radius),
-        center.y.add(radius),
-      ),
-      Point.from(
-        center.x.add(radius),
-        center.y.subtract(radius),
-      ),
-    ),
-  ];
-}

@@ -1,8 +1,8 @@
 import * as uuid from "uuid";
 
-import { draftColor } from "../colors";
 import { Cross, Point } from "../geometry";
-import { crossLines, RenderArea } from "../rendering";
+import { RenderArea } from "../rendering";
+import { CrossDraftView } from "../rendering/cross";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const crossToolType: ToolType<"Cross"> = {
@@ -57,17 +57,7 @@ class CrossTool implements Tool<"Cross"> {
     const { snapPoint } = this.state;
 
     return snapPoint !== null && (
-      <g stroke={draftColor} strokeWidth={3} strokeLinecap="round">
-        {crossLines(snapPoint, renderArea).map((line, crossLineIndex) => (
-          <line
-            key={crossLineIndex}
-            x1={renderArea.toPixelCoordinate(line.start.x)}
-            y1={renderArea.toPixelCoordinate(line.start.y)}
-            x2={renderArea.toPixelCoordinate(line.end.x)}
-            y2={renderArea.toPixelCoordinate(line.end.y)}
-          />
-        ))}
-      </g>
+      <CrossDraftView center={snapPoint} renderArea={renderArea} />
     );
   }
 }

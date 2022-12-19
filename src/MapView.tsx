@@ -1,11 +1,11 @@
 import { Box } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
 import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { draftColor } from "./app/colors";
-import { crossLines } from "./app/rendering";
+import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { RoughLine, RoughPolygon, RoughSvgProvider } from "./app/rough";
 import { tokenRadius } from "./app/tools/token";
 import assertNever from "./assertNever";
@@ -19,8 +19,6 @@ interface MapViewProps {
   onToolChange: (newTool: Tool) => void;
   highlightObject: MapObject | null;
 }
-
-const crossStrokeWidth = 3;
 
 export default function MapView(props: MapViewProps) {
   const { renderArea, state, tool, onToolChange, toolContext, highlightObject } = props;
@@ -171,19 +169,7 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
   switch (object.shape.type) {
     case "cross":
       return (
-        <>
-          {crossLines(object.shape.cross.center, renderArea).map((crossLine, crossLineIndex) => (
-            <line
-              key={crossLineIndex}
-              stroke={draftColor}
-              strokeWidth={crossStrokeWidth * 5}
-              x1={renderArea.toPixelCoordinate(crossLine.start.x)}
-              y1={renderArea.toPixelCoordinate(crossLine.start.y)}
-              x2={renderArea.toPixelCoordinate(crossLine.end.x)}
-              y2={renderArea.toPixelCoordinate(crossLine.end.y)}
-            />
-          ))}
-        </>
+        <CrossHighlightView cross={object.shape.cross} renderArea={renderArea} />
       );
     case "line":
       return (
@@ -235,20 +221,11 @@ function ObjectView(props: ObjectViewProps) {
   switch (shape.type) {
     case "cross":
       return (
-        <g>
-          {crossLines(shape.cross.center, renderArea).map((crossLine, crossLineIndex) => (
-            <RoughLine
-              key={crossLineIndex}
-              x1={renderArea.toPixelCoordinate(crossLine.start.x)}
-              y1={renderArea.toPixelCoordinate(crossLine.start.y)}
-              x2={renderArea.toPixelCoordinate(crossLine.end.x)}
-              y2={renderArea.toPixelCoordinate(crossLine.end.y)}
-              seed={objectNumber}
-              strokeColor={shape.cross.color}
-              strokeWidth={crossStrokeWidth}
-            />
-          ))}
-        </g>
+        <CrossView
+          cross={shape.cross}
+          renderArea={renderArea}
+          seed={objectNumber}
+        />
       );
     case "line":
       return (
