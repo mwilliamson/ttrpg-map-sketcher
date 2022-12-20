@@ -43,7 +43,7 @@ function Item(props: ItemProps) {
       <div>
         {children}
       </div>
-      {onDelete !== null && (
+      {onDelete !== undefined && (
         <Button
           onClick={onDelete}
           size="sm"
