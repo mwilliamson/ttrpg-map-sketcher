@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, SeededMapObject } from "./app";
@@ -6,6 +6,7 @@ import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
+import PagesView from "./PagesView";
 import ToolsView from "./ToolsView";
 
 const renderArea = RenderArea.from({
@@ -126,13 +127,32 @@ export default function SketcherView(props: SketcherViewProps) {
         )}
       </Box>
       <Box flex="0 0 auto" width={400} height="100%">
-        {page !== null && (
-          <ObjectsView
-            onHighlightObject={setHoveredObject}
-            page={page}
-            sendUpdate={handleSendUpdate}
-          />
-        )}
+        <Tabs defaultIndex={1}>
+          <TabList>
+            <Tab>Pages</Tab>
+            <Tab>Objects</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Box height="100%" overflowY="scroll">
+                <PagesView pages={state.pages} />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box height="100%" overflowY="scroll">
+                {page === null ? (
+                  <p>No page selected.</p>
+                ) : (
+                  <ObjectsView
+                    onHighlightObject={setHoveredObject}
+                    page={page}
+                    sendUpdate={handleSendUpdate}
+                  />
+                )}
+              </Box>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
     </Flex>
   )

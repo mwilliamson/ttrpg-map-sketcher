@@ -1,4 +1,4 @@
-import { Box, Button, Heading } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 import { AppUpdate, Page, SeededMapObject } from "./app";
 
@@ -12,8 +12,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
   const { onHighlightObject, page, sendUpdate } = props;
 
   return (
-    <Box height="100%" overflowY="scroll">
-      <Heading size="md">Objects</Heading>
+    <>
       {page.objects.map(lineObject => (
         <div
           key={lineObject.id}
@@ -40,6 +39,6 @@ export default function ObjectsView(props: ObjectsViewProps) {
           </Button>
         </div>
       ))}
-    </Box>
+    </>
   );
 }
