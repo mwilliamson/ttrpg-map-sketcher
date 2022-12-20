@@ -5,22 +5,20 @@ import { RenderArea, Scale } from "./rendering";
 import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
-  objects: ReadonlyArray<SeededMapObject>;
-  nextSeed: number;
+  pages: ReadonlyArray<Page>;
   updates: ReadonlyArray<AppUpdate>;
 };
 
 export function initialAppState(): AppState {
   return {
-    objects: [],
-    nextSeed: 1,
+    pages: [Page.createEmpty("initial")],
     updates: [],
   };
 }
 
 export type AppUpdate =
-  | {type: "addObject", object: MapObject}
-  | {type: "deleteObject", id: string};
+  | {type: "addObject", pageId: string, object: MapObject}
+  | {type: "deleteObject", pageId: string, id: string};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
   return {
@@ -34,16 +32,12 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
     case "addObject":
       return {
         ...state,
-        objects: [
-          ...state.objects,
-          {...update.object, seed: state.nextSeed},
-        ],
-        nextSeed: state.nextSeed + 1,
+        pages: state.pages.map(page => page.id === update.pageId ? page.addObject(update.object) : page)
       };
     case "deleteObject":
       return {
         ...state,
-        objects: state.objects.filter(object => object.id !== update.id),
+        pages: state.pages.map(page => page.id === update.pageId ? page.deleteObject(update.id) : page)
       };
   }
 }
@@ -53,6 +47,7 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
     case "addObject":
       return {
         type: "deleteObject",
+        pageId: update.pageId,
         id: update.object.id,
       };
     case "deleteObject":
@@ -60,6 +55,35 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         state.updates,
         updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.id,
       ) || null;
+  }
+}
+
+export class Page {
+  public static createEmpty(id: string): Page {
+    return new Page(id, [], 1);
+  }
+
+  public readonly id: string;
+  public readonly objects: ReadonlyArray<SeededMapObject>;
+  public readonly nextSeed: number;
+
+  constructor(id: string, objects: ReadonlyArray<SeededMapObject>, nextSeed: number) {
+    this.id = id;
+    this.objects = objects;
+    this.nextSeed = nextSeed;
+  }
+
+  public addObject(object: MapObject): Page {
+    const objects = [
+      ...this.objects,
+      {...object, seed: this.nextSeed},
+    ]
+    return new Page(this.id, objects, this.nextSeed + 1);
+  }
+
+  public deleteObject(id: string): Page {
+    const objects = this.objects.filter(object => object.id !== id);
+    return new Page(this.id, objects, this.nextSeed);
   }
 }
 

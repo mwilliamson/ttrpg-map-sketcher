@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppState, AppUpdate, Distance, SeededMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
+import { AppUpdate, Distance, SeededMapObject, MapObject, Point, RenderArea, Tool, ToolContext, Page } from "./app";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
@@ -12,9 +12,9 @@ import { RoughSvgProvider } from "./app/rough";
 import assertNever from "./assertNever";
 
 interface MapViewProps {
+  page: Page;
   renderArea: RenderArea,
   sendUpdate: (update: AppUpdate) => void;
-  state: AppState;
   tool: Tool;
   toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
@@ -22,7 +22,7 @@ interface MapViewProps {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { renderArea, state, tool, onToolChange, toolContext, highlightObject } = props;
+  const { page, renderArea, tool, onToolChange, toolContext, highlightObject } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +35,7 @@ export default function MapView(props: MapViewProps) {
   const standardObjects: Array<SeededMapObject> = [];
   const annotationObjects: Array<SeededMapObject> = [];
 
-  state.objects.forEach(object => {
+  page.objects.forEach(object => {
     if (highlightObject !== null && object.id === highlightObject.id) {
       return;
     }

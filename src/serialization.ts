@@ -2,8 +2,8 @@ import { AppUpdate, Cross, Distance, Line, MapObject, Point, Polygon, Shape, Tok
 import assertNever from "./assertNever";
 
 type SerializedAppUpdate =
-  | {type: "addObject", object: SerializedMapObject}
-  | {type: "deleteObject", id: string};
+  | {type: "addObject", pageId: string, object: SerializedMapObject}
+  | {type: "deleteObject", pageId: string, id: string};
 
 interface SerializedMapObject {
   id: string;
@@ -48,6 +48,7 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
     case "addObject":
       return {
         type: "addObject",
+        pageId: update.pageId,
         object: serializeMapObject(update.object),
       }
     case "deleteObject":
@@ -61,6 +62,7 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
     case "addObject":
       return {
         type: "addObject",
+        pageId: update.pageId,
         object: deserializeMapObject(update.object),
       };
     case "deleteObject":

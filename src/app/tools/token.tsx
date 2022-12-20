@@ -48,7 +48,11 @@ class TokenTool implements Tool<"Token"> {
     if (snapPoint !== null) {
       const id = uuid.v4();
       const token = Token.from(snapPoint, context.selectedColor);
-      context.sendUpdate({type: "addObject", object: {id, shape: {type: "token", token}}});
+      context.sendUpdate({
+        type: "addObject",
+        pageId: context.pageId,
+        object: {id, shape: {type: "token", token}}
+      });
     }
     return this;
   }

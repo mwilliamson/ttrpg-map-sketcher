@@ -1,20 +1,20 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 
-import { AppState, AppUpdate, SeededMapObject } from "./app";
+import { AppUpdate, Page, SeededMapObject } from "./app";
 
 interface ObjectsViewProps {
   onHighlightObject: (object: SeededMapObject | null) => void;
+  page: Page;
   sendUpdate: (update: AppUpdate) => void;
-  state: AppState;
 }
 
 export default function ObjectsView(props: ObjectsViewProps) {
-  const { onHighlightObject, sendUpdate, state } = props;
+  const { onHighlightObject, page, sendUpdate } = props;
 
   return (
     <Box height="100%" overflowY="scroll">
       <Heading size="md">Objects</Heading>
-      {state.objects.map(lineObject => (
+      {page.objects.map(lineObject => (
         <div
           key={lineObject.id}
           onMouseEnter={() => onHighlightObject(lineObject)}
@@ -29,7 +29,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
           <div>{lineObject.shape.type} #{lineObject.seed}</div>
           <Button
             onClick={() => {
-              sendUpdate({type: "deleteObject", id: lineObject.id});
+              sendUpdate({type: "deleteObject", pageId: page.id, id: lineObject.id});
               // TODO: more elegant way of dealing with hovered object?
               onHighlightObject(null);
             }}

@@ -28,16 +28,13 @@ interface UndoStack {
 export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(state.pages.length === 0 ? null : state.pages[0].id);
   const [tool, setTool] = useState<Tool>(noneTool);
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
   const [hoveredObject, setHoveredObject] = useState<SeededMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
-  const toolContext = {
-    selectedColor: selectedColor,
-    sendUpdate: handleSendUpdate,
-    squareWidth: renderArea.squareWidth,
-  };
+  const page = state.pages.find(page => page.id === selectedPageId) ?? null;
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {
@@ -111,22 +108,31 @@ export default function SketcherView(props: SketcherViewProps) {
         />
       </Box>
       <Box flex="1 1 0" minWidth={0} height="100%">
-        <MapView
-          renderArea={renderArea}
-          sendUpdate={handleSendUpdate}
-          state={state}
-          tool={tool}
-          onToolChange={newTool => setTool(newTool)}
-          toolContext={toolContext}
-          highlightObject={hoveredObject}
-        />
+        {page !== null && (
+          <MapView
+            page={page}
+            renderArea={renderArea}
+            sendUpdate={handleSendUpdate}
+            tool={tool}
+            onToolChange={newTool => setTool(newTool)}
+            toolContext={{
+              pageId: page.id,
+              selectedColor: selectedColor,
+              sendUpdate: handleSendUpdate,
+              squareWidth: renderArea.squareWidth,
+            }}
+            highlightObject={hoveredObject}
+          />
+        )}
       </Box>
       <Box flex="0 0 auto" width={400} height="100%">
-        <ObjectsView
-          onHighlightObject={setHoveredObject}
-          sendUpdate={handleSendUpdate}
-          state={state}
-        />
+        {page !== null && (
+          <ObjectsView
+            onHighlightObject={setHoveredObject}
+            page={page}
+            sendUpdate={handleSendUpdate}
+          />
+        )}
       </Box>
     </Flex>
   )

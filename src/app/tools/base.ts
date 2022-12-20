@@ -1,6 +1,7 @@
 import { AppUpdate, Distance, Point, RenderArea } from "..";
 
 export interface ToolContext {
+  pageId: string;
   selectedColor: string;
   sendUpdate: (update: AppUpdate) => void;
   squareWidth: Distance,

@@ -48,7 +48,11 @@ class CrossTool implements Tool<"Cross"> {
     if (snapPoint !== null) {
       const id = uuid.v4();
       const cross = Cross.from(snapPoint, context.selectedColor);
-      context.sendUpdate({type: "addObject", object: {id, shape: {type: "cross", cross}}});
+      context.sendUpdate({
+        type: "addObject",
+        pageId: context.pageId,
+        object: {id, shape: {type: "cross", cross}},
+      });
     }
     return this;
   }

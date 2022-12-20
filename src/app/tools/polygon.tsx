@@ -49,7 +49,7 @@ class PolygonTool implements Tool<"Polygon"> {
         const polygon = Polygon.from(this.state.points, context.selectedColor);
         const shape = {type: "polygon" as const, polygon};
         const object = {id, shape};
-        context.sendUpdate({type: "addObject", object});
+        context.sendUpdate({type: "addObject", pageId: context.pageId, object});
 
         return new PolygonTool({
           ...this.state,
