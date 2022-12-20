@@ -1,6 +1,5 @@
-import { Button } from "@chakra-ui/react";
-
 import { AppUpdate, Page, SeededMapObject } from "./app";
+import ItemList from "./widgets/ItemList";
 
 interface ObjectsViewProps {
   onHighlightObject: (object: SeededMapObject | null) => void;
@@ -12,33 +11,21 @@ export default function ObjectsView(props: ObjectsViewProps) {
   const { onHighlightObject, page, sendUpdate } = props;
 
   return (
-    <>
+    <ItemList>
       {page.objects.map(lineObject => (
-        <div
+        <ItemList.Item
           key={lineObject.id}
+          onDelete={() => {
+            sendUpdate({type: "deleteObject", pageId: page.id, id: lineObject.id});
+            // TODO: more elegant way of dealing with hovered object?
+            onHighlightObject(null);
+          }}
           onMouseEnter={() => onHighlightObject(lineObject)}
           onMouseLeave={() => onHighlightObject(null)}
-          style={{
-            border: "1px solid #ccc",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
         >
-          <div>{lineObject.shape.type} #{lineObject.seed}</div>
-          <Button
-            onClick={() => {
-              sendUpdate({type: "deleteObject", pageId: page.id, id: lineObject.id});
-              // TODO: more elegant way of dealing with hovered object?
-              onHighlightObject(null);
-            }}
-            size="sm"
-            variant="link"
-          >
-            Delete
-          </Button>
-        </div>
+          {lineObject.shape.type} #{lineObject.seed}
+        </ItemList.Item>
       ))}
-    </>
+    </ItemList>
   );
 }

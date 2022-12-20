@@ -1,6 +1,5 @@
-import { Box, Button } from "@chakra-ui/react";
-
-import { AppUpdate, Page, SeededMapObject } from "./app";
+import { Page } from "./app";
+import ItemList from "./widgets/ItemList";
 
 interface PagesViewProps {
   pages: ReadonlyArray<Page>;
@@ -10,20 +9,14 @@ export default function PagesView(props: PagesViewProps) {
   const { pages } = props;
 
   return (
-    <>
+    <ItemList>
       {pages.map(page => (
-        <div
+        <ItemList.Item
           key={page.id}
-          style={{
-            border: "1px solid #ccc",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
         >
-          <div>Page {page.id}</div>
-        </div>
+          Page {page.id}
+        </ItemList.Item>
       ))}
-    </>
+    </ItemList>
   );
 }
