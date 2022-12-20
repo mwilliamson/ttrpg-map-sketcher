@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 
 interface ItemListProps {
   children: React.ReactNode;
@@ -24,16 +24,21 @@ interface ItemProps {
 function Item(props: ItemProps) {
   const {children, onDelete, onMouseEnter, onMouseLeave} = props;
 
+  const borderWidth = 1;
+
   return (
-    <div
+    <Flex
+      borderWidth={borderWidth}
+      borderTopWidth={0}
+      _first={{borderTopWidth: 1}}
+      borderColor="gray.400"
+      direction="row"
+      justifyContent="space-between"
+      paddingX={3}
+      paddingY={1}
+      fontSize="sm"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      style={{
-        border: "1px solid #ccc",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
     >
       <div>
         {children}
@@ -47,7 +52,7 @@ function Item(props: ItemProps) {
           Delete
         </Button>
       )}
-    </div>
+    </Flex>
   );
 }
 
