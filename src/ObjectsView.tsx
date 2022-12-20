@@ -1,9 +1,9 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 
-import { AppState, AppUpdate, IndexedMapObject } from "./app";
+import { AppState, AppUpdate, SeededMapObject } from "./app";
 
 interface ObjectsViewProps {
-  onHighlightObject: (object: IndexedMapObject | null) => void;
+  onHighlightObject: (object: SeededMapObject | null) => void;
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
 }
@@ -26,7 +26,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
             justifyContent: "space-between",
           }}
         >
-          <div>{lineObject.shape.type} #{lineObject.objectNumber}</div>
+          <div>{lineObject.shape.type} #{lineObject.seed}</div>
           <Button
             onClick={() => {
               sendUpdate({type: "deleteObject", id: lineObject.id});

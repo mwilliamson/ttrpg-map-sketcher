@@ -5,15 +5,15 @@ import { RenderArea, Scale } from "./rendering";
 import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
 
 export interface AppState {
-  objects: ReadonlyArray<IndexedMapObject>;
-  nextObjectNumber: number;
+  objects: ReadonlyArray<SeededMapObject>;
+  nextSeed: number;
   updates: ReadonlyArray<AppUpdate>;
 };
 
 export function initialAppState(): AppState {
   return {
     objects: [],
-    nextObjectNumber: 1,
+    nextSeed: 1,
     updates: [],
   };
 }
@@ -36,9 +36,9 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
         ...state,
         objects: [
           ...state.objects,
-          {...update.object, objectNumber: state.nextObjectNumber},
+          {...update.object, seed: state.nextSeed},
         ],
-        nextObjectNumber: state.nextObjectNumber + 1,
+        nextSeed: state.nextSeed + 1,
       };
     case "deleteObject":
       return {
@@ -68,8 +68,8 @@ export interface MapObject {
   shape: Shape;
 }
 
-export interface IndexedMapObject extends MapObject {
-  objectNumber: number;
+export interface SeededMapObject extends MapObject {
+  seed: number;
 }
 
 export type Shape =

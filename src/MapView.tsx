@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppState, AppUpdate, Distance, IndexedMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
+import { AppState, AppUpdate, Distance, SeededMapObject, MapObject, Point, RenderArea, Tool, ToolContext } from "./app";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
@@ -18,7 +18,7 @@ interface MapViewProps {
   tool: Tool;
   toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
-  highlightObject: IndexedMapObject | null;
+  highlightObject: SeededMapObject | null;
 }
 
 export default function MapView(props: MapViewProps) {
@@ -32,8 +32,8 @@ export default function MapView(props: MapViewProps) {
 
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
-  const standardObjects: Array<IndexedMapObject> = [];
-  const annotationObjects: Array<IndexedMapObject> = [];
+  const standardObjects: Array<SeededMapObject> = [];
+  const annotationObjects: Array<SeededMapObject> = [];
 
   state.objects.forEach(object => {
     if (highlightObject !== null && object.id === highlightObject.id) {
@@ -207,12 +207,12 @@ function HighlightedObjectView(props: HighlightedObjectViewProps) {
 }
 
 interface ObjectViewProps {
-  object: IndexedMapObject;
+  object: SeededMapObject;
   renderArea: RenderArea;
 }
 
 function ObjectView(props: ObjectViewProps) {
-  const { object: { objectNumber, shape }, renderArea } = props;
+  const { object: { seed, shape }, renderArea } = props;
 
   switch (shape.type) {
     case "cross":
@@ -220,7 +220,7 @@ function ObjectView(props: ObjectViewProps) {
         <CrossView
           cross={shape.cross}
           renderArea={renderArea}
-          seed={objectNumber}
+          seed={seed}
         />
       );
     case "line":
@@ -228,7 +228,7 @@ function ObjectView(props: ObjectViewProps) {
         <LineView
           line={shape.line}
           renderArea={renderArea}
-          seed={objectNumber}
+          seed={seed}
         />
       );
     case "polygon":
@@ -236,7 +236,7 @@ function ObjectView(props: ObjectViewProps) {
         <PolygonView
           polygon={shape.polygon}
           renderArea={renderArea}
-          seed={objectNumber}
+          seed={seed}
         />
       )
     case "token":

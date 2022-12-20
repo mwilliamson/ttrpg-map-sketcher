@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, IndexedMapObject } from "./app";
+import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, SeededMapObject } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
@@ -30,7 +30,7 @@ export default function SketcherView(props: SketcherViewProps) {
 
   const [tool, setTool] = useState<Tool>(noneTool);
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
-  const [hoveredObject, setHoveredObject] = useState<IndexedMapObject | null>(null);
+  const [hoveredObject, setHoveredObject] = useState<SeededMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
   const toolContext = {
