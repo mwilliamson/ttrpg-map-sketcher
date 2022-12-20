@@ -1,5 +1,5 @@
 import { AppUpdate, Cross, Distance, Line, MapObject, Point, Polygon, Shape, Token } from "./app";
-import assertNever from "./assertNever";
+import assertNever from "./util/assertNever";
 
 type SerializedAppUpdate =
   | {type: "addObject", pageId: string, object: SerializedMapObject}

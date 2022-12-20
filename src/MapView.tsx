@@ -9,7 +9,7 @@ import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
 import { TokenHighlightView, TokenView } from "./app/rendering/token";
 import { RoughSvgProvider } from "./app/rough";
-import assertNever from "./assertNever";
+import assertNever from "./util/assertNever";
 
 interface MapViewProps {
   page: Page;

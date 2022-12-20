@@ -1,5 +1,5 @@
 import { RenderArea } from ".";
-import slidingPairs from "../../slidingPairs";
+import slidingPairs from "../../util/slidingPairs";
 import { draftColor, highlightColor } from "../colors";
 import { Point, Polygon } from "../geometry";
 import { RoughPolygon } from "../rough";
