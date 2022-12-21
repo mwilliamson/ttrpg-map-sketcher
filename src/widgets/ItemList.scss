@@ -1,0 +1,45 @@
+.flex-container-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-item-fit {
+    flex: 1 1 auto;
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
+$gray: #A0AEC0;
+
+.widgets-ItemList {
+    font-size: 14px;
+
+    .widgets-ItemList_Item {
+        @extend .flex-container-row;
+
+        border: 1px solid $gray;
+
+        &:not(:first-child) {
+            border-top: none;
+        }
+    }
+
+    .widgets-ItemList_selection-status {
+        width: 10px;
+    }
+
+    .widgets-ItemList_selection-status--selected {
+        background-color: $gray;
+    }
+
+    .widgets-ItemList_contents {
+        @extend .flex-item-fit;
+        @extend .flex-container-row;
+        @extend .justify-content-space-between;
+
+        padding: 3px 10px 3px 5px;
+    }
+
+}

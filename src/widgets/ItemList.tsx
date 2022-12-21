@@ -1,4 +1,7 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
+import classNames from "classnames";
+
+import "./ItemList.scss";
 
 interface ItemListProps {
   children: React.ReactNode;
@@ -8,9 +11,9 @@ export default function ItemList(props: ItemListProps) {
   const {children} = props;
 
   return (
-    <>
+    <div className="widgets-ItemList">
       {children}
-    </>
+    </div>
   );
 }
 
@@ -25,45 +28,37 @@ interface ItemProps {
 function Item(props: ItemProps) {
   const {children, isSelected = false, onDelete, onMouseEnter, onMouseLeave} = props;
 
-  const borderWidth = 1;
-
   return (
-    <Box
-      borderWidth={borderWidth}
-      borderTopWidth={0}
-      _first={{borderTopWidth: 1}}
-      borderColor="gray.400"
+    <div
+      className="widgets-ItemList_Item"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <Flex
-        direction="row"
+      <div
+        className={classNames(
+          "widgets-ItemList_selection-status",
+          {"widgets-ItemList_selection-status--selected": isSelected},
+        )}
       >
-        <Box backgroundColor={isSelected ? "gray.400" : "transparent"} width={2} />
-        <Flex
-          flex="1 1 auto"
-          direction="row"
-          justifyContent="space-between"
-          paddingX={2}
-          paddingY={1}
-          fontSize="sm"
-        >
-          <div>
-            {children}
-          </div>
-          {onDelete !== undefined && (
-            <Button
-              colorScheme="red"
-              onClick={onDelete}
-              size="sm"
-              variant="link"
-            >
-              Delete
-            </Button>
-          )}
-        </Flex>
-      </Flex>
-    </Box>
+      </div>
+      <div
+        className="widgets-ItemList_contents"
+      >
+        <div>
+          {children}
+        </div>
+        {onDelete !== undefined && (
+          <Button
+            colorScheme="red"
+            onClick={onDelete}
+            size="sm"
+            variant="link"
+          >
+            Delete
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
 
