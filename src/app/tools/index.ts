@@ -1,13 +1,13 @@
 import { Tool, ToolContext, ToolType } from "./base";
 import { crossToolType } from "./cross";
 import { lineToolType } from "./line";
-import { noneTool, noneToolType } from "./none";
+import { panTool, panToolType } from "./pan";
 import { polygonToolType } from "./polygon";
 import { rulerToolType } from "./ruler";
 import { tokenToolType } from "./token";
 
 export const allToolTypes: ReadonlyArray<ToolType<string>> = [
-    noneToolType,
+    panToolType,
     lineToolType,
     polygonToolType,
     crossToolType,
@@ -18,6 +18,6 @@ export const allToolTypes: ReadonlyArray<ToolType<string>> = [
 export {
     Tool,
     ToolContext,
-    noneTool,
+    panTool as noneTool,
 }
 

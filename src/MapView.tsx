@@ -11,6 +11,7 @@ import { RoughSvgProvider } from "./app/rough";
 import assertNever from "./util/assertNever";
 
 import "./MapView.scss";
+import { panToolType } from "./app/tools/pan";
 
 interface MapViewProps {
   page: Page;
@@ -89,7 +90,9 @@ export default function MapView(props: MapViewProps) {
   function handleMouseDown(event: React.MouseEvent) {
     if (event.button === 0) {
       onToolChange(tool.onMouseLeftDown(toolContext));
-    } else if (event.button === 2) {
+    }
+
+    if (isPan(event)) {
       event.preventDefault();
       if (containerRef.current !== null) {
         lastDragMousePosition.current = {
@@ -103,9 +106,15 @@ export default function MapView(props: MapViewProps) {
   function handleMouseUp(event: React.MouseEvent) {
     if (event.button === 0) {
       onToolChange(tool.onMouseLeftUp(toolContext));
-    } else if (event.button === 2) {
+    }
+
+    if (isPan(event)) {
       lastDragMousePosition.current = null;
     }
+  }
+
+  function isPan(event: React.MouseEvent) {
+    return (event.button === 0 && tool.type === panToolType) || event.button === 2;
   }
 
   return (
