@@ -27,7 +27,8 @@ export class AppState {
     return this.pages.find(page => page.id === id) ?? null;
   }
 
-  public addPage(page: Page): AppState {
+  public addPage(id: string): AppState {
+    const page = Page.createEmpty(id, `Page #${this.allPages.length + 1}`);
     return new AppState(
       [...this.allPages, page],
       this.deletedPageIds,
@@ -76,10 +77,10 @@ export class AppState {
 
 export function initialAppState(): AppState {
   return new AppState(
-    [Page.createEmpty("initial")],
+    [],
     new Set(),
     [],
-  );
+  ).addPage("initial");
 }
 
 export type AppUpdate =
@@ -96,7 +97,7 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
 function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
   switch (update.type) {
     case "addPage":
-      return state.addPage(Page.createEmpty(update.id));
+      return state.addPage(update.id);
     case "deletePage":
       return state.deletePage(update.id);
     case "undeletePage":
@@ -165,16 +166,23 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
 }
 
 export class Page {
-  public static createEmpty(id: string): Page {
-    return new Page(id, [], 1);
+  public static createEmpty(id: string, name: string): Page {
+    return new Page(id, name, [], 1);
   }
 
   public readonly id: string;
+  public readonly name: string;
   public readonly objects: ReadonlyArray<NumberedMapObject>;
   public readonly nextObjectNumber: number;
 
-  constructor(id: string, objects: ReadonlyArray<NumberedMapObject>, nextObjectNumber: number) {
+  constructor(
+    id: string,
+    name: string,
+    objects: ReadonlyArray<NumberedMapObject>,
+    nextObjectNumber: number,
+  ) {
     this.id = id;
+    this.name = name;
     this.objects = objects;
     this.nextObjectNumber = nextObjectNumber;
   }
@@ -184,12 +192,12 @@ export class Page {
       ...this.objects,
       {...object, objectNumber: this.nextObjectNumber},
     ]
-    return new Page(this.id, objects, this.nextObjectNumber + 1);
+    return new Page(this.id, this.name, objects, this.nextObjectNumber + 1);
   }
 
   public deleteObject(id: string): Page {
     const objects = this.objects.filter(object => object.id !== id);
-    return new Page(this.id, objects, this.nextObjectNumber);
+    return new Page(this.id, this.name, objects, this.nextObjectNumber);
   }
 }
 

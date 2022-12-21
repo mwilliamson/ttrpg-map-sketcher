@@ -20,7 +20,7 @@ export default function PagesView(props: PagesViewProps) {
             key={page.id}
             onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
           >
-            Page {page.id}
+            {page.name}
           </ItemList.Item>
         ))}
       </ItemList>
