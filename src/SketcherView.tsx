@@ -97,7 +97,7 @@ export default function SketcherView(props: SketcherViewProps) {
 
   return (
     <div className="flex-container-row h-100">
-      <div className="flex-item-static">
+      <div className="flex-item-static mr-md">
         <ToolsView
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
@@ -127,7 +127,7 @@ export default function SketcherView(props: SketcherViewProps) {
           />
         )}
       </div>
-      <div className="flex-item-static flex-container-column" style={{width: 400}}>
+      <div className="flex-item-static flex-container-column ml-md" style={{width: 400}}>
         <Tabs.Flex
           defaultIndex={1}
           tabs={[
