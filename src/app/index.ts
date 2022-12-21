@@ -217,18 +217,28 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
         pageId: update.pageId,
       });
     case "deletePage":
-      return update;
+      return updates.deletePage({
+        pageId: update.pageId,
+      });
     case "undeletePage":
-      return update;
+      return updates.undeletePage({
+        pageId: update.pageId,
+      });
     case "addObject":
       return updates.undeleteObject({
         pageId: update.pageId,
         objectId: update.object.id,
       });
     case "deleteObject":
-      return update;
+      return updates.deleteObject({
+        pageId: update.pageId,
+        objectId: update.objectId,
+      });
     case "undeleteObject":
-      return update;
+      return updates.undeleteObject({
+        pageId: update.pageId,
+        objectId: update.objectId,
+      });
   }
 }
 
