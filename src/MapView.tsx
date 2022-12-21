@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
@@ -122,6 +122,17 @@ export default function MapView(props: MapViewProps) {
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
       if (event.deltaY !== 0 && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL) {
+        const svg = containerRef.current!.firstChild as Element;
+        const svgRect = svg.getBoundingClientRect();
+        const svgX = event.clientX - svgRect.left;
+        const svgY = event.clientY - svgRect.top;
+
+        const pageX = renderArea.fromPixelCoordinate(svgX);
+        const pageY = renderArea.fromPixelCoordinate(svgY);
+        zoomPositionRef.current = {
+          viewport: {x: event.clientX, y: event.clientY},
+          page: Point.from(pageX, pageY)
+        };
         onZoomChange(-event.deltaY);
       }
     }
@@ -133,6 +144,27 @@ export default function MapView(props: MapViewProps) {
     };
   }, [onZoomChange]);
 
+  const zoomPositionRef = useRef<{viewport: {x: number, y: number}, page: Point} | null>(null);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const zoomPosition = zoomPositionRef.current;
+    if (container === null || zoomPosition === null) {
+      return;
+    }
+    const svg = container.firstChild as Element;
+    const svgRect = svg.getBoundingClientRect();
+
+    const svgX = renderArea.toPixelCoordinate(zoomPosition.page.x);
+    const svgY = renderArea.toPixelCoordinate(zoomPosition.page.y);
+
+    const viewportX = svgX + svgRect.left;
+    const viewportY = svgY + svgRect.top;
+
+    container.scrollBy(viewportX - zoomPosition.viewport.x, viewportY - zoomPosition.viewport.y);
+
+    zoomPositionRef.current = null;
+  }, [renderArea.squareWidth]);
 
   return (
     <div className="MapView" ref={containerRef}>
