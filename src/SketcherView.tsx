@@ -127,25 +127,23 @@ export default function SketcherView(props: SketcherViewProps) {
           />
         )}
       </Box>
-      <Box flex="0 0 auto" width={400} height="100%">
-        <Tabs defaultIndex={1}>
-          <TabList>
-            <Tab>Pages</Tab>
-            <Tab>Objects</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Box height="100%" overflowY="scroll">
+      <Flex direction="column" flex="0 0 auto" width={400} height="100%">
+        <Box flex="1 1 0" minHeight={0}>
+          <Tabs defaultIndex={1} display="flex" flexDirection="column" height="100%">
+            <TabList>
+              <Tab>Pages</Tab>
+              <Tab>Objects</Tab>
+            </TabList>
+            <TabPanels flex="1 1 auto" minHeight={0}>
+              <TabPanel height="100%" overflowY="scroll">
                 <PagesView
                   onSelectPage={pageId => setSelectedPageId(pageId)}
                   pages={state.pages}
                   selectedPageId={selectedPageId}
                   sendUpdate={handleSendUpdate}
                 />
-              </Box>
-            </TabPanel>
-            <TabPanel>
-              <Box height="100%" overflowY="scroll">
+              </TabPanel>
+              <TabPanel height="100%" overflowY="scroll">
                 {page === null ? (
                   <p>No page selected.</p>
                 ) : (
@@ -155,11 +153,27 @@ export default function SketcherView(props: SketcherViewProps) {
                     sendUpdate={handleSendUpdate}
                   />
                 )}
-              </Box>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+        <Box flex="1 1 0" minHeight={0}>
+          <Tabs display="flex" flexDirection="column" height="100%">
+            <TabList>
+              <Tab>Page</Tab>
+            </TabList>
+            <TabPanels flex="1 1 auto" minHeight={0}>
+              <TabPanel height="100%" overflowY="scroll">
+                {page === null ? (
+                  <p>No page selected.</p>
+                ) : (
+                  <p>Name: {page.name}</p>
+                )}
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      </Flex>
     </Flex>
   )
 }
