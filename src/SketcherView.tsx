@@ -1,7 +1,7 @@
 import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, SeededMapObject } from "./app";
+import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, SeededMapObject, createUpdateToRedo } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
@@ -35,7 +35,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const [hoveredObject, setHoveredObject] = useState<SeededMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
-  const page = state.pages.find(page => page.id === selectedPageId) ?? null;
+  const page = selectedPageId === null ? null : state.findPage(selectedPageId);
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {
@@ -69,7 +69,8 @@ export default function SketcherView(props: SketcherViewProps) {
     const update = updateToRedo();
     if (update !== null) {
       setUndoStack({...undoStack, index: undoStack.index + 1})
-      sendUpdate(update);
+      const updateRedo = createUpdateToRedo(state, update);
+      sendUpdate(updateRedo);
     }
   }
 
@@ -135,7 +136,10 @@ export default function SketcherView(props: SketcherViewProps) {
           <TabPanels>
             <TabPanel>
               <Box height="100%" overflowY="scroll">
-                <PagesView pages={state.pages} />
+                <PagesView
+                  pages={state.pages}
+                  sendUpdate={handleSendUpdate}
+                />
               </Box>
             </TabPanel>
             <TabPanel>
