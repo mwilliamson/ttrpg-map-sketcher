@@ -99,7 +99,7 @@ export default function SketcherView(props: SketcherViewProps) {
 
   return (
     <div className="flex-container-row h-100">
-      <div className="flex-item-static h-100">
+      <div className="flex-item-static">
         <ToolsView
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
@@ -111,7 +111,7 @@ export default function SketcherView(props: SketcherViewProps) {
           onSelectColor={newColor => handleSelectColor(newColor)}
         />
       </div>
-      <div className="flex-item-fill h-100">
+      <div className="flex-item-fill">
         {page !== null && (
           <MapView
             page={page}
@@ -129,7 +129,7 @@ export default function SketcherView(props: SketcherViewProps) {
           />
         )}
       </div>
-      <div className="flex-item-static h-100 flex-container-column" style={{width: 400}}>
+      <div className="flex-item-static flex-container-column" style={{width: 400}}>
         <div className="flex-item-fill">
           <Tabs defaultIndex={1} display="flex" flexDirection="column" height="100%">
             <TabList>
