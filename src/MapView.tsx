@@ -57,7 +57,7 @@ export default function MapView(props: MapViewProps) {
         tokenObjects.push(object);
         return;
       default:
-        return assertNever(object.shape, "unhanded shape type");
+        return assertNever(object.shape, "unhandled shape type");
     }
   });
 
