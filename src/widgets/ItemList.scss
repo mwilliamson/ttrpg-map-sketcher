@@ -1,18 +1,5 @@
-.flex-container-row {
-    display: flex;
-    flex-direction: row;
-}
-
-.flex-item-fit {
-    flex: 1 1 auto;
-}
-
-.justify-content-space-between {
-    justify-content: space-between;
-}
-
-$color-danger: #E53E3E;
-$color-border: #A0AEC0;
+@use "../scss/colors";
+@use "../scss/flex";
 
 .widgets-ItemList {
     font-size: 14px;
@@ -20,7 +7,7 @@ $color-border: #A0AEC0;
     .widgets-ItemList_Item {
         @extend .flex-container-row;
 
-        border: 1px solid $color-border;
+        border: 1px solid colors.$border;
 
         &:not(:first-child) {
             border-top: none;
@@ -32,7 +19,7 @@ $color-border: #A0AEC0;
     }
 
     .widgets-ItemList_selection-status--selected {
-        background-color: $color-border;
+        background-color: colors.$border;
     }
 
     .widgets-ItemList_contents {
@@ -44,6 +31,6 @@ $color-border: #A0AEC0;
     }
 
     .widgets-ItemList_delete {
-        color: $color-danger;
+        color: colors.$danger;
     }
 }
