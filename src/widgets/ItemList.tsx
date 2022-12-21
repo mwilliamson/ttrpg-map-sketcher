@@ -53,6 +53,7 @@ function Item(props: ItemProps) {
           </div>
           {onDelete !== undefined && (
             <Button
+              colorScheme="red"
               onClick={onDelete}
               size="sm"
               variant="link"
