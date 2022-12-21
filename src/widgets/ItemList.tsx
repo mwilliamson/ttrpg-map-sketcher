@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import classNames from "classnames";
 
 import "./ItemList.scss";
@@ -48,14 +47,12 @@ function Item(props: ItemProps) {
           {children}
         </div>
         {onDelete !== undefined && (
-          <Button
-            colorScheme="red"
+          <button
+            className="widgets-ItemList_delete"
             onClick={onDelete}
-            size="sm"
-            variant="link"
           >
             Delete
-          </Button>
+          </button>
         )}
       </div>
     </div>
