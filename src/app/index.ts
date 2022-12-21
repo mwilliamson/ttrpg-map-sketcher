@@ -89,7 +89,8 @@ export type AppUpdate =
   | {type: "deletePage", updateId: string, pageId: string}
   | {type: "undeletePage", updateId: string, pageId: string}
   | {type: "addObject", updateId: string, pageId: string, object: MapObject}
-  | {type: "deleteObject", updateId: string, pageId: string, objectId: string};
+  | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
+  | {type: "undeleteObject", updateId: string, pageId: string, objectId: string};
 
 export const updates = {
   addPage(): AppUpdate {
@@ -133,6 +134,15 @@ export const updates = {
       objectId,
     };
   },
+
+  undeleteObject({pageId, objectId}: {pageId: string, objectId: string}): AppUpdate {
+    return {
+      type: "undeleteObject",
+      updateId: generateUpdateId(),
+      pageId,
+      objectId,
+    };
+  },
 }
 
 function generateUpdateId(): string {
@@ -161,6 +171,11 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
         update.pageId,
         page => page.deleteObject(update.objectId),
       );
+    case "undeleteObject":
+      return state.updatePage(
+        update.pageId,
+        page => page.undeleteObject(update.objectId),
+      );
   }
 }
 
@@ -184,16 +199,15 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         objectId: update.object.id,
       });
     case "deleteObject":
-      // TODO: switch deletion to being a flag, especially once objects can be edited
-      const addObjectUpdate = findLast(
-        state.updates,
-        updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.objectId,
-      );
-      if (addObjectUpdate === undefined || addObjectUpdate.type !== "addObject") {
-        return null;
-      } else {
-        return updates.addObject(addObjectUpdate);
-      }
+      return updates.undeleteObject({
+        pageId: update.pageId,
+        objectId: update.objectId,
+      });
+    case "undeleteObject":
+      return updates.undeleteObject({
+        pageId: update.pageId,
+        objectId: update.objectId,
+      });
   }
 }
 
@@ -208,45 +222,59 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
     case "undeletePage":
       return update;
     case "addObject":
-      return update;
+      return updates.undeleteObject({
+        pageId: update.pageId,
+        objectId: update.object.id,
+      });
     case "deleteObject":
+      return update;
+    case "undeleteObject":
       return update;
   }
 }
 
 export class Page {
   public static createEmpty(id: string, name: string): Page {
-    return new Page(id, name, [], 1);
+    return new Page(id, name, [], new Set());
   }
 
   public readonly id: string;
   public readonly name: string;
+  private readonly allObjects: ReadonlyArray<NumberedMapObject>;
+  private readonly deletedObjectIds: Set<string>;
   public readonly objects: ReadonlyArray<NumberedMapObject>;
-  public readonly nextObjectNumber: number;
 
   constructor(
     id: string,
     name: string,
-    objects: ReadonlyArray<NumberedMapObject>,
-    nextObjectNumber: number,
+    allObjects: ReadonlyArray<NumberedMapObject>,
+    deletedObjectIds: Set<string>,
   ) {
     this.id = id;
     this.name = name;
-    this.objects = objects;
-    this.nextObjectNumber = nextObjectNumber;
+    this.allObjects = allObjects;
+    this.deletedObjectIds = deletedObjectIds;
+    this.objects = this.allObjects.filter(object => !deletedObjectIds.has(object.id))
   }
 
   public addObject(object: MapObject): Page {
-    const objects = [
-      ...this.objects,
-      {...object, objectNumber: this.nextObjectNumber},
+    const allObjects = [
+      ...this.allObjects,
+      {...object, objectNumber: this.allObjects.length + 1},
     ]
-    return new Page(this.id, this.name, objects, this.nextObjectNumber + 1);
+    return new Page(this.id, this.name, allObjects, this.deletedObjectIds);
   }
 
   public deleteObject(id: string): Page {
-    const objects = this.objects.filter(object => object.id !== id);
-    return new Page(this.id, this.name, objects, this.nextObjectNumber);
+    const deletedObjectIds = new Set(this.deletedObjectIds);
+    deletedObjectIds.add(id);
+    return new Page(this.id, this.name, this.allObjects, deletedObjectIds);
+  }
+
+  public undeleteObject(id: string): Page {
+    const deletedObjectIds = new Set(this.deletedObjectIds);
+    deletedObjectIds.delete(id);
+    return new Page(this.id, this.name, this.allObjects, deletedObjectIds);
   }
 }
 
