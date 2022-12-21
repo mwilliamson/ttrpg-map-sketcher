@@ -203,7 +203,7 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         objectId: update.objectId,
       });
     case "undeleteObject":
-      return updates.undeleteObject({
+      return updates.deleteObject({
         pageId: update.pageId,
         objectId: update.objectId,
       });
