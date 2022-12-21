@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
@@ -10,6 +9,8 @@ import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
 import { TokenHighlightView, TokenView } from "./app/rendering/token";
 import { RoughSvgProvider } from "./app/rough";
 import assertNever from "./util/assertNever";
+
+import "./MapView.scss";
 
 interface MapViewProps {
   page: Page;
@@ -107,7 +108,7 @@ export default function MapView(props: MapViewProps) {
   }
 
   return (
-    <Box height="100%" overflow="auto" ref={containerRef}>
+    <div className="MapView" ref={containerRef}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
@@ -144,7 +145,7 @@ export default function MapView(props: MapViewProps) {
           {tool.render(renderArea)}
         </RoughSvgProvider>
       </svg>
-    </Box>
+    </div>
   );
 }
 
