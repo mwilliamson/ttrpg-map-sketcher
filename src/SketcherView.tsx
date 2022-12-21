@@ -137,6 +137,7 @@ export default function SketcherView(props: SketcherViewProps) {
             <TabPanel>
               <Box height="100%" overflowY="scroll">
                 <PagesView
+                  onSelectPage={pageId => setSelectedPageId(pageId)}
                   pages={state.pages}
                   sendUpdate={handleSendUpdate}
                 />

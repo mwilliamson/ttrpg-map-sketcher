@@ -5,12 +5,13 @@ import { AppUpdate, Page } from "./app";
 import ItemList from "./widgets/ItemList";
 
 interface PagesViewProps {
+  onSelectPage: (pageId: string) => void;
   pages: ReadonlyArray<Page>;
   sendUpdate: (update: AppUpdate) => void;
 }
 
 export default function PagesView(props: PagesViewProps) {
-  const { pages, sendUpdate } = props;
+  const { onSelectPage, pages, sendUpdate } = props;
 
   return (
     <>
@@ -20,7 +21,13 @@ export default function PagesView(props: PagesViewProps) {
             key={page.id}
             onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
           >
-            {page.name}
+            <Button
+              onClick={() => onSelectPage(page.id)}
+              size="sm"
+              variant="link"
+            >
+              {page.name}
+            </Button>
           </ItemList.Item>
         ))}
       </ItemList>
