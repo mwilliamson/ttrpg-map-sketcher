@@ -87,6 +87,7 @@ export type AppUpdate =
   | {type: "addPage", updateId: string, pageId: string}
   | {type: "deletePage", updateId: string, pageId: string}
   | {type: "undeletePage", updateId: string, pageId: string}
+  | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
   | {type: "addObject", updateId: string, pageId: string, object: MapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string};
@@ -114,6 +115,16 @@ export const updates = {
       updateId: generateUpdateId(),
       pageId,
     };
+  },
+
+  renamePage({pageId, previousName, name}: {pageId: string, previousName: string, name: string}): AppUpdate {
+    return {
+      type: "renamePage",
+      updateId: generateUpdateId(),
+      pageId,
+      previousName,
+      name,
+    }
   },
 
   addObject({pageId, object}: {pageId: string, object: MapObject}): AppUpdate {
@@ -160,6 +171,11 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
       return state.deletePage(update.pageId);
     case "undeletePage":
       return state.undeletePage(update.pageId);
+    case "renamePage":
+      return state.updatePage(
+        update.pageId,
+        page => page.name === update.previousName ? page.rename(update.name) : page,
+      )
     case "addObject":
       return state.updatePage(
         update.pageId,
@@ -192,6 +208,12 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
       return updates.deletePage({
         pageId: update.pageId,
       });
+    case "renamePage":
+      return updates.renamePage({
+        pageId: update.pageId,
+        previousName: update.name,
+        name: update.previousName,
+      });
     case "addObject":
       return updates.deleteObject({
         pageId: update.pageId,
@@ -223,6 +245,12 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
     case "undeletePage":
       return updates.undeletePage({
         pageId: update.pageId,
+      });
+    case "renamePage":
+      return updates.renamePage({
+        pageId: update.pageId,
+        previousName: update.previousName,
+        name: update.name,
       });
     case "addObject":
       return updates.undeleteObject({
@@ -284,6 +312,10 @@ export class Page {
     const deletedObjectIds = new Set(this.deletedObjectIds);
     deletedObjectIds.delete(id);
     return new Page(this.id, this.name, this.allObjects, deletedObjectIds);
+  }
+
+  public rename(name: string): Page {
+    return new Page(this.id, name, this.allObjects, this.deletedObjectIds);
   }
 }
 

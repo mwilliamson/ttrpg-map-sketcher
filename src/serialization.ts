@@ -5,6 +5,7 @@ type SerializedAppUpdate =
   | {type: "addPage", updateId: string, pageId: string}
   | {type: "deletePage", updateId: string, pageId: string}
   | {type: "undeletePage", updateId: string, pageId: string}
+  | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
   | {type: "addObject", updateId: string, pageId: string, object: SerializedMapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string};
@@ -55,6 +56,8 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
       return update;
     case "undeletePage":
       return update;
+    case "renamePage":
+      return update;
     case "addObject":
       return {
         type: "addObject",
@@ -77,6 +80,8 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
     case "deletePage":
       return update;
     case "undeletePage":
+      return update;
+    case "renamePage":
       return update;
     case "addObject":
       return {
