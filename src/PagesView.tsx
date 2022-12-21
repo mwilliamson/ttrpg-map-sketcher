@@ -18,6 +18,7 @@ export default function PagesView(props: PagesViewProps) {
         {pages.map(page => (
           <ItemList.Item
             key={page.id}
+            onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
           >
             Page {page.id}
           </ItemList.Item>
