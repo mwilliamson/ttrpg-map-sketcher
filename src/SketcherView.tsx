@@ -160,7 +160,7 @@ export default function SketcherView(props: SketcherViewProps) {
               render: () => page === null ? (
                 <p>No page selected.</p>
               ) : (
-                <PageView page={page} />
+                <PageView page={page} sendUpdate={handleSendUpdate} />
               )
             }
           ]}
