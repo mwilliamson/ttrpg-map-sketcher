@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import { updates } from "..";
 
 import { Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -48,11 +49,10 @@ class TokenTool implements Tool<"Token"> {
     if (snapPoint !== null) {
       const id = uuid.v4();
       const token = Token.from(snapPoint, context.selectedColor);
-      context.sendUpdate({
-        type: "addObject",
+      context.sendUpdate(updates.addObject({
         pageId: context.pageId,
         object: {id, shape: {type: "token", token}}
-      });
+      }));
     }
     return this;
   }

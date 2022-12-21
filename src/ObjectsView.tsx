@@ -1,4 +1,4 @@
-import { AppUpdate, Page, NumberedMapObject } from "./app";
+import { AppUpdate, Page, NumberedMapObject, updates } from "./app";
 import ItemList from "./widgets/ItemList";
 
 interface ObjectsViewProps {
@@ -16,7 +16,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
         <ItemList.Item
           key={lineObject.id}
           onDelete={() => {
-            sendUpdate({type: "deleteObject", pageId: page.id, objectId: lineObject.id});
+            sendUpdate(updates.deleteObject({pageId: page.id, objectId: lineObject.id}));
             // TODO: more elegant way of dealing with hovered object?
             onHighlightObject(null);
           }}

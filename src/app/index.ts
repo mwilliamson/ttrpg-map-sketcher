@@ -1,4 +1,5 @@
 import { findLast } from "lodash";
+import * as uuid from "uuid";
 
 import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
@@ -84,11 +85,59 @@ export function initialAppState(): AppState {
 }
 
 export type AppUpdate =
-  | {type: "addPage", pageId: string}
-  | {type: "deletePage", pageId: string}
-  | {type: "undeletePage", pageId: string}
-  | {type: "addObject", pageId: string, object: MapObject}
-  | {type: "deleteObject", pageId: string, objectId: string};
+  | {type: "addPage", updateId: string, pageId: string}
+  | {type: "deletePage", updateId: string, pageId: string}
+  | {type: "undeletePage", updateId: string, pageId: string}
+  | {type: "addObject", updateId: string, pageId: string, object: MapObject}
+  | {type: "deleteObject", updateId: string, pageId: string, objectId: string};
+
+export const updates = {
+  addPage(): AppUpdate {
+    return {
+      type: "addPage",
+      updateId: generateUpdateId(),
+      pageId: uuid.v4(),
+    };
+  },
+
+  deletePage({pageId}: {pageId: string}): AppUpdate {
+    return {
+      type: "deletePage",
+      updateId: generateUpdateId(),
+      pageId,
+    };
+  },
+
+  undeletePage({pageId}: {pageId: string}): AppUpdate {
+    return {
+      type: "undeletePage",
+      updateId: generateUpdateId(),
+      pageId,
+    };
+  },
+
+  addObject({pageId, object}: {pageId: string, object: MapObject}): AppUpdate {
+    return {
+      type: "addObject",
+      updateId: generateUpdateId(),
+      pageId,
+      object,
+    };
+  },
+
+  deleteObject({pageId, objectId}: {pageId: string, objectId: string}): AppUpdate {
+    return {
+      type: "deleteObject",
+      updateId: generateUpdateId(),
+      pageId,
+      objectId,
+    };
+  },
+}
+
+function generateUpdateId(): string {
+  return uuid.v4();
+}
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
   return applyAppUpdateInner(state, update).appendUpdate(update);
@@ -118,42 +167,42 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
 export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdate | null {
   switch (update.type) {
     case "addPage":
-      return {
-        type: "deletePage",
+      return updates.deletePage({
         pageId: update.pageId,
-      };
+      });
     case "deletePage":
-      return {
-        type: "undeletePage",
+      return updates.undeletePage({
         pageId: update.pageId,
-      };
+      });
     case "undeletePage":
-      return {
-        type: "deletePage",
+      return updates.deletePage({
         pageId: update.pageId,
-      };
+      });
     case "addObject":
-      return {
-        type: "deleteObject",
+      return updates.deleteObject({
         pageId: update.pageId,
         objectId: update.object.id,
-      };
+      });
     case "deleteObject":
       // TODO: switch deletion to being a flag, especially once objects can be edited
-      return findLast(
+      const addObjectUpdate = findLast(
         state.updates,
         updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.objectId,
-      ) || null;
+      );
+      if (addObjectUpdate === undefined || addObjectUpdate.type !== "addObject") {
+        return null;
+      } else {
+        return updates.addObject(addObjectUpdate);
+      }
   }
 }
 
 export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdate {
   switch (update.type) {
     case "addPage":
-      return {
-        type: "undeletePage",
+      return updates.undeletePage({
         pageId: update.pageId,
-      };
+      });
     case "deletePage":
       return update;
     case "undeletePage":
@@ -219,3 +268,4 @@ export type Shape =
 export { Cross, Distance, Line, Point, Polygon, Token };
 export { RenderArea, Scale };
 export { Tool, ToolContext, allToolTypes, noneTool };
+

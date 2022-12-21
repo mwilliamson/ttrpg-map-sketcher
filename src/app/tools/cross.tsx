@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import { updates } from "..";
 
 import { Cross, Point } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -48,11 +49,10 @@ class CrossTool implements Tool<"Cross"> {
     if (snapPoint !== null) {
       const id = uuid.v4();
       const cross = Cross.from(snapPoint, context.selectedColor);
-      context.sendUpdate({
-        type: "addObject",
+      context.sendUpdate(updates.addObject({
         pageId: context.pageId,
         object: {id, shape: {type: "cross", cross}},
-      });
+      }));
     }
     return this;
   }

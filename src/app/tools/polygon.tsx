@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import { updates } from "..";
 
 import { Polygon, Point } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -49,7 +50,7 @@ class PolygonTool implements Tool<"Polygon"> {
         const polygon = Polygon.from(this.state.points, context.selectedColor);
         const shape = {type: "polygon" as const, polygon};
         const object = {id, shape};
-        context.sendUpdate({type: "addObject", pageId: context.pageId, object});
+        context.sendUpdate(updates.addObject({pageId: context.pageId, object}));
 
         return new PolygonTool({
           ...this.state,

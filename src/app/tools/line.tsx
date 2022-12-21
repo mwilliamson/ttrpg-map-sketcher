@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import { updates } from "..";
 
 import { Line, Point } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -53,11 +54,10 @@ class LineTool implements Tool<"Line"> {
     if (lineStart !== null && snapPoint !== null && !lineStart.equals(snapPoint)) {
       const id = uuid.v4();
       const line = Line.from(lineStart, snapPoint);
-      context.sendUpdate({
-        type: "addObject",
+      context.sendUpdate(updates.addObject({
         pageId: context.pageId,
         object: {id, shape: {type: "line", line}}
-      });
+      }));
     }
     return new LineTool({
       ...this.state,
