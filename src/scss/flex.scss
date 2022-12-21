@@ -1,10 +1,27 @@
+.flex-container-column {
+    display: flex;
+    flex-direction: column;
+
+    & > .flex-item-fill {
+        min-height: 0;
+    }
+}
+
 .flex-container-row {
     display: flex;
     flex-direction: row;
+
+    & > .flex-item-fill {
+        min-width: 0;
+    }
 }
 
-.flex-item-fit {
-    flex: 1 1 auto;
+.flex-item-fill {
+    flex: 1 1 0;
+}
+
+.flex-item-static {
+    flex: 0 0 auto;
 }
 
 .justify-content-space-between {

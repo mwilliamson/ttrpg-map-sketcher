@@ -23,7 +23,7 @@
     }
 
     .widgets-ItemList_contents {
-        @extend .flex-item-fit;
+        @extend .flex-item-fill;
         @extend .flex-container-row;
         @extend .justify-content-space-between;
 

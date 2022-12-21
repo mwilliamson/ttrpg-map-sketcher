@@ -1,0 +1,6 @@
+@use "./scss/flex";
+
+.SketcherView {
+    @extend .flex-container-row;
+    height: 100%;
+}

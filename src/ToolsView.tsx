@@ -1,7 +1,9 @@
-import { Button, ButtonGroup, Flex, Heading, Stack } from "@chakra-ui/react";
-import { Tool, allToolTypes } from "./app";
+import { Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
+import { allToolTypes } from "./app";
 import { fillColors } from "./app/colors";
 import { ToolType } from "./app/tools/base";
+
+import "./scss/style.scss"
 
 interface ToolsViewProps {
   onRedo: (() => void) | null;
@@ -20,7 +22,7 @@ export default function ToolsView(props: ToolsViewProps) {
   const padding = 1;
 
   return (
-    <Flex flexDirection="column" width={100} height="100%" justifyContent="space-between">
+    <div className="flex-container-column justify-content-space-between h-100" style={{width: 100}}>
       <Stack padding={padding}>
         <Heading size="md" textAlign="center">Tools</Heading>
         {allToolTypes.map(toolType => (
@@ -57,6 +59,6 @@ export default function ToolsView(props: ToolsViewProps) {
           Redo
         </Button>
       </ButtonGroup>
-    </Flex>
+    </div>
   );
 }

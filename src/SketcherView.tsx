@@ -1,4 +1,4 @@
-import { Box, Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
@@ -8,6 +8,8 @@ import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
 import ToolsView from "./ToolsView";
+
+import "./scss/style.scss";
 
 const renderArea = RenderArea.from({
   scale: Scale.pixelsPerMetre(20),
@@ -96,8 +98,8 @@ export default function SketcherView(props: SketcherViewProps) {
   }
 
   return (
-    <Flex flexDirection="row" height="100%">
-      <Box flex="0 0 auto" height="100%">
+    <div className="flex-container-row h-100">
+      <div className="flex-item-static h-100">
         <ToolsView
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
@@ -108,8 +110,8 @@ export default function SketcherView(props: SketcherViewProps) {
           selectedColor={selectedColor}
           onSelectColor={newColor => handleSelectColor(newColor)}
         />
-      </Box>
-      <Box flex="1 1 0" minWidth={0} height="100%">
+      </div>
+      <div className="flex-item-fill h-100">
         {page !== null && (
           <MapView
             page={page}
@@ -126,9 +128,9 @@ export default function SketcherView(props: SketcherViewProps) {
             highlightObject={hoveredObject}
           />
         )}
-      </Box>
-      <Flex direction="column" flex="0 0 auto" width={400} height="100%">
-        <Box flex="1 1 0" minHeight={0}>
+      </div>
+      <div className="flex-item-static h-100 flex-container-column" style={{width: 400}}>
+        <div className="flex-item-fill">
           <Tabs defaultIndex={1} display="flex" flexDirection="column" height="100%">
             <TabList>
               <Tab>Pages</Tab>
@@ -156,8 +158,8 @@ export default function SketcherView(props: SketcherViewProps) {
               </TabPanel>
             </TabPanels>
           </Tabs>
-        </Box>
-        <Box flex="1 1 0" minHeight={0}>
+        </div>
+        <div className="flex-item-fill">
           <Tabs display="flex" flexDirection="column" height="100%">
             <TabList>
               <Tab>Page</Tab>
@@ -172,8 +174,8 @@ export default function SketcherView(props: SketcherViewProps) {
               </TabPanel>
             </TabPanels>
           </Tabs>
-        </Box>
-      </Flex>
-    </Flex>
+        </div>
+      </div>
+    </div>
   )
 }
