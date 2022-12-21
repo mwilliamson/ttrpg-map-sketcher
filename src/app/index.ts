@@ -1,4 +1,3 @@
-import { findLast } from "lodash";
 import * as uuid from "uuid";
 
 import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";

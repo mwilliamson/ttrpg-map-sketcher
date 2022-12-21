@@ -1,5 +1,3 @@
-import * as uuid from "uuid";
-
 import { AppUpdate, Page, updates } from "./app";
 import ItemList from "./widgets/ItemList";
 
