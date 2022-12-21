@@ -6,6 +6,7 @@ import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
+import PageView from "./PageView";
 import ToolsView from "./ToolsView";
 import Tabs from "./widgets/Tabs";
 
@@ -159,7 +160,7 @@ export default function SketcherView(props: SketcherViewProps) {
               render: () => page === null ? (
                 <p>No page selected.</p>
               ) : (
-                <p>Name: {page.name}</p>
+                <PageView page={page} />
               )
             }
           ]}
