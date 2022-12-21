@@ -34,6 +34,7 @@ export default function MapView(props: MapViewProps) {
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
   const standardObjects: Array<NumberedMapObject> = [];
+  const tokenObjects: Array<NumberedMapObject> = [];
   const annotationObjects: Array<NumberedMapObject> = [];
 
   page.objects.forEach(object => {
@@ -51,7 +52,7 @@ export default function MapView(props: MapViewProps) {
         standardObjects.push(object);
         return;
       case "token":
-        standardObjects.push(object);
+        tokenObjects.push(object);
         return;
       default:
         return assertNever(object.shape, "unhanded shape type");
@@ -123,6 +124,11 @@ export default function MapView(props: MapViewProps) {
           <GridView renderArea={renderArea} />
           <g>
             {standardObjects.map(object => (
+              <ObjectView key={object.id} object={object} renderArea={renderArea} />
+            ))}
+          </g>
+          <g>
+            {tokenObjects.map(object => (
               <ObjectView key={object.id} object={object} renderArea={renderArea} />
             ))}
           </g>
