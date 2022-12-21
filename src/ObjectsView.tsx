@@ -1,8 +1,8 @@
-import { AppUpdate, Page, SeededMapObject } from "./app";
+import { AppUpdate, Page, NumberedMapObject } from "./app";
 import ItemList from "./widgets/ItemList";
 
 interface ObjectsViewProps {
-  onHighlightObject: (object: SeededMapObject | null) => void;
+  onHighlightObject: (object: NumberedMapObject | null) => void;
   page: Page;
   sendUpdate: (update: AppUpdate) => void;
 }
@@ -23,7 +23,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
           onMouseEnter={() => onHighlightObject(lineObject)}
           onMouseLeave={() => onHighlightObject(null)}
         >
-          {lineObject.shape.type} #{lineObject.seed}
+          {lineObject.shape.type} #{lineObject.objectNumber}
         </ItemList.Item>
       ))}
     </ItemList>

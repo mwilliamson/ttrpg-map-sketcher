@@ -170,26 +170,26 @@ export class Page {
   }
 
   public readonly id: string;
-  public readonly objects: ReadonlyArray<SeededMapObject>;
-  public readonly nextSeed: number;
+  public readonly objects: ReadonlyArray<NumberedMapObject>;
+  public readonly nextObjectNumber: number;
 
-  constructor(id: string, objects: ReadonlyArray<SeededMapObject>, nextSeed: number) {
+  constructor(id: string, objects: ReadonlyArray<NumberedMapObject>, nextObjectNumber: number) {
     this.id = id;
     this.objects = objects;
-    this.nextSeed = nextSeed;
+    this.nextObjectNumber = nextObjectNumber;
   }
 
   public addObject(object: MapObject): Page {
     const objects = [
       ...this.objects,
-      {...object, seed: this.nextSeed},
+      {...object, objectNumber: this.nextObjectNumber},
     ]
-    return new Page(this.id, objects, this.nextSeed + 1);
+    return new Page(this.id, objects, this.nextObjectNumber + 1);
   }
 
   public deleteObject(id: string): Page {
     const objects = this.objects.filter(object => object.id !== id);
-    return new Page(this.id, objects, this.nextSeed);
+    return new Page(this.id, objects, this.nextObjectNumber);
   }
 }
 
@@ -198,8 +198,8 @@ export interface MapObject {
   shape: Shape;
 }
 
-export interface SeededMapObject extends MapObject {
-  seed: number;
+export interface NumberedMapObject extends MapObject {
+  objectNumber: number;
 }
 
 export type Shape =
