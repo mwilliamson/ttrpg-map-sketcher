@@ -36,12 +36,12 @@ export default function SketcherView(props: SketcherViewProps) {
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
   const [zoomLevel, setZoomLevel] = useState(zoomLevels.default);
 
-  function handleZoomIn() {
-    setZoomLevel(zoomLevel => Math.min(zoomLevels.max, zoomLevel + 1));
+  function handleZoomChange(zoomDelta: number) {
+    setZoomLevel(zoomLevel => clamp(zoomLevels.min, zoomLevel + zoomDelta / 100, zoomLevels.max));
   }
 
-  function handleZoomOut() {
-    setZoomLevel(zoomLevel => Math.max(zoomLevels.min, zoomLevel - 1));
+  function clamp(min: number, value: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
   }
 
   const renderArea = RenderArea.from({
@@ -136,9 +136,7 @@ export default function SketcherView(props: SketcherViewProps) {
               squareWidth: renderArea.squareWidth,
             }}
             highlightObject={hoveredObject}
-
-            onZoomIn={handleZoomIn}
-            onZoomOut={handleZoomOut}
+            onZoomChange={handleZoomChange}
           />
         )}
       </div>

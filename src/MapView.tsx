@@ -21,13 +21,11 @@ interface MapViewProps {
   toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
   highlightObject: NumberedMapObject | null;
-
-  onZoomIn: () => void;
-  onZoomOut: () => void;
+  onZoomChange: (zoomDelta: number) => void;
 }
 
 export default function MapView(props: MapViewProps) {
-  const { page, renderArea, tool, onToolChange, toolContext, highlightObject, onZoomIn, onZoomOut } = props;
+  const { page, renderArea, tool, onToolChange, toolContext, highlightObject, onZoomChange } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -123,10 +121,8 @@ export default function MapView(props: MapViewProps) {
   useEffect(() => {
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
-      if (event.deltaY < 0) {
-        onZoomIn();
-      } else if (event.deltaY > 0) {
-        onZoomOut();
+      if (event.deltaY !== 0 && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL) {
+        onZoomChange(-event.deltaY);
       }
     }
 
@@ -135,7 +131,7 @@ export default function MapView(props: MapViewProps) {
     return () => {
       containerRef.current?.removeEventListener("wheel", handleWheel);
     };
-  }, [onZoomIn, onZoomOut]);
+  }, [onZoomChange]);
 
 
   return (
