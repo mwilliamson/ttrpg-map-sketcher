@@ -84,11 +84,11 @@ export function initialAppState(): AppState {
 }
 
 export type AppUpdate =
-  | {type: "addPage", id: string}
-  | {type: "deletePage", id: string}
-  | {type: "undeletePage", id: string}
+  | {type: "addPage", pageId: string}
+  | {type: "deletePage", pageId: string}
+  | {type: "undeletePage", pageId: string}
   | {type: "addObject", pageId: string, object: MapObject}
-  | {type: "deleteObject", pageId: string, id: string};
+  | {type: "deleteObject", pageId: string, objectId: string};
 
 export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
   return applyAppUpdateInner(state, update).appendUpdate(update);
@@ -97,11 +97,11 @@ export function applyAppUpdate(state: AppState, update: AppUpdate): AppState {
 function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
   switch (update.type) {
     case "addPage":
-      return state.addPage(update.id);
+      return state.addPage(update.pageId);
     case "deletePage":
-      return state.deletePage(update.id);
+      return state.deletePage(update.pageId);
     case "undeletePage":
-      return state.undeletePage(update.id);
+      return state.undeletePage(update.pageId);
     case "addObject":
       return state.updatePage(
         update.pageId,
@@ -110,7 +110,7 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
     case "deleteObject":
       return state.updatePage(
         update.pageId,
-        page => page.deleteObject(update.id),
+        page => page.deleteObject(update.objectId),
       );
   }
 }
@@ -120,29 +120,29 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
     case "addPage":
       return {
         type: "deletePage",
-        id: update.id,
+        pageId: update.pageId,
       };
     case "deletePage":
       return {
         type: "undeletePage",
-        id: update.id,
+        pageId: update.pageId,
       };
     case "undeletePage":
       return {
         type: "deletePage",
-        id: update.id,
+        pageId: update.pageId,
       };
     case "addObject":
       return {
         type: "deleteObject",
         pageId: update.pageId,
-        id: update.object.id,
+        objectId: update.object.id,
       };
     case "deleteObject":
       // TODO: switch deletion to being a flag, especially once objects can be edited
       return findLast(
         state.updates,
-        updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.id,
+        updateAdd => updateAdd.type === "addObject" && updateAdd.object.id === update.objectId,
       ) || null;
   }
 }
@@ -152,7 +152,7 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
     case "addPage":
       return {
         type: "undeletePage",
-        id: update.id,
+        pageId: update.pageId,
       };
     case "deletePage":
       return update;

@@ -16,7 +16,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
         <ItemList.Item
           key={lineObject.id}
           onDelete={() => {
-            sendUpdate({type: "deleteObject", pageId: page.id, id: lineObject.id});
+            sendUpdate({type: "deleteObject", pageId: page.id, objectId: lineObject.id});
             // TODO: more elegant way of dealing with hovered object?
             onHighlightObject(null);
           }}

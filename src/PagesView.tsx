@@ -19,7 +19,7 @@ export default function PagesView(props: PagesViewProps) {
         {pages.map(page => (
           <ItemList.Item
             key={page.id}
-            onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
+            onDelete={() => sendUpdate({type: "deletePage", pageId: page.id})}
             isSelected={page.id === selectedPageId}
           >
             <button
@@ -33,7 +33,7 @@ export default function PagesView(props: PagesViewProps) {
 
       <button
         className="btn btn-secondary btn-variant-solid btn-sm mt-md"
-        onClick={() => sendUpdate({type: "addPage", id: uuid.v4()})}
+        onClick={() => sendUpdate({type: "addPage", pageId: uuid.v4()})}
       >
         Add page
       </button>
