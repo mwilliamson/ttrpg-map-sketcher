@@ -1,9 +1,8 @@
-import { Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
+import classNames from "classnames";
+
 import { allToolTypes } from "./app";
 import { fillColors } from "./app/colors";
 import { ToolType } from "./app/tools/base";
-
-import "./scss/style.scss"
 
 interface ToolsViewProps {
   onRedo: (() => void) | null;
@@ -19,23 +18,25 @@ interface ToolsViewProps {
 export default function ToolsView(props: ToolsViewProps) {
   const { onRedo, onUndo, selectedToolType, onSelectToolType, selectedColor, onSelectColor } = props;
 
-  const padding = 1;
-
   return (
     <div className="flex-container-column justify-content-space-between h-100" style={{width: 100}}>
-      <Stack padding={padding}>
-        <Heading size="md" textAlign="center">Tools</Heading>
-        {allToolTypes.map(toolType => (
-          <Button
-            key={toolType.name}
-            colorScheme="blue"
-            onClick={() => onSelectToolType(toolType)}
-            variant={selectedToolType === toolType ? "solid" : "outline"}
-          >
-            {toolType.name}
-          </Button>
-        ))}
-        <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5}}>
+      <div>
+        <h2 className="m-sm text-center">Tools</h2>
+        <div className="btn-stack m-sm">
+          {allToolTypes.map(toolType => (
+            <button
+              key={toolType.name}
+              className={classNames(
+                "btn btn-primary",
+                selectedToolType === toolType ? "btn-variant-solid" : "btn-variant-outline",
+              )}
+              onClick={() => onSelectToolType(toolType)}
+            >
+              {toolType.name}
+            </button>
+          ))}
+        </div>
+        <div className="m-sm" style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5}}>
           <div style={{height: 40, backgroundColor: selectedColor, border: "1px solid #000", gridColumn: "1 / span 3"}}></div>
           {fillColors.map(fillColor => (
             <div
@@ -50,15 +51,23 @@ export default function ToolsView(props: ToolsViewProps) {
             </div>
           ))}
         </div>
-      </Stack>
-      <ButtonGroup colorScheme="blue" variant="outline" orientation="vertical" padding={padding}>
-        <Button disabled={onUndo === null} onClick={onUndo === null ? undefined : onUndo}>
+      </div>
+      <div className="btn-stack m-sm">
+        <button
+          className="btn btn-primary btn-variant-outline"
+          disabled={onUndo === null}
+          onClick={onUndo === null ? undefined : onUndo}
+        >
           Undo
-        </Button>
-        <Button disabled={onRedo === null} onClick={onRedo === null ? undefined : onRedo}>
+        </button>
+        <button
+          className="btn btn-primary btn-variant-outline"
+          disabled={onRedo === null}
+          onClick={onRedo === null ? undefined : onRedo}
+        >
           Redo
-        </Button>
-      </ButtonGroup>
+        </button>
+      </div>
     </div>
   );
 }

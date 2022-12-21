@@ -1,8 +1,9 @@
 @use "../scss/colors";
 @use "../scss/flex";
+@use "../scss/fonts";
 
 .widgets-ItemList {
-    font-size: 14px;
+    font-size: fonts.$sm;
 
     .widgets-ItemList_Item {
         @extend .flex-container-row;

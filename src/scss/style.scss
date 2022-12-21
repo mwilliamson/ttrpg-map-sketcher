@@ -1,5 +1,30 @@
 @use "./flex";
+@use "./forms";
+@use "./text";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: text.$font-family;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
 
 .h-100 {
     height: 100%;
+}
+
+.d-block {
+    display: block;
+}
+
+.overflow-y-scroll {
+    overflow-y: scroll;
 }

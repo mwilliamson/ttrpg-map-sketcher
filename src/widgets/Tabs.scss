@@ -1,0 +1,16 @@
+@use "../scss/forms";
+@use "../scss/spacing";
+
+.widgets-Tabs_tablist {
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: spacing.$md;
+
+    & > button {
+        padding: 0.6rem 1rem;
+
+        &[aria-selected=true] {
+            color: #2b6cb0;
+            border-bottom: 2px solid currentColor;
+        }
+    }
+}

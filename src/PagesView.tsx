@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import * as uuid from "uuid";
 
 import { AppUpdate, Page } from "./app";
@@ -23,25 +22,21 @@ export default function PagesView(props: PagesViewProps) {
             onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
             isSelected={page.id === selectedPageId}
           >
-            <Button
+            <button
               onClick={() => onSelectPage(page.id)}
-              size="sm"
-              variant="link"
             >
               {page.name}
-            </Button>
+            </button>
           </ItemList.Item>
         ))}
       </ItemList>
 
-      <Button
-        marginTop={3}
+      <button
+        className="btn btn-secondary btn-variant-solid btn-sm mt-md"
         onClick={() => sendUpdate({type: "addPage", id: uuid.v4()})}
-        size="sm"
-        variant="solid"
       >
         Add page
-      </Button>
+      </button>
     </>
   );
 }

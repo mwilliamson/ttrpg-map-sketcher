@@ -1,4 +1,3 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
@@ -8,8 +7,7 @@ import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
 import ToolsView from "./ToolsView";
-
-import "./scss/style.scss";
+import Tabs from "./widgets/Tabs";
 
 const renderArea = RenderArea.from({
   scale: Scale.pixelsPerMetre(20),
@@ -130,51 +128,46 @@ export default function SketcherView(props: SketcherViewProps) {
         )}
       </div>
       <div className="flex-item-static flex-container-column" style={{width: 400}}>
-        <div className="flex-item-fill">
-          <Tabs defaultIndex={1} display="flex" flexDirection="column" height="100%">
-            <TabList>
-              <Tab>Pages</Tab>
-              <Tab>Objects</Tab>
-            </TabList>
-            <TabPanels flex="1 1 auto" minHeight={0}>
-              <TabPanel height="100%" overflowY="scroll">
+        <Tabs.Flex
+          defaultIndex={1}
+          tabs={[
+            {
+              title: "Pages",
+              render: () => (
                 <PagesView
                   onSelectPage={pageId => setSelectedPageId(pageId)}
                   pages={state.pages}
                   selectedPageId={selectedPageId}
                   sendUpdate={handleSendUpdate}
                 />
-              </TabPanel>
-              <TabPanel height="100%" overflowY="scroll">
-                {page === null ? (
-                  <p>No page selected.</p>
-                ) : (
-                  <ObjectsView
-                    onHighlightObject={setHoveredObject}
-                    page={page}
-                    sendUpdate={handleSendUpdate}
-                  />
-                )}
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </div>
-        <div className="flex-item-fill">
-          <Tabs display="flex" flexDirection="column" height="100%">
-            <TabList>
-              <Tab>Page</Tab>
-            </TabList>
-            <TabPanels flex="1 1 auto" minHeight={0}>
-              <TabPanel height="100%" overflowY="scroll">
-                {page === null ? (
-                  <p>No page selected.</p>
-                ) : (
-                  <p>Name: {page.name}</p>
-                )}
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </div>
+              )
+            },
+            {
+              title: "Objects",
+              render: () => page === null ? (
+                <p>No page selected.</p>
+              ) : (
+                <ObjectsView
+                  onHighlightObject={setHoveredObject}
+                  page={page}
+                  sendUpdate={handleSendUpdate}
+                />
+              )
+            },
+          ]}
+        />
+        <Tabs.Flex
+          tabs={[
+            {
+              title: "Page",
+              render: () => page === null ? (
+                <p>No page selected.</p>
+              ) : (
+                <p>Name: {page.name}</p>
+              )
+            }
+          ]}
+        />
       </div>
     </div>
   )

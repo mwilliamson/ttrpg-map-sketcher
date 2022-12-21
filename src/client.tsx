@@ -1,11 +1,12 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
 
-import { applyAppUpdate, AppUpdate, initialAppState } from "./app";
+import { applyAppUpdate, initialAppState } from "./app";
 import { deserializeAppUpdate, serializeAppUpdate } from "./serialization";
 import SketcherView from "./SketcherView";
+
+import "./scss/style.scss";
 
 function webSocketUri() {
   const location = window.location;
@@ -45,8 +46,6 @@ function Client() {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <Client />
-    </ChakraProvider>
+    <Client />
   </React.StrictMode>,
 );

@@ -111,7 +111,7 @@ export default function MapView(props: MapViewProps) {
     <div className="MapView" ref={containerRef}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        style={{width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
+        style={{display: "block", width: renderArea.visibleWidthPixels(), height: renderArea.visibleHeightPixels(), margin: "0 auto"}}
         ref={handleSvgRef.current}
         onContextMenu={handleContextMenu}
         onMouseMove={handleMouseMove}
