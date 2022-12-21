@@ -139,6 +139,7 @@ export default function SketcherView(props: SketcherViewProps) {
                 <PagesView
                   onSelectPage={pageId => setSelectedPageId(pageId)}
                   pages={state.pages}
+                  selectedPageId={selectedPageId}
                   sendUpdate={handleSendUpdate}
                 />
               </Box>

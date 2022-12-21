@@ -1,4 +1,4 @@
-import { Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 
 interface ItemListProps {
   children: React.ReactNode;
@@ -16,43 +16,53 @@ export default function ItemList(props: ItemListProps) {
 
 interface ItemProps {
   children: React.ReactNode;
+  isSelected?: boolean;
   onDelete?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
 
 function Item(props: ItemProps) {
-  const {children, onDelete, onMouseEnter, onMouseLeave} = props;
+  const {children, isSelected = false, onDelete, onMouseEnter, onMouseLeave} = props;
 
   const borderWidth = 1;
 
   return (
-    <Flex
+    <Box
       borderWidth={borderWidth}
       borderTopWidth={0}
       _first={{borderTopWidth: 1}}
       borderColor="gray.400"
-      direction="row"
-      justifyContent="space-between"
-      paddingX={3}
-      paddingY={1}
-      fontSize="sm"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div>
-        {children}
-      </div>
-      {onDelete !== undefined && (
-        <Button
-          onClick={onDelete}
-          size="sm"
-          variant="link"
+      <Flex
+        direction="row"
+      >
+        <Box backgroundColor={isSelected ? "gray.400" : "transparent"} width={2} />
+        <Flex
+          flex="1 1 auto"
+          direction="row"
+          justifyContent="space-between"
+          paddingX={2}
+          paddingY={1}
+          fontSize="sm"
         >
-          Delete
-        </Button>
-      )}
-    </Flex>
+          <div>
+            {children}
+          </div>
+          {onDelete !== undefined && (
+            <Button
+              onClick={onDelete}
+              size="sm"
+              variant="link"
+            >
+              Delete
+            </Button>
+          )}
+        </Flex>
+      </Flex>
+    </Box>
   );
 }
 

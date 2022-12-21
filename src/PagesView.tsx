@@ -7,11 +7,12 @@ import ItemList from "./widgets/ItemList";
 interface PagesViewProps {
   onSelectPage: (pageId: string) => void;
   pages: ReadonlyArray<Page>;
+  selectedPageId: string | null;
   sendUpdate: (update: AppUpdate) => void;
 }
 
 export default function PagesView(props: PagesViewProps) {
-  const { onSelectPage, pages, sendUpdate } = props;
+  const { onSelectPage, pages, selectedPageId, sendUpdate } = props;
 
   return (
     <>
@@ -20,6 +21,7 @@ export default function PagesView(props: PagesViewProps) {
           <ItemList.Item
             key={page.id}
             onDelete={() => sendUpdate({type: "deletePage", id: page.id})}
+            isSelected={page.id === selectedPageId}
           >
             <Button
               onClick={() => onSelectPage(page.id)}
