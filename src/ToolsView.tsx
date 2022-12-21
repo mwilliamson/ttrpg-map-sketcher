@@ -21,7 +21,7 @@ export default function ToolsView(props: ToolsViewProps) {
   return (
     <div className="flex-container-column justify-content-space-between h-100" style={{width: 100}}>
       <div>
-        <h2 className="m-sm text-center">Tools</h2>
+        <h2 className="my-md text-center">Tools</h2>
         <div className="btn-stack m-sm">
           {allToolTypes.map(toolType => (
             <button

@@ -1,8 +1,9 @@
+@use "../scss/colors";
 @use "../scss/forms";
 @use "../scss/spacing";
 
 .widgets-Tabs_tablist {
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid colors.$border-light;
     margin-bottom: spacing.$md;
 
     & > button {
