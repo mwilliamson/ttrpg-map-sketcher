@@ -178,7 +178,7 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
   }
 }
 
-export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdate | null {
+export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdate {
   switch (update.type) {
     case "addPage":
       return updates.deletePage({

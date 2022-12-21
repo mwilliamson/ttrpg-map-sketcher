@@ -68,9 +68,9 @@ export default function SketcherView(props: SketcherViewProps) {
   function handleRedo() {
     const update = updateToRedo();
     if (update !== null) {
-      setUndoStack({...undoStack, index: undoStack.index + 1})
       const updateRedo = createUpdateToRedo(state, update);
       sendUpdate(updateRedo);
+      setUndoStack({...undoStack, index: undoStack.index + 1})
     }
   }
 
@@ -84,12 +84,8 @@ export default function SketcherView(props: SketcherViewProps) {
 
   function handleUndo() {
     const update = updateToUndo();
-    if (update === null) {
-      return;
-    }
-
-    const updateUndo = createUpdateToUndo(state, update);
-    if (updateUndo !== null) {
+    if (update !== null) {
+      const updateUndo = createUpdateToUndo(state, update);
       sendUpdate(updateUndo);
       setUndoStack({...undoStack, index: undoStack.index - 1  });
     }
