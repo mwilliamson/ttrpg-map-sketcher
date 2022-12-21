@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
@@ -21,10 +21,13 @@ interface MapViewProps {
   toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
   highlightObject: NumberedMapObject | null;
+
+  onZoomIn: () => void;
+  onZoomOut: () => void;
 }
 
 export default function MapView(props: MapViewProps) {
-  const { page, renderArea, tool, onToolChange, toolContext, highlightObject } = props;
+  const { page, renderArea, tool, onToolChange, toolContext, highlightObject, onZoomIn, onZoomOut } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -116,6 +119,24 @@ export default function MapView(props: MapViewProps) {
   function isPan(event: React.MouseEvent) {
     return (event.button === 0 && tool.type === panToolType) || event.button === 2;
   }
+
+  useEffect(() => {
+    function handleWheel(event: WheelEvent) {
+      event.preventDefault();
+      if (event.deltaY < 0) {
+        onZoomIn();
+      } else if (event.deltaY > 0) {
+        onZoomOut();
+      }
+    }
+
+    containerRef.current?.addEventListener("wheel", handleWheel, {passive: false});
+
+    return () => {
+      containerRef.current?.removeEventListener("wheel", handleWheel);
+    };
+  }, [onZoomIn, onZoomOut]);
+
 
   return (
     <div className="MapView" ref={containerRef}>

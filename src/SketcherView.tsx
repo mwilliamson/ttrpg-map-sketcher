@@ -10,12 +10,11 @@ import PageView from "./PageView";
 import ToolsView from "./ToolsView";
 import Tabs from "./widgets/Tabs";
 
-const renderArea = RenderArea.from({
-  scale: Scale.pixelsPerMetre(20),
-  mapWidth: Distance.metres(40),
-  mapHeight: Distance.metres(30),
-  squareWidth: Distance.metres(2),
-});
+const zoomLevels = {
+  min: -5,
+  max: 5,
+  default: 0,
+};
 
 interface SketcherViewProps {
   sendUpdate: (update: AppUpdate) => void;
@@ -35,6 +34,22 @@ export default function SketcherView(props: SketcherViewProps) {
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
   const [hoveredObject, setHoveredObject] = useState<NumberedMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
+  const [zoomLevel, setZoomLevel] = useState(zoomLevels.default);
+
+  function handleZoomIn() {
+    setZoomLevel(zoomLevel => Math.min(zoomLevels.max, zoomLevel + 1));
+  }
+
+  function handleZoomOut() {
+    setZoomLevel(zoomLevel => Math.max(zoomLevels.min, zoomLevel - 1));
+  }
+
+  const renderArea = RenderArea.from({
+    scale: Scale.pixelsPerMetre(20 * 1.2 ** zoomLevel),
+    mapWidth: Distance.metres(40),
+    mapHeight: Distance.metres(30),
+    squareWidth: Distance.metres(2),
+  });
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);
 
@@ -121,6 +136,9 @@ export default function SketcherView(props: SketcherViewProps) {
               squareWidth: renderArea.squareWidth,
             }}
             highlightObject={hoveredObject}
+
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
           />
         )}
       </div>
