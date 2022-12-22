@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, ToolContext, Page } from "./app";
+import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, Page } from "./app";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
