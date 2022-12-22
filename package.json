@@ -22,7 +22,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "roughjs": "^4.5.2",
-    "simple-sync": "github:mwilliamson/simple-sync#abfec9b5bb60ede320bb1fdeabf03fb79ac2d60c",
+    "simple-sync": "github:mwilliamson/simple-sync#93bfcdb0ed3258ce2f98c5457900c182d471edce",
     "uuid": "^9.0.0"
   },
   "volta": {
