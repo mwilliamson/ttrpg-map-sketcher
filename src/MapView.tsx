@@ -206,7 +206,7 @@ export default function MapView(props: MapViewProps) {
             </g>
           )}
 
-          {tool.render(renderArea)}
+          {tool.render(renderArea, toolContext)}
         </RoughSvgProvider>
       </svg>
     </div>

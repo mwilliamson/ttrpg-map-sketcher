@@ -1,6 +1,7 @@
 import { findLast } from "lodash";
 import * as uuid from "uuid";
 import { updates } from "..";
+import { draftColor } from "../colors";
 
 import { Distance, Line, Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
@@ -131,14 +132,36 @@ class MoveTool implements Tool<"Move"> {
     });
   }
 
-  public render(renderArea: RenderArea) {
+  public render(renderArea: RenderArea, context: ToolContext) {
     const { position, movingTokenId } = this.state;
 
-    return position !== null && movingTokenId !== null && (
-      <TokenDraftView
-        center={position.token}
-        renderArea={renderArea}
-      />
+    if (position === null || movingTokenId === null){
+      return null;
+    }
+
+    const tokenObject = context.objects.find(object => object.id === movingTokenId);
+
+    if (tokenObject === undefined || tokenObject.shape.type !== "token") {
+      return null;
+    }
+
+    const tokenCenter = tokenObject.shape.token.center;
+
+    return (
+      <>
+        <TokenDraftView
+          center={position.token}
+          renderArea={renderArea}
+        />
+        <line
+          x1={renderArea.toPixelCoordinate(tokenCenter.x)}
+          y1={renderArea.toPixelCoordinate(tokenCenter.y)}
+          x2={renderArea.toPixelCoordinate(position.token.x)}
+          y2={renderArea.toPixelCoordinate(position.token.y)}
+          stroke={draftColor}
+          strokeWidth={2}
+        />
+      </>
     );
   }
 }
