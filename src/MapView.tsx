@@ -47,6 +47,7 @@ export default function MapView(props: MapViewProps) {
     return Math.max(min, Math.min(max, value));
   }
 
+  const lastPagePosition = useRef<null | Point>(null);
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
 
   const renderArea = RenderArea.from({
@@ -97,6 +98,7 @@ export default function MapView(props: MapViewProps) {
     const x = renderArea.fromPixelCoordinate(event.clientX - rect.left);
     const y = renderArea.fromPixelCoordinate(event.clientY - rect.top);
     onToolChange(tool.onMouseMove(Point.from(x, y), toolContext));
+    lastPagePosition.current = Point.from(x, y);
 
     const container = containerRef.current;
     if (lastDragMousePosition.current !== null && container !== null) {
@@ -148,17 +150,10 @@ export default function MapView(props: MapViewProps) {
   useEffect(() => {
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
-      if (event.deltaY !== 0 && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL) {
-        const svg = containerRef.current!.firstChild as Element;
-        const svgRect = svg.getBoundingClientRect();
-        const svgX = event.clientX - svgRect.left;
-        const svgY = event.clientY - svgRect.top;
-
-        const pageX = renderArea.fromPixelCoordinate(svgX);
-        const pageY = renderArea.fromPixelCoordinate(svgY);
+      if (event.deltaY !== 0 && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL && lastPagePosition.current !== null) {
         zoomPositionRef.current = {
           viewport: {x: event.clientX, y: event.clientY},
-          page: Point.from(pageX, pageY)
+          page: lastPagePosition.current,
         };
         handleZoomChange(-event.deltaY);
       }
