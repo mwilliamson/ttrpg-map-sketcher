@@ -2,7 +2,7 @@
 
 ## Getting started
 
-* Run `npm install`
+* Run `npm install`.
 * Start the server with `npm start`.
 * Run `npm build` to build the client.
 
