@@ -1,4 +1,4 @@
-import { AppUpdate, Cross, Distance, Line, MapObject, Point, Polygon, Shape, Token } from "./app";
+import { AppUpdate, Cross, Distance, Line, MapObject, PageDimensions, Point, Polygon, Shape, Token } from "./app";
 import assertNever from "./util/assertNever";
 
 type SerializedAppUpdate =
@@ -6,6 +6,7 @@ type SerializedAppUpdate =
   | {type: "deletePage", updateId: string, pageId: string}
   | {type: "undeletePage", updateId: string, pageId: string}
   | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
+  | {type: "setPageDimensions", updateId: string, pageId: string, previousDimensions: SerializedPageDimensions, dimensions: SerializedPageDimensions}
   | {type: "addObject", updateId: string, pageId: string, object: SerializedMapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
@@ -42,6 +43,12 @@ interface SerializedToken {
   color: string;
 }
 
+interface SerializedPageDimensions {
+  width: SerializedDistance;
+  height: SerializedDistance;
+  squareWidth: SerializedDistance;
+}
+
 interface SerializedPoint {
   x: SerializedDistance;
   y: SerializedDistance;
@@ -59,6 +66,14 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
       return update;
     case "renamePage":
       return update;
+    case "setPageDimensions":
+      return {
+        type: "setPageDimensions",
+        updateId: update.updateId,
+        pageId: update.pageId,
+        previousDimensions: serializePageDimensions(update.previousDimensions),
+        dimensions: serializePageDimensions(update.dimensions),
+      };
     case "addObject":
       return {
         type: "addObject",
@@ -93,6 +108,14 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
       return update;
     case "renamePage":
       return update;
+    case "setPageDimensions":
+      return {
+        type: "setPageDimensions",
+        updateId: update.updateId,
+        pageId: update.pageId,
+        previousDimensions: deserializePageDimensions(update.previousDimensions),
+        dimensions: deserializePageDimensions(update.dimensions),
+      };
     case "addObject":
       return {
         type: "addObject",
@@ -238,6 +261,22 @@ function deserializeToken(token: SerializedToken): Token {
     deserializePoint(token.center),
     token.color,
   );
+}
+
+function serializePageDimensions(dimensions: PageDimensions): SerializedPageDimensions {
+  return {
+    width: serializeDistance(dimensions.width),
+    height: serializeDistance(dimensions.height),
+    squareWidth: serializeDistance(dimensions.squareWidth),
+  };
+}
+
+function deserializePageDimensions(dimensions: SerializedPageDimensions): PageDimensions {
+  return {
+    width: deserializeDistance(dimensions.width),
+    height: deserializeDistance(dimensions.height),
+    squareWidth: deserializeDistance(dimensions.squareWidth),
+  };
 }
 
 function serializePoint(point: Point): SerializedPoint {

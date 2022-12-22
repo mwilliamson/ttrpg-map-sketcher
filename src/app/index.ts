@@ -88,6 +88,7 @@ export type AppUpdate =
   | {type: "deletePage", updateId: string, pageId: string}
   | {type: "undeletePage", updateId: string, pageId: string}
   | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
+  | {type: "setPageDimensions", updateId: string, pageId: string, previousDimensions: PageDimensions, dimensions: PageDimensions}
   | {type: "addObject", updateId: string, pageId: string, object: MapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
@@ -125,6 +126,16 @@ export const updates = {
       pageId,
       previousName,
       name,
+    }
+  },
+
+  setPageDimensions({pageId, previousDimensions, dimensions}: {pageId: string, previousDimensions: PageDimensions, dimensions: PageDimensions}): AppUpdate {
+    return {
+      type: "setPageDimensions",
+      updateId: generateUpdateId(),
+      pageId,
+      previousDimensions,
+      dimensions,
     }
   },
 
@@ -188,6 +199,11 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
         update.pageId,
         page => page.name === update.previousName ? page.rename(update.name) : page,
       )
+    case "setPageDimensions":
+      return state.updatePage(
+        update.pageId,
+        page => page.withDimensions(update.dimensions),
+      );
     case "addObject":
       return state.updatePage(
         update.pageId,
@@ -230,6 +246,12 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         pageId: update.pageId,
         previousName: update.name,
         name: update.previousName,
+      });
+    case "setPageDimensions":
+      return updates.setPageDimensions({
+        pageId: update.pageId,
+        previousDimensions: update.dimensions,
+        dimensions: update.previousDimensions,
       });
     case "addObject":
       return updates.deleteObject({
@@ -275,6 +297,12 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
         pageId: update.pageId,
         previousName: update.previousName,
         name: update.name,
+      });
+    case "setPageDimensions":
+      return updates.setPageDimensions({
+        pageId: update.pageId,
+        previousDimensions: update.previousDimensions,
+        dimensions: update.dimensions,
       });
     case "addObject":
       return updates.undeleteObject({
@@ -380,6 +408,10 @@ export class Page {
 
   public rename(name: string): Page {
     return new Page(this.id, name, this.dimensions, this.allObjects, this.deletedObjectIds);
+  }
+
+  public withDimensions(dimensions: PageDimensions): Page {
+    return new Page(this.id, this.name, dimensions, this.allObjects, this.deletedObjectIds);
   }
 
   public moveToken(update: {objectId: string, previousCenter: Point, center: Point}): Page {
