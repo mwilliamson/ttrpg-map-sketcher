@@ -44,7 +44,8 @@ export class RenderArea {
   }) {
     this.pageDimensions = pageDimensions;
     this.padding = padding;
-    this.scale = pageDimensions.scale.multiply(1.2 ** zoomLevel);
+    const pixelsPerSquare = 40;
+    this.scale = Scale.pixelsPerMetre(pixelsPerSquare / pageDimensions.squareWidth.toMetres() * 1.2 ** zoomLevel);
   }
 
   public get pageWidth() {

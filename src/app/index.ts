@@ -303,7 +303,6 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
 
 export class PageDimensions {
   public static from(options: {
-    scale: Scale,
     width: Distance,
     height: Distance,
     squareWidth: Distance,
@@ -311,18 +310,15 @@ export class PageDimensions {
     return new PageDimensions(options);
   }
 
-  public readonly scale: Scale;
   public readonly width: Distance;
   public readonly height: Distance;
   public readonly squareWidth: Distance;
 
-  private constructor({scale, width, height, squareWidth}: {
-    scale: Scale,
+  private constructor({width, height, squareWidth}: {
     width: Distance,
     height: Distance,
     squareWidth: Distance,
   }) {
-    this.scale = scale;
     this.width = width;
     this.height = height;
     this.squareWidth = squareWidth;
@@ -330,7 +326,6 @@ export class PageDimensions {
 }
 
 const initialPageDimensions = PageDimensions.from({
-  scale: Scale.pixelsPerMetre(20),
   width: Distance.metres(40),
   height: Distance.metres(30),
   squareWidth: Distance.metres(2),
