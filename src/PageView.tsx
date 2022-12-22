@@ -52,6 +52,10 @@ function PageReadView(props: PageReadViewProps) {
             <th>Height</th>
             <td>{page.dimensions.height.toString()}</td>
           </tr>
+          <tr>
+            <th>Square width</th>
+            <td>{page.dimensions.squareWidth.toString()}</td>
+          </tr>
         </tbody>
       </table>
 
