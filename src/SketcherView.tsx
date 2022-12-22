@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, noneTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
+import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
@@ -30,7 +30,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
   const [selectedPageId, setSelectedPageId] = useState<string | null>(state.pages.length === 0 ? null : state.pages[0].id);
-  const [tool, setTool] = useState<Tool>(noneTool);
+  const [tool, setTool] = useState<Tool>(panTool);
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
   const [hoveredObject, setHoveredObject] = useState<NumberedMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});

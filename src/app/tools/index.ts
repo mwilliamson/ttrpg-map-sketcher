@@ -18,6 +18,6 @@ export const allToolTypes: ReadonlyArray<ToolType<string>> = [
 export {
     Tool,
     ToolContext,
-    panTool as noneTool,
+    panTool,
 }
 

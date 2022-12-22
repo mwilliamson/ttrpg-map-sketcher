@@ -2,7 +2,7 @@ import * as uuid from "uuid";
 
 import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
-import { Tool, ToolContext, allToolTypes, noneTool } from "./tools";
+import { Tool, ToolContext, allToolTypes, panTool } from "./tools";
 
 export class AppState {
   private readonly allPages: ReadonlyArray<Page>;
@@ -336,5 +336,5 @@ export type Shape =
 
 export { Cross, Distance, Line, Point, Polygon, Token };
 export { RenderArea, Scale };
-export { Tool, ToolContext, allToolTypes, noneTool };
+export { Tool, ToolContext, allToolTypes, panTool };
 
