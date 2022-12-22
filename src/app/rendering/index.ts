@@ -1,3 +1,4 @@
+import { PageDimensions } from "..";
 import { Distance, Line, Point } from "../geometry";
 
 export class Scale {
@@ -21,41 +22,45 @@ export class Scale {
 }
 
 export class RenderArea {
-  public static from(options: {
-    scale: Scale,
-    mapWidth: Distance,
-    mapHeight: Distance,
-    squareWidth: Distance,
+  public static from({pageDimensions}: {
+    pageDimensions: PageDimensions,
   }) {
-    return new RenderArea({...options, padding: options.squareWidth.divide(2)});
+    return new RenderArea({pageDimensions, padding: pageDimensions.squareWidth.divide(2)});
   }
 
-  private readonly scale: Scale;
+  private readonly pageDimensions: PageDimensions;
   private readonly padding: Distance;
-  public readonly mapWidth: Distance;
-  public readonly mapHeight: Distance;
-  public readonly squareWidth: Distance;
 
-  private constructor({scale, padding, mapWidth, mapHeight, squareWidth}: {
-    scale: Scale,
+  private constructor({pageDimensions, padding}: {
+    pageDimensions: PageDimensions,
     padding: Distance,
-    mapWidth: Distance,
-    mapHeight: Distance,
-    squareWidth: Distance,
   }) {
-    this.scale = scale;
+    this.pageDimensions = pageDimensions;
     this.padding = padding;
-    this.mapWidth = mapWidth;
-    this.mapHeight = mapHeight;
-    this.squareWidth = squareWidth;
+  }
+
+  private get scale() {
+    return this.pageDimensions.scale;
+  }
+
+  public get pageWidth() {
+    return this.pageDimensions.width;
+  }
+
+  public get pageHeight() {
+    return this.pageDimensions.height;
+  }
+
+  public get squareWidth() {
+    return this.pageDimensions.squareWidth;
   }
 
   public visibleWidthPixels(): number {
-    return this.scale.toPixels(this.mapWidth.add(this.padding.multiply(2)));
+    return this.scale.toPixels(this.pageWidth.add(this.padding.multiply(2)));
   }
 
   public visibleHeightPixels(): number {
-    return this.scale.toPixels(this.mapHeight.add(this.padding.multiply(2)));
+    return this.scale.toPixels(this.pageHeight.add(this.padding.multiply(2)));
   }
 
   public distanceToPixels(distance: Distance): number {

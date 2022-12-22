@@ -222,10 +222,10 @@ function GridView(props: GridViewProps) {
 
   return (
     <g stroke="#ccc">
-      {Distance.rangeInclusive(Distance.metres(0), renderArea.mapWidth, renderArea.squareWidth).map(x => (
+      {Distance.rangeInclusive(Distance.metres(0), renderArea.pageWidth, renderArea.squareWidth).map(x => (
         <line key={x.toMetres()} x1={renderArea.toPixelCoordinate(x)} y1={0} x2={renderArea.toPixelCoordinate(x)} y2={renderArea.visibleHeightPixels()} />
       ))}
-      {Distance.rangeInclusive(Distance.metres(0), renderArea.mapHeight, renderArea.squareWidth).map(y => (
+      {Distance.rangeInclusive(Distance.metres(0), renderArea.pageHeight, renderArea.squareWidth).map(y => (
         <line key={y.toMetres()} x1={0} y1={renderArea.toPixelCoordinate(y)} x2={renderArea.visibleWidthPixels()} y2={renderArea.toPixelCoordinate(y)} />
       ))}
     </g>

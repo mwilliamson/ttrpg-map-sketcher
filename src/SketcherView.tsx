@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
+import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo, PageDimensions } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
@@ -45,10 +45,12 @@ export default function SketcherView(props: SketcherViewProps) {
   }
 
   const renderArea = RenderArea.from({
-    scale: Scale.pixelsPerMetre(20 * 1.2 ** zoomLevel),
-    mapWidth: Distance.metres(40),
-    mapHeight: Distance.metres(30),
-    squareWidth: Distance.metres(2),
+    pageDimensions: PageDimensions.from({
+      scale: Scale.pixelsPerMetre(20 * 1.2 ** zoomLevel),
+      width: Distance.metres(40),
+      height: Distance.metres(30),
+      squareWidth: Distance.metres(2),
+    }),
   });
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);

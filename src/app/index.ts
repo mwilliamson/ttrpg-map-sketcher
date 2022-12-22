@@ -301,6 +301,34 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
   }
 }
 
+export class PageDimensions {
+  public static from(options: {
+    scale: Scale,
+    width: Distance,
+    height: Distance,
+    squareWidth: Distance,
+  }) {
+    return new PageDimensions(options);
+  }
+
+  public readonly scale: Scale;
+  public readonly width: Distance;
+  public readonly height: Distance;
+  public readonly squareWidth: Distance;
+
+  private constructor({scale, width, height, squareWidth}: {
+    scale: Scale,
+    width: Distance,
+    height: Distance,
+    squareWidth: Distance,
+  }) {
+    this.scale = scale;
+    this.width = width;
+    this.height = height;
+    this.squareWidth = squareWidth;
+  }
+}
+
 export class Page {
   public static createEmpty(id: string, name: string): Page {
     return new Page(id, name, [], new Set());
