@@ -90,7 +90,8 @@ export type AppUpdate =
   | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
   | {type: "addObject", updateId: string, pageId: string, object: MapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
-  | {type: "undeleteObject", updateId: string, pageId: string, objectId: string};
+  | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
+  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: Point, center: Point};
 
 export const updates = {
   addPage(): AppUpdate {
@@ -153,6 +154,17 @@ export const updates = {
       objectId,
     };
   },
+
+  moveToken({pageId, objectId, previousCenter, center}: {pageId: string, objectId: string, previousCenter: Point, center: Point}): AppUpdate {
+    return {
+      type: "moveToken",
+      updateId: generateUpdateId(),
+      pageId,
+      objectId,
+      previousCenter,
+      center,
+    }
+  },
 }
 
 function generateUpdateId(): string {
@@ -190,6 +202,11 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
       return state.updatePage(
         update.pageId,
         page => page.undeleteObject(update.objectId),
+      );
+    case "moveToken":
+      return state.updatePage(
+        update.pageId,
+        page => page.moveToken(update),
       );
   }
 }
@@ -229,6 +246,13 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         pageId: update.pageId,
         objectId: update.objectId,
       });
+    case "moveToken":
+      return updates.moveToken({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousCenter: update.previousCenter,
+        center: update.center,
+      });
   }
 }
 
@@ -266,6 +290,13 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
       return updates.undeleteObject({
         pageId: update.pageId,
         objectId: update.objectId,
+      });
+    case "moveToken":
+      return updates.moveToken({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousCenter: update.previousCenter,
+        center: update.center,
       });
   }
 }
@@ -316,6 +347,20 @@ export class Page {
 
   public rename(name: string): Page {
     return new Page(this.id, name, this.allObjects, this.deletedObjectIds);
+  }
+
+  public moveToken(update: {objectId: string, previousCenter: Point, center: Point}): Page {
+    const allObjects = this.allObjects.map(
+      object => object.id === update.objectId && object.shape.type === "token" && object.shape.token.center.equals(update.previousCenter) ? {
+        ...object,
+        shape: {
+          type: "token" as const,
+          token: object.shape.token.move(update.center)
+        }
+      } : object
+    );
+
+    return new Page(this.id, this.name, allObjects, this.deletedObjectIds);
   }
 }
 

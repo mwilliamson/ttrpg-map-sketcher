@@ -8,7 +8,8 @@ type SerializedAppUpdate =
   | {type: "renamePage", updateId: string, pageId: string, previousName: string, name: string}
   | {type: "addObject", updateId: string, pageId: string, object: SerializedMapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
-  | {type: "undeleteObject", updateId: string, pageId: string, objectId: string};
+  | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
+  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: SerializedPoint, center: SerializedPoint};
 
 interface SerializedMapObject {
   id: string;
@@ -69,6 +70,15 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
       return update;
     case "undeleteObject":
       return update;
+    case "moveToken":
+      return {
+        type: "moveToken",
+        updateId: update.updateId,
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousCenter: serializePoint(update.previousCenter),
+        center: serializePoint(update.center),
+      };
   }
 }
 
@@ -94,6 +104,15 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
       return update;
     case "undeleteObject":
       return update;
+    case "moveToken":
+      return {
+        type: "moveToken",
+        updateId: update.updateId,
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousCenter: deserializePoint(update.previousCenter),
+        center: deserializePoint(update.center),
+      };
   }
 }
 

@@ -125,7 +125,19 @@ class MoveTool implements Tool<"Move"> {
     });
   }
 
-  public onMouseLeftUp(): MoveTool {
+  public onMouseLeftUp(context: ToolContext): MoveTool {
+    const {position} = this.state;
+    const movingToken = this.movingToken(context);
+
+    if (position !== null && movingToken !== null) {
+      context.sendUpdate(updates.moveToken({
+        pageId: context.pageId,
+        objectId: this.state.movingTokenId!,
+        previousCenter: movingToken.center,
+        center: position.token,
+      }));
+    }
+
     return new MoveTool({
       ...this.state,
       movingTokenId: null,
@@ -133,30 +145,28 @@ class MoveTool implements Tool<"Move"> {
   }
 
   public render(renderArea: RenderArea, context: ToolContext) {
-    const { position, movingTokenId } = this.state;
+    const { position } = this.state;
 
-    if (position === null || movingTokenId === null){
+    if (position === null){
       return null;
     }
 
-    const tokenObject = context.objects.find(object => object.id === movingTokenId);
+    const movingToken = this.movingToken(context);
 
-    if (tokenObject === undefined || tokenObject.shape.type !== "token") {
+    if (movingToken === null) {
       return null;
     }
-
-    const tokenCenter = tokenObject.shape.token.center;
 
     return (
       <>
         <TokenView
           opacity={0.4}
           renderArea={renderArea}
-          token={tokenObject.shape.token.move(position.token)}
+          token={movingToken.move(position.token)}
         />
         <line
-          x1={renderArea.toPixelCoordinate(tokenCenter.x)}
-          y1={renderArea.toPixelCoordinate(tokenCenter.y)}
+          x1={renderArea.toPixelCoordinate(movingToken.center.x)}
+          y1={renderArea.toPixelCoordinate(movingToken.center.y)}
           x2={renderArea.toPixelCoordinate(position.token.x)}
           y2={renderArea.toPixelCoordinate(position.token.y)}
           stroke={draftColor}
@@ -164,6 +174,20 @@ class MoveTool implements Tool<"Move"> {
         />
       </>
     );
+  }
+
+  private movingToken(context: ToolContext): Token | null {
+    if (this.state.movingTokenId === null){
+      return null;
+    }
+
+    const tokenObject = context.objects.find(object => object.id === this.state.movingTokenId);
+
+    if (tokenObject === undefined || tokenObject.shape.type !== "token") {
+      return null;
+    } else {
+      return tokenObject.shape.token;
+    }
   }
 }
 
