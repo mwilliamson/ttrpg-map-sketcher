@@ -1,6 +1,7 @@
-import { AppUpdate, Distance, Point, RenderArea } from "..";
+import { AppUpdate, Distance, NumberedMapObject, Point, RenderArea } from "..";
 
 export interface ToolContext {
+  objects: ReadonlyArray<NumberedMapObject>;
   pageId: string;
   selectedColor: string;
   sendUpdate: (update: AppUpdate) => void;

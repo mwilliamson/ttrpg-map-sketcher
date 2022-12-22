@@ -4,7 +4,7 @@ import { lineToolType } from "./line";
 import { panTool, panToolType } from "./pan";
 import { polygonToolType } from "./polygon";
 import { rulerToolType } from "./ruler";
-import { tokenToolType } from "./token";
+import { moveToolType, tokenToolType } from "./token";
 
 export const allToolTypes: ReadonlyArray<ToolType<string>> = [
     panToolType,
@@ -12,6 +12,7 @@ export const allToolTypes: ReadonlyArray<ToolType<string>> = [
     polygonToolType,
     crossToolType,
     tokenToolType,
+    moveToolType,
     rulerToolType,
 ];
 

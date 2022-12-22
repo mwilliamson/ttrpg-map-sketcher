@@ -1,9 +1,10 @@
+import { findLast } from "lodash";
 import * as uuid from "uuid";
 import { updates } from "..";
 
-import { Point, Token } from "../geometry";
+import { Distance, Line, Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
-import { TokenDraftView } from "../rendering/token";
+import { TokenDraftView, tokenRadius } from "../rendering/token";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const tokenToolType: ToolType<"Token"> = {
@@ -26,7 +27,7 @@ class TokenTool implements Tool<"Token"> {
   }
 
   public onMouseMove(mousePosition: Point, context: ToolContext): TokenTool {
-    const snapDistance = context.squareWidth.divide(2);
+    const snapDistance = tokenSnapDistance(context);
     return new TokenTool({
       ...this.state,
       snapPoint: mousePosition.snapTo(snapDistance),
@@ -67,4 +68,81 @@ class TokenTool implements Tool<"Token"> {
       />
     );
   }
+}
+
+export const moveToolType: ToolType<"Move"> = {
+  name: "Move",
+  create: () => new MoveTool({
+    movingTokenId: null,
+    position: null,
+  }),
+}
+
+interface MoveToolState {
+  movingTokenId: string | null;
+  position: {mouse: Point, token: Point} | null;
+}
+
+class MoveTool implements Tool<"Move"> {
+  public readonly type = moveToolType;
+  private readonly state: MoveToolState;
+
+  public constructor(state: MoveToolState) {
+    this.state = state;
+  }
+
+  public onMouseMove(mousePosition: Point, context: ToolContext): MoveTool {
+    return new MoveTool({
+      ...this.state,
+      position: {mouse: mousePosition, token: mousePosition.snapTo(tokenSnapDistance(context))},
+    });
+  }
+
+  public onMouseLeave(): MoveTool {
+    return new MoveTool({
+      ...this.state,
+      position: null,
+    });
+  }
+
+  public onMouseLeftDown(context: ToolContext): MoveTool {
+    const position = this.state.position;
+    if (position === null) {
+      return this;
+    }
+
+    const radius = tokenRadius(context);
+
+    const token = findLast(
+      context.objects,
+      object => object.shape.type === "token" && Line.from(object.shape.token.center, position.mouse).isShorterThanOrEqualTo(radius)
+    );
+
+    return new MoveTool({
+      ...this.state,
+      movingTokenId: token !== undefined && token.shape.type === "token" ? token.id : null,
+    });
+  }
+
+  public onMouseLeftUp(): MoveTool {
+    return new MoveTool({
+      ...this.state,
+      movingTokenId: null,
+    });
+  }
+
+  public render(renderArea: RenderArea) {
+    const { position, movingTokenId } = this.state;
+
+    return position !== null && movingTokenId !== null && (
+      <TokenDraftView
+        center={position.token}
+        renderArea={renderArea}
+      />
+    );
+  }
+}
+
+function tokenSnapDistance(context: ToolContext): Distance {
+  return context.squareWidth.divide(2);
 }

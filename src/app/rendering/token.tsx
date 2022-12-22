@@ -58,6 +58,6 @@ export function TokenDraftView(props: TokenDraftViewProps) {
   );
 }
 
-function tokenRadius(renderArea: RenderArea): Distance {
-  return renderArea.squareWidth.divide(2);
+export function tokenRadius({squareWidth}: {squareWidth: Distance}): Distance {
+  return squareWidth.divide(2);
 }

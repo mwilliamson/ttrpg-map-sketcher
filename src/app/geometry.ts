@@ -91,6 +91,13 @@ export class Line {
     const y = this.start.y.toMetres() - this.end.y.toMetres();
     return Distance.metres(Math.sqrt(x * x + y * y));
   }
+
+  public isShorterThanOrEqualTo(distance: Distance): boolean {
+    const x = this.start.x.toMetres() - this.end.x.toMetres();
+    const y = this.start.y.toMetres() - this.end.y.toMetres();
+    const distanceMetres = distance.toMetres();
+    return x * x + y * y <= distanceMetres * distanceMetres;
+  }
 }
 
 export class Polygon {

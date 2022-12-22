@@ -130,6 +130,7 @@ export default function SketcherView(props: SketcherViewProps) {
             tool={tool}
             onToolChange={newTool => setTool(newTool)}
             toolContext={{
+              objects: page.objects,
               pageId: page.id,
               selectedColor: selectedColor,
               sendUpdate: handleSendUpdate,
