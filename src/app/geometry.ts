@@ -140,4 +140,8 @@ export class Token {
     this.center = center;
     this.color = color;
   }
+
+  public move(center: Point): Token {
+    return new Token(center, this.color);
+  }
 }

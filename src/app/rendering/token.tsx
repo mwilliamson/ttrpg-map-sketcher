@@ -3,15 +3,17 @@ import { draftColor, highlightColor } from "../colors";
 import { Distance, Point, Token } from "../geometry";
 
 interface TokenViewProps {
+  opacity?: number;
   renderArea: RenderArea;
   token: Token;
 }
 
 export function TokenView(props: TokenViewProps) {
-  const { renderArea, token } = props;
+  const { opacity, renderArea, token } = props;
 
   return (
     <circle
+      opacity={opacity}
       stroke="#000"
       strokeWidth="3"
       fill={token.color}

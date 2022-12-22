@@ -5,7 +5,7 @@ import { draftColor } from "../colors";
 
 import { Distance, Line, Point, Token } from "../geometry";
 import { RenderArea } from "../rendering";
-import { TokenDraftView, tokenRadius } from "../rendering/token";
+import { TokenDraftView, tokenRadius, TokenView } from "../rendering/token";
 import { Tool, ToolContext, ToolType } from "./base";
 
 export const tokenToolType: ToolType<"Token"> = {
@@ -149,9 +149,10 @@ class MoveTool implements Tool<"Move"> {
 
     return (
       <>
-        <TokenDraftView
-          center={position.token}
+        <TokenView
+          opacity={0.4}
           renderArea={renderArea}
+          token={tokenObject.shape.token.move(position.token)}
         />
         <line
           x1={renderArea.toPixelCoordinate(tokenCenter.x)}
