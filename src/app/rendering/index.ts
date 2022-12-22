@@ -12,6 +12,10 @@ export class Scale {
     this.pixelsPerMetre = pixelsPerMetre;
   }
 
+  public multiply(by: number): Scale {
+    return new Scale(this.pixelsPerMetre * by);
+  }
+
   public toPixels(distance: Distance): number {
     return distance.toMetres() * this.pixelsPerMetre;
   }
@@ -22,25 +26,25 @@ export class Scale {
 }
 
 export class RenderArea {
-  public static from({pageDimensions}: {
+  public static from({pageDimensions, zoomLevel}: {
     pageDimensions: PageDimensions,
+    zoomLevel: number,
   }) {
-    return new RenderArea({pageDimensions, padding: pageDimensions.squareWidth.divide(2)});
+    return new RenderArea({pageDimensions, padding: pageDimensions.squareWidth.divide(2), zoomLevel});
   }
 
   private readonly pageDimensions: PageDimensions;
   private readonly padding: Distance;
+  private readonly scale: Scale;
 
-  private constructor({pageDimensions, padding}: {
+  private constructor({pageDimensions, padding, zoomLevel}: {
     pageDimensions: PageDimensions,
     padding: Distance,
+    zoomLevel: number,
   }) {
     this.pageDimensions = pageDimensions;
     this.padding = padding;
-  }
-
-  private get scale() {
-    return this.pageDimensions.scale;
+    this.scale = pageDimensions.scale.multiply(1.2 ** zoomLevel);
   }
 
   public get pageWidth() {

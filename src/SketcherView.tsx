@@ -46,11 +46,12 @@ export default function SketcherView(props: SketcherViewProps) {
 
   const renderArea = RenderArea.from({
     pageDimensions: PageDimensions.from({
-      scale: Scale.pixelsPerMetre(20 * 1.2 ** zoomLevel),
+      scale: Scale.pixelsPerMetre(20),
       width: Distance.metres(40),
       height: Distance.metres(30),
       squareWidth: Distance.metres(2),
     }),
+    zoomLevel,
   });
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);
