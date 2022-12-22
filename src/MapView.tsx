@@ -188,7 +188,11 @@ export default function MapView(props: MapViewProps) {
     const viewportX = svgX + svgRect.left;
     const viewportY = svgY + svgRect.top;
 
-    container.scrollBy(viewportX - zoomPosition.viewport.x, viewportY - zoomPosition.viewport.y);
+    container.scrollBy({
+      left: viewportX - zoomPosition.viewport.x,
+      top:viewportY - zoomPosition.viewport.y,
+      behavior: "instant" as any
+    });
 
     zoomPositionRef.current = null;
   }, [zoomLevel]);
