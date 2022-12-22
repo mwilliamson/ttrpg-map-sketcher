@@ -191,7 +191,7 @@ export default function MapView(props: MapViewProps) {
     container.scrollBy(viewportX - zoomPosition.viewport.x, viewportY - zoomPosition.viewport.y);
 
     zoomPositionRef.current = null;
-  }, [renderArea.squareWidth]);
+  }, [zoomLevel]);
 
   return (
     <div className="MapView" ref={containerRef}>
