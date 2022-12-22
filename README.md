@@ -1,6 +1,6 @@
-## TTRPG Map Sketcher
+# TTRPG Map Sketcher
 
-# Getting started
+## Getting started
 
 * Run `npm install`
 * Start the server with `npm start`.
