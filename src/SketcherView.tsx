@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Distance, RenderArea, Scale, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo, PageDimensions } from "./app";
+import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
