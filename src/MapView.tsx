@@ -15,17 +15,21 @@ import { panToolType } from "./app/tools/pan";
 
 interface MapViewProps {
   page: Page;
-  renderArea: RenderArea,
   sendUpdate: (update: AppUpdate) => void;
   tool: Tool;
-  toolContext: ToolContext;
   onToolChange: (newTool: Tool) => void;
   highlightObject: NumberedMapObject | null;
-  onZoomChange: (zoomDelta: number) => void;
+  selectedColor: string;
 }
 
+const zoomLevels = {
+  min: -5,
+  max: 5,
+  default: 0,
+};
+
 export default function MapView(props: MapViewProps) {
-  const { page, renderArea, tool, onToolChange, toolContext, highlightObject, onZoomChange } = props;
+  const { page, sendUpdate, tool, onToolChange, highlightObject, selectedColor } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +37,30 @@ export default function MapView(props: MapViewProps) {
 
   const handleSvgRef = useRef((svgElement: SVGSVGElement) => svgElement !== null && setRoughSvg(rough.svg(svgElement)));
 
+  const [zoomLevel, setZoomLevel] = useState(zoomLevels.default);
+
+  function handleZoomChange(zoomDelta: number) {
+    setZoomLevel(zoomLevel => clamp(zoomLevels.min, zoomLevel + zoomDelta / 100, zoomLevels.max));
+  }
+
+  function clamp(min: number, value: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
+  }
+
   const lastDragMousePosition = useRef<null | {x: number, y: number}>(null);
+
+  const renderArea = RenderArea.from({
+    pageDimensions: page.dimensions,
+    zoomLevel,
+  });
+
+  const toolContext = {
+    objects: page.objects,
+    pageId: page.id,
+    selectedColor: selectedColor,
+    sendUpdate,
+    squareWidth: renderArea.squareWidth,
+  };
 
   const standardObjects: Array<NumberedMapObject> = [];
   const tokenObjects: Array<NumberedMapObject> = [];
@@ -133,7 +160,7 @@ export default function MapView(props: MapViewProps) {
           viewport: {x: event.clientX, y: event.clientY},
           page: Point.from(pageX, pageY)
         };
-        onZoomChange(-event.deltaY);
+        handleZoomChange(-event.deltaY);
       }
     }
 
@@ -142,7 +169,7 @@ export default function MapView(props: MapViewProps) {
     return () => {
       containerRef.current?.removeEventListener("wheel", handleWheel);
     };
-  }, [onZoomChange]);
+  }, [handleZoomChange]);
 
   const zoomPositionRef = useRef<{viewport: {x: number, y: number}, page: Point} | null>(null);
 

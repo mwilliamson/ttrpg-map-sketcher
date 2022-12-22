@@ -10,12 +10,6 @@ import PageView from "./PageView";
 import ToolsView from "./ToolsView";
 import Tabs from "./widgets/Tabs";
 
-const zoomLevels = {
-  min: -5,
-  max: 5,
-  default: 0,
-};
-
 interface SketcherViewProps {
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;
@@ -34,25 +28,6 @@ export default function SketcherView(props: SketcherViewProps) {
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
   const [hoveredObject, setHoveredObject] = useState<NumberedMapObject | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
-  const [zoomLevel, setZoomLevel] = useState(zoomLevels.default);
-
-  function handleZoomChange(zoomDelta: number) {
-    setZoomLevel(zoomLevel => clamp(zoomLevels.min, zoomLevel + zoomDelta / 100, zoomLevels.max));
-  }
-
-  function clamp(min: number, value: number, max: number): number {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  const renderArea = RenderArea.from({
-    pageDimensions: PageDimensions.from({
-      scale: Scale.pixelsPerMetre(20),
-      width: Distance.metres(40),
-      height: Distance.metres(30),
-      squareWidth: Distance.metres(2),
-    }),
-    zoomLevel,
-  });
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);
 
@@ -128,19 +103,11 @@ export default function SketcherView(props: SketcherViewProps) {
         {page !== null && (
           <MapView
             page={page}
-            renderArea={renderArea}
             sendUpdate={handleSendUpdate}
             tool={tool}
             onToolChange={newTool => setTool(newTool)}
-            toolContext={{
-              objects: page.objects,
-              pageId: page.id,
-              selectedColor: selectedColor,
-              sendUpdate: handleSendUpdate,
-              squareWidth: renderArea.squareWidth,
-            }}
             highlightObject={hoveredObject}
-            onZoomChange={handleZoomChange}
+            selectedColor={selectedColor}
           />
         )}
       </div>

@@ -329,13 +329,21 @@ export class PageDimensions {
   }
 }
 
+const initialPageDimensions = PageDimensions.from({
+  scale: Scale.pixelsPerMetre(20),
+  width: Distance.metres(40),
+  height: Distance.metres(30),
+  squareWidth: Distance.metres(2),
+});
+
 export class Page {
   public static createEmpty(id: string, name: string): Page {
-    return new Page(id, name, [], new Set());
+    return new Page(id, name, initialPageDimensions, [], new Set());
   }
 
   public readonly id: string;
   public readonly name: string;
+  public readonly dimensions: PageDimensions;
   private readonly allObjects: ReadonlyArray<NumberedMapObject>;
   private readonly deletedObjectIds: Set<string>;
   public readonly objects: ReadonlyArray<NumberedMapObject>;
@@ -343,11 +351,13 @@ export class Page {
   constructor(
     id: string,
     name: string,
+    dimensions: PageDimensions,
     allObjects: ReadonlyArray<NumberedMapObject>,
     deletedObjectIds: Set<string>,
   ) {
     this.id = id;
     this.name = name;
+    this.dimensions = dimensions;
     this.allObjects = allObjects;
     this.deletedObjectIds = deletedObjectIds;
     this.objects = this.allObjects.filter(object => !deletedObjectIds.has(object.id))
@@ -358,23 +368,23 @@ export class Page {
       ...this.allObjects,
       {...object, objectNumber: this.allObjects.length + 1},
     ]
-    return new Page(this.id, this.name, allObjects, this.deletedObjectIds);
+    return new Page(this.id, this.name, this.dimensions, allObjects, this.deletedObjectIds);
   }
 
   public deleteObject(id: string): Page {
     const deletedObjectIds = new Set(this.deletedObjectIds);
     deletedObjectIds.add(id);
-    return new Page(this.id, this.name, this.allObjects, deletedObjectIds);
+    return new Page(this.id, this.name, this.dimensions, this.allObjects, deletedObjectIds);
   }
 
   public undeleteObject(id: string): Page {
     const deletedObjectIds = new Set(this.deletedObjectIds);
     deletedObjectIds.delete(id);
-    return new Page(this.id, this.name, this.allObjects, deletedObjectIds);
+    return new Page(this.id, this.name, this.dimensions, this.allObjects, deletedObjectIds);
   }
 
   public rename(name: string): Page {
-    return new Page(this.id, name, this.allObjects, this.deletedObjectIds);
+    return new Page(this.id, name, this.dimensions, this.allObjects, this.deletedObjectIds);
   }
 
   public moveToken(update: {objectId: string, previousCenter: Point, center: Point}): Page {
@@ -388,7 +398,7 @@ export class Page {
       } : object
     );
 
-    return new Page(this.id, this.name, allObjects, this.deletedObjectIds);
+    return new Page(this.id, this.name, this.dimensions, allObjects, this.deletedObjectIds);
   }
 }
 
