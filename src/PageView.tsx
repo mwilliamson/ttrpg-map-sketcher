@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { AppUpdate, Page, updates } from "./app";
 
+import "./PageView.scss";
+
 interface PageViewProps {
   page: Page;
   sendUpdate: (update: AppUpdate) => void;
@@ -36,7 +38,22 @@ function PageReadView(props: PageReadViewProps) {
   const {onEdit, page} = props;
   return (
     <>
-      <p>Name: {page.name}</p>
+      <table className="PageView-properties">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{page.name}</td>
+          </tr>
+          <tr>
+            <th>Width</th>
+            <td>{page.dimensions.width.toString()}</td>
+          </tr>
+          <tr>
+            <th>Height</th>
+            <td>{page.dimensions.height.toString()}</td>
+          </tr>
+        </tbody>
+      </table>
 
       <button
         className="btn btn-secondary btn-variant-solid mt-md"
