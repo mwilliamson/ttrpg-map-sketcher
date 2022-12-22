@@ -11,7 +11,7 @@ export const crossToolType: ToolType<"Cross"> = {
   create: () => new CrossTool({
     snapPoint: null,
   }),
-}
+};
 
 interface CrossToolState {
   snapPoint: Point | null;

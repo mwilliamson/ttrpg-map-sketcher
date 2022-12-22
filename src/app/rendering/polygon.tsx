@@ -67,7 +67,7 @@ export function PolygonDraftView(props: PolygonDraftViewProps) {
           cy={renderArea.toPixelCoordinate(point.y)}
           r={5}
           fill={draftColor}
-          />
+        />
       ))}
 
       {slidingPairs(points).map(([start, end], lineIndex) => (

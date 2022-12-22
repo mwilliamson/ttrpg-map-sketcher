@@ -12,7 +12,7 @@ export const lineToolType: ToolType<"Line"> = {
     lineStart: null,
     snapPoint: null,
   }),
-}
+};
 
 interface LineToolState {
   lineStart: Point | null;

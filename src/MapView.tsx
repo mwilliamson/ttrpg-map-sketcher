@@ -107,7 +107,7 @@ export default function MapView(props: MapViewProps) {
       lastDragMousePosition.current = {
         x: event.clientX,
         y: event.clientY,
-      }
+      };
 
       container.scrollBy(deltaX, deltaY);
     }
@@ -329,7 +329,7 @@ function ObjectView(props: ObjectViewProps) {
           renderArea={renderArea}
           seed={objectNumber}
         />
-      )
+      );
     case "token":
       return (
         <TokenView

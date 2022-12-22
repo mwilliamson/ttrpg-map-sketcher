@@ -64,7 +64,7 @@ function FlexTabs(props: TabsProps) {
       panelClassName={classNames("h-100 overflow-y-scroll", panelClassName)}
       {...restProps}
     />
-  )
+  );
 }
 
 Tabs.Flex = FlexTabs;

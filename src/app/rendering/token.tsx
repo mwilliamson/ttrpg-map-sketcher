@@ -21,7 +21,7 @@ export function TokenView(props: TokenViewProps) {
       cy={renderArea.toPixelCoordinate(token.center.y)}
       r={renderArea.distanceToPixels(tokenRadius(renderArea))}
     />
-  )
+  );
 }
 
 interface TokenHighlightViewProps {

@@ -111,7 +111,7 @@ function PageEditView(props: PageEditViewProps) {
         height: Distance.metres(parseFloat(height)),
         squareWidth: Distance.metres(parseFloat(squareWidth)),
       })
-    }))
+    }));
 
     onSave(pageUpdates);
   }

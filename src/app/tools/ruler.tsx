@@ -10,7 +10,7 @@ export const rulerToolType: ToolType<"Ruler"> = {
     lineStart: null,
     snapPoint: null,
   }),
-}
+};
 
 interface RulerToolState {
   lineStart: Point | null;

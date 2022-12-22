@@ -19,7 +19,7 @@ export function RoughLine(props: RoughLineProps) {
   const { x1, y1, x2, y2, seed, strokeColor = "#000", strokeWidth = 1 } = props;
 
   const rc = useContext(RoughSvgContext);
-  const containerRef = useRef<SVGGElement>(null)
+  const containerRef = useRef<SVGGElement>(null);
 
   useLayoutEffect(() => {
     if (rc !== null && containerRef.current !== null) {
@@ -30,7 +30,7 @@ export function RoughLine(props: RoughLineProps) {
 
   return (
     <g ref={containerRef}></g>
-  )
+  );
 }
 
 interface RoughPolygonProps {
@@ -43,7 +43,7 @@ export function RoughPolygon(props: RoughPolygonProps) {
   const { points, seed, fillColor } = props;
 
   const rc = useContext(RoughSvgContext);
-  const containerRef = useRef<SVGGElement>(null)
+  const containerRef = useRef<SVGGElement>(null);
 
   useLayoutEffect(() => {
     if (rc !== null && containerRef.current !== null) {
@@ -54,5 +54,5 @@ export function RoughPolygon(props: RoughPolygonProps) {
 
   return (
     <g ref={containerRef}></g>
-  )
+  );
 }

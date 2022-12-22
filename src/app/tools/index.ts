@@ -7,18 +7,18 @@ import { rulerToolType } from "./ruler";
 import { moveToolType, tokenToolType } from "./token";
 
 export const allToolTypes: ReadonlyArray<ToolType<string>> = [
-    panToolType,
-    lineToolType,
-    polygonToolType,
-    crossToolType,
-    tokenToolType,
-    moveToolType,
-    rulerToolType,
+  panToolType,
+  lineToolType,
+  polygonToolType,
+  crossToolType,
+  tokenToolType,
+  moveToolType,
+  rulerToolType,
 ];
 
 export {
-    Tool,
-    ToolContext,
-    panTool,
-}
+  Tool,
+  ToolContext,
+  panTool,
+};
 

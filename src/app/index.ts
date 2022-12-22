@@ -126,7 +126,7 @@ export const updates = {
       pageId,
       previousName,
       name,
-    }
+    };
   },
 
   setPageDimensions({pageId, previousDimensions, dimensions}: {pageId: string, previousDimensions: PageDimensions, dimensions: PageDimensions}): AppUpdate {
@@ -136,7 +136,7 @@ export const updates = {
       pageId,
       previousDimensions,
       dimensions,
-    }
+    };
   },
 
   addObject({pageId, object}: {pageId: string, object: MapObject}): AppUpdate {
@@ -174,9 +174,9 @@ export const updates = {
       objectId,
       previousCenter,
       center,
-    }
+    };
   },
-}
+};
 
 function generateUpdateId(): string {
   return uuid.v4();
@@ -198,7 +198,7 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
       return state.updatePage(
         update.pageId,
         page => page.name === update.previousName ? page.rename(update.name) : page,
-      )
+      );
     case "setPageDimensions":
       return state.updatePage(
         update.pageId,
@@ -383,14 +383,14 @@ export class Page {
     this.dimensions = dimensions;
     this.allObjects = allObjects;
     this.deletedObjectIds = deletedObjectIds;
-    this.objects = this.allObjects.filter(object => !deletedObjectIds.has(object.id))
+    this.objects = this.allObjects.filter(object => !deletedObjectIds.has(object.id));
   }
 
   public addObject(object: MapObject): Page {
     const allObjects = [
       ...this.allObjects,
       {...object, objectNumber: this.allObjects.length + 1},
-    ]
+    ];
     return new Page(this.id, this.name, this.dimensions, allObjects, this.deletedObjectIds);
   }
 

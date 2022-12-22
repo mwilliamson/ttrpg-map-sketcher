@@ -80,7 +80,7 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
         updateId: update.updateId,
         pageId: update.pageId,
         object: serializeMapObject(update.object),
-      }
+      };
     case "deleteObject":
       return update;
     case "undeleteObject":
@@ -197,11 +197,11 @@ function deserializeShape(shape: SerializedShape): Shape {
         type: "polygon",
         polygon: deserializePolygon(shape.polygon),
       };
-      case "token":
-        return {
-          type: "token",
-          token: deserializeToken(shape.token),
-        };
+    case "token":
+      return {
+        type: "token",
+        token: deserializeToken(shape.token),
+      };
     default:
       return assertNever(shape, "unhandled shape type");
   }
@@ -283,7 +283,7 @@ function serializePoint(point: Point): SerializedPoint {
   return {
     x: serializeDistance(point.x),
     y: serializeDistance(point.y),
-  }
+  };
 }
 
 function deserializePoint(point: SerializedPoint): Point {

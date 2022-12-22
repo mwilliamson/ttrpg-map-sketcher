@@ -12,6 +12,6 @@ export const fillColors = [
   "blue",
   "purple",
   "magenta",
-]
+];
 
 export const defaultFillColor = "red";

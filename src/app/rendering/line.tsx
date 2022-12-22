@@ -20,7 +20,7 @@ export function LineView(props: LineViewProps) {
       y2={renderArea.toPixelCoordinate(line.end.y)}
       seed={seed}
     />
-  )
+  );
 }
 
 interface LineHighlightViewProps {
@@ -40,7 +40,7 @@ export function LineHighlightView(props: LineHighlightViewProps) {
       x2={renderArea.toPixelCoordinate(line.end.x)}
       y2={renderArea.toPixelCoordinate(line.end.y)}
     />
-  )
+  );
 }
 
 interface LineDraftViewProps {

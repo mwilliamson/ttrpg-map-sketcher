@@ -12,7 +12,7 @@ export const polygonToolType: ToolType<"Polygon"> = {
     points: [],
     snapPoint: null,
   }),
-}
+};
 
 interface PolygonToolState {
   points: ReadonlyArray<Point>;
@@ -46,21 +46,21 @@ class PolygonTool implements Tool<"Polygon"> {
     if (this.state.snapPoint === null) {
       return this;
     } else if (this.state.points.length > 0 && this.state.snapPoint.equals(this.state.points[0])) {
-        const id = uuid.v4();
-        const polygon = Polygon.from(this.state.points, context.selectedColor);
-        const shape = {type: "polygon" as const, polygon};
-        const object = {id, shape};
-        context.sendUpdate(updates.addObject({pageId: context.pageId, object}));
+      const id = uuid.v4();
+      const polygon = Polygon.from(this.state.points, context.selectedColor);
+      const shape = {type: "polygon" as const, polygon};
+      const object = {id, shape};
+      context.sendUpdate(updates.addObject({pageId: context.pageId, object}));
 
-        return new PolygonTool({
-          ...this.state,
-          points: [],
-        });
+      return new PolygonTool({
+        ...this.state,
+        points: [],
+      });
     } else {
       return new PolygonTool({
-          ...this.state,
-          points: [...this.state.points, this.state.snapPoint],
-        });
+        ...this.state,
+        points: [...this.state.points, this.state.snapPoint],
+      });
     }
   }
 

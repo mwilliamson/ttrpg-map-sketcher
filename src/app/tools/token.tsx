@@ -13,7 +13,7 @@ export const tokenToolType: ToolType<"Token"> = {
   create: () => new TokenTool({
     snapPoint: null,
   }),
-}
+};
 
 interface TokenToolState {
   snapPoint: Point | null;
@@ -77,7 +77,7 @@ export const moveToolType: ToolType<"Move"> = {
     movingTokenId: null,
     position: null,
   }),
-}
+};
 
 interface MoveToolState {
   movingTokenId: string | null;

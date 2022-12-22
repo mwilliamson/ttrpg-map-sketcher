@@ -12,6 +12,6 @@ export const panTool: Tool<"Pan"> = {
   onMouseLeftDown: () => panTool,
   onMouseLeftUp: () => panTool,
   render: () => null,
-}
+};
 
 export type PanTool = typeof panTool;

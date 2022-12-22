@@ -1,5 +1,5 @@
 import { PageDimensions } from "..";
-import { Distance, Line, Point } from "../geometry";
+import { Distance } from "../geometry";
 
 export class Scale {
   public static pixelsPerMetre(pixelsPerMetre: number) {
