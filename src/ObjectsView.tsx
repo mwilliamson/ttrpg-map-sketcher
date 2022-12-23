@@ -48,7 +48,11 @@ export default function ObjectsView(props: ObjectsViewProps) {
         {selectedObject === null ? (
           <p>No object selected.</p>
         ) : (
-          <ObjectView object={selectedObject} sendUpdate={sendUpdate} />
+          <ObjectView
+            object={selectedObject}
+            onDeselect={() => onSelectObject(null)}
+            sendUpdate={sendUpdate}
+          />
         )}
         </div>
       </div>
