@@ -8,11 +8,9 @@ export default function PropertiesTable(props: PropertiesTableProps) {
   const {children} = props;
 
   return (
-    <table className="PropertiesTable">
-      <tbody>
-        {children}
-      </tbody>
-    </table>
+    <dl className="PropertiesTable">
+      {children}
+    </dl>
   );
 }
 
@@ -25,10 +23,10 @@ function PropertiesTableRow(props: PropertiesTableRowProps) {
   const {name, value} = props;
 
   return (
-    <tr>
-      <th>{name}</th>
-      <td>{value}</td>
-    </tr>
+    <>
+      <dt>{name}</dt>
+      <dd>{value}</dd>
+    </>
   );
 }
 

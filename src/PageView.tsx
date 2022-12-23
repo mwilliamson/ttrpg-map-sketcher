@@ -119,25 +119,25 @@ function PageEditView(props: PageEditViewProps) {
         <PropertiesTable.Row
           name="Name"
           value={(
-            <Input id={nameInputId} onChange={newName => setName(newName)} value={name} />
+            <Input className="w-100" id={nameInputId} onChange={newName => setName(newName)} value={name} />
           )}
         />
         <PropertiesTable.Row
           name="Width (m)"
           value={(
-            <FloatInput id={widthInputId} onChange={newWidth => setWidth(newWidth)} value={width} />
+            <FloatInput className="w-100" id={widthInputId} onChange={newWidth => setWidth(newWidth)} value={width} />
           )}
         />
         <PropertiesTable.Row
           name="Height (m)"
           value={(
-            <FloatInput id={heightInputId} onChange={newHeight => setHeight(newHeight)} value={height} />
+            <FloatInput className="w-100" id={heightInputId} onChange={newHeight => setHeight(newHeight)} value={height} />
           )}
         />
         <PropertiesTable.Row
           name="Square width (m)"
           value={(
-            <FloatInput id={squareWidthInputId} onChange={newSquareHeight => setSquareWidth(newSquareHeight)} value={squareWidth} />
+            <FloatInput className="w-100" id={squareWidthInputId} onChange={newSquareHeight => setSquareWidth(newSquareHeight)} value={squareWidth} />
           )}
         />
       </PropertiesTable>
@@ -161,20 +161,28 @@ function PageEditView(props: PageEditViewProps) {
 }
 
 interface FloatInputProps {
+  className?: string;
   id: string;
   onChange: (value: string) => void;
   value: string;
 }
 
 function FloatInput(props: FloatInputProps) {
-  const {id, onChange, value} = props;
+  const {className, id, onChange, value} = props;
 
   return (
-    <Input id={id} onChange={onChange} pattern="[+-]?([0-9]*[.])?[0-9]+" value={value} />
+    <Input
+      className={className}
+      id={id}
+      onChange={onChange}
+      pattern="[+-]?([0-9]*[.])?[0-9]+"
+      value={value}
+    />
   );
 }
 
 interface InputProps {
+  className?: string;
   id: string;
   onChange: (value: string) => void;
   pattern?: string;
@@ -182,9 +190,16 @@ interface InputProps {
 }
 
 function Input(props: InputProps) {
-  const { id, onChange, pattern, value } = props;
+  const { className, id, onChange, pattern, value } = props;
 
   return (
-    <input type="text" id={id} onChange={event => onChange(event.target.value)} pattern={pattern} value={value} />
+    <input
+      type="text"
+      className={className}
+      id={id}
+      onChange={event => onChange(event.target.value)}
+      pattern={pattern}
+      value={value}
+    />
   );
 }

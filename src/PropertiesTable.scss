@@ -1,9 +1,18 @@
-.PropertiesTable > tbody > tr {
-    & > th {
-        text-align: right;
+@use "./scss/fonts";
+
+.PropertiesTable {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    font-size: fonts.$sm;
+
+    & > dt, dd {
+        margin: 0;
+        padding: 0.2rem 0.3rem;
     }
 
-    & > th, td {
-        padding: 0.2rem 0.3rem;
+    & > dt {
+        text-align: right;
+        font-weight: bold;
+        white-space: nowrap;
     }
 }
