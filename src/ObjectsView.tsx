@@ -2,7 +2,7 @@ import { AppUpdate, Page, NumberedMapObject, updates } from "./app";
 import ItemList from "./widgets/ItemList";
 
 interface ObjectsViewProps {
-  onHighlightObject: (object: NumberedMapObject | null) => void;
+  onHighlightObject: (objectId: string | null) => void;
   onSelectObject: (objectId: string | null) => void;
   page: Page;
   selectedObjectId: string | null;
@@ -23,7 +23,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
             // TODO: more elegant way of dealing with hovered object?
             onHighlightObject(null);
           }}
-          onMouseEnter={() => onHighlightObject(lineObject)}
+          onMouseEnter={() => onHighlightObject(lineObject.id)}
           onMouseLeave={() => onHighlightObject(null)}
           onSelect={() => onSelectObject(lineObject.id)}
         >
