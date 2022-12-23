@@ -1,4 +1,5 @@
 import { AppUpdate, Page, NumberedMapObject, updates } from "./app";
+import ObjectLabel from "./ObjectLabel";
 import ItemList from "./widgets/ItemList";
 
 interface ObjectsViewProps {
@@ -25,7 +26,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
           onMouseLeave={() => onHighlightObject(null)}
           onSelect={() => onSelectObject(object.id)}
         >
-          {object.shape.type} #{object.objectNumber}
+          <ObjectLabel object={object} />
         </ItemList.Item>
       ))}
     </ItemList>
