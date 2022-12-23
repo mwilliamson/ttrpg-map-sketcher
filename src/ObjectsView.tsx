@@ -14,18 +14,18 @@ export default function ObjectsView(props: ObjectsViewProps) {
 
   return (
     <ItemList>
-      {page.objects.map(lineObject => (
+      {page.objects.map(object => (
         <ItemList.Item
-          key={lineObject.id}
-          isSelected={lineObject.id === selectedObjectId}
+          key={object.id}
+          isSelected={object.id === selectedObjectId}
           onDelete={() => {
-            sendUpdate(updates.deleteObject({pageId: page.id, objectId: lineObject.id}));
+            sendUpdate(updates.deleteObject({pageId: page.id, objectId: object.id}));
           }}
-          onMouseEnter={() => onHighlightObject(lineObject.id)}
+          onMouseEnter={() => onHighlightObject(object.id)}
           onMouseLeave={() => onHighlightObject(null)}
-          onSelect={() => onSelectObject(lineObject.id)}
+          onSelect={() => onSelectObject(object.id)}
         >
-          {lineObject.shape.type} #{lineObject.objectNumber}
+          {object.shape.type} #{object.objectNumber}
         </ItemList.Item>
       ))}
     </ItemList>
