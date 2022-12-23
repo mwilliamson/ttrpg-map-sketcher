@@ -117,25 +117,33 @@ function PageEditView(props: PageEditViewProps) {
     <form onSubmit={handleSave}>
       <PropertiesTable>
         <PropertiesTable.Row
-          name="Name"
+          name={(
+            <label htmlFor={nameInputId}>Name</label>
+          )}
           value={(
             <Input className="w-100" id={nameInputId} onChange={newName => setName(newName)} value={name} />
           )}
         />
         <PropertiesTable.Row
-          name="Width (m)"
+          name={(
+            <label htmlFor={widthInputId}>Width (m)</label>
+          )}
           value={(
             <FloatInput className="w-100" id={widthInputId} onChange={newWidth => setWidth(newWidth)} value={width} />
           )}
         />
         <PropertiesTable.Row
-          name="Height (m)"
+          name={(
+            <label htmlFor={heightInputId}>Height (m)</label>
+          )}
           value={(
             <FloatInput className="w-100" id={heightInputId} onChange={newHeight => setHeight(newHeight)} value={height} />
           )}
         />
         <PropertiesTable.Row
-          name="Square width (m)"
+          name={(
+            <label htmlFor={squareWidthInputId}>Square width (m)</label>
+          )}
           value={(
             <FloatInput className="w-100" id={squareWidthInputId} onChange={newSquareHeight => setSquareWidth(newSquareHeight)} value={squareWidth} />
           )}
