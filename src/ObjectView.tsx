@@ -1,15 +1,16 @@
-import { AppUpdate, NumberedMapObject } from "./app";
+import { AppUpdate, NumberedMapObject, updates } from "./app";
 import ObjectLabel from "./ObjectLabel";
 import PropertiesTable from "./PropertiesTable";
 
 interface ObjectViewProps {
   object: NumberedMapObject;
   onDeselect: () => void;
+  pageId: string;
   sendUpdate: (update: AppUpdate) => void;
 }
 
 export default function ObjectView(props: ObjectViewProps) {
-  const { object, onDeselect } = props;
+  const { object, onDeselect, pageId, sendUpdate } = props;
 
   return (
     <>
@@ -27,6 +28,12 @@ export default function ObjectView(props: ObjectViewProps) {
         onClick={() => onDeselect()}
       >
           Deselect
+      </button>
+      <button
+        className="btn btn-danger btn-variant-solid btn-sm mt-md ml-md"
+        onClick={() => sendUpdate(updates.deleteObject({pageId: pageId, objectId: object.id}))}
+      >
+          Delete
       </button>
     </>
   );

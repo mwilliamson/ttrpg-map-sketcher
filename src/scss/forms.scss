@@ -1,3 +1,4 @@
+@use "./colors";
 @use "./fonts";
 @use "./spacing";
 
@@ -58,6 +59,19 @@ button {
     &.btn-variant-solid {
         background-color: #edf2f7;
         color: #000;
+    }
+}
+
+.btn-danger {
+    &.btn-variant-outline {
+        background-color: #fff;
+        color: colors.$danger;
+        border: 1px solid currentColor;
+    }
+
+    &.btn-variant-solid {
+        background-color: colors.$danger;
+        color: #fff;
     }
 }
 

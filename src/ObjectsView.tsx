@@ -51,6 +51,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
           <ObjectView
             object={selectedObject}
             onDeselect={() => onSelectObject(null)}
+            pageId={page.id}
             sendUpdate={sendUpdate}
           />
         )}
