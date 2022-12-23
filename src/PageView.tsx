@@ -1,8 +1,7 @@
 import { useId, useState } from "react";
 
 import { AppUpdate, Distance, Page, PageDimensions, updates } from "./app";
-
-import "./PageView.scss";
+import PropertiesTable from "./PropertiesTable";
 
 interface PageViewProps {
   page: Page;
@@ -38,26 +37,24 @@ function PageReadView(props: PageReadViewProps) {
   const {onEdit, page} = props;
   return (
     <>
-      <table className="PageView-properties">
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <td>{page.name}</td>
-          </tr>
-          <tr>
-            <th>Width</th>
-            <td>{page.dimensions.width.toString()}</td>
-          </tr>
-          <tr>
-            <th>Height</th>
-            <td>{page.dimensions.height.toString()}</td>
-          </tr>
-          <tr>
-            <th>Square width</th>
-            <td>{page.dimensions.squareWidth.toString()}</td>
-          </tr>
-        </tbody>
-      </table>
+      <PropertiesTable>
+        <PropertiesTable.Row
+          name="Name"
+          value={page.name}
+        />
+        <PropertiesTable.Row
+          name="Width"
+          value={page.dimensions.width.toString()}
+        />
+        <PropertiesTable.Row
+          name="Height"
+          value={page.dimensions.height.toString()}
+        />
+        <PropertiesTable.Row
+          name="Square width"
+          value={page.dimensions.squareWidth.toString()}
+        />
+      </PropertiesTable>
 
       <button
         className="btn btn-secondary btn-variant-solid mt-md"
@@ -118,26 +115,32 @@ function PageEditView(props: PageEditViewProps) {
 
   return (
     <form onSubmit={handleSave}>
-      <table className="PageView-properties">
-        <tbody>
-          <tr>
-            <th><label htmlFor={nameInputId}>Name</label></th>
-            <td><Input id={nameInputId} onChange={newName => setName(newName)} value={name} /></td>
-          </tr>
-          <tr>
-            <th><label htmlFor={widthInputId}>Width (m)</label></th>
-            <td><FloatInput id={widthInputId} onChange={newWidth => setWidth(newWidth)} value={width} /></td>
-          </tr>
-          <tr>
-            <th><label htmlFor={heightInputId}>Height (m)</label></th>
-            <td><FloatInput id={heightInputId} onChange={newHeight => setHeight(newHeight)} value={height} /></td>
-          </tr>
-          <tr>
-            <th><label htmlFor={squareWidthInputId}>Square width (m)</label></th>
-            <td><FloatInput id={squareWidthInputId} onChange={newSquareHeight => setSquareWidth(newSquareHeight)} value={squareWidth} /></td>
-          </tr>
-        </tbody>
-      </table>
+      <PropertiesTable>
+        <PropertiesTable.Row
+          name="Name"
+          value={(
+            <Input id={nameInputId} onChange={newName => setName(newName)} value={name} />
+          )}
+        />
+        <PropertiesTable.Row
+          name="Width (m)"
+          value={(
+            <FloatInput id={widthInputId} onChange={newWidth => setWidth(newWidth)} value={width} />
+          )}
+        />
+        <PropertiesTable.Row
+          name="Height (m)"
+          value={(
+            <FloatInput id={heightInputId} onChange={newHeight => setHeight(newHeight)} value={height} />
+          )}
+        />
+        <PropertiesTable.Row
+          name="Square width (m)"
+          value={(
+            <FloatInput id={squareWidthInputId} onChange={newSquareHeight => setSquareWidth(newSquareHeight)} value={squareWidth} />
+          )}
+        />
+      </PropertiesTable>
 
       <div className="mt-md">
         <button
