@@ -138,7 +138,7 @@ export default function SketcherView(props: SketcherViewProps) {
           />
         )}
       </div>
-      <div className="flex-item-static ml-md" style={{width: 400}}>
+      <div className="flex-item-static ml-md" style={{width: 270}}>
         <Tabs.Flex
           defaultIndex={1}
           tabs={[
