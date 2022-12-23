@@ -133,6 +133,7 @@ export default function SketcherView(props: SketcherViewProps) {
                 <p>No page selected.</p>
               ) : (
                 <ObjectsView
+                  className="h-100"
                   onHighlightObject={objectId => setHighlightedObjectId(objectId)}
                   onSelectObject={objectId => setSelectedObjectId(objectId)}
                   page={page}
