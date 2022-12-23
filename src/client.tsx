@@ -11,7 +11,8 @@ import "./scss/style.scss";
 function webSocketUri() {
   const location = window.location;
   const webSocketProtocol = location.protocol === "https:" ? "wss" : "ws";
-  return `${webSocketProtocol}://${location.host}/ws`;
+  const path = new URLSearchParams(location.search).get("path") || "ws"
+  return `${webSocketProtocol}://${location.host}/${path}`;
 }
 
 function Client() {

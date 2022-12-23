@@ -5,7 +5,7 @@
     "check": "tsc",
     "check-watch": "npm run check -- --watch",
     "eslint": "eslint src",
-    "start": "node node_modules/simple-sync/lib/server.js public/"
+    "start": "node -r dotenv/config node_modules/simple-sync/lib/server.js public/"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
@@ -22,13 +22,14 @@
   "dependencies": {
     "@types/lodash": "^4.14.191",
     "classnames": "^2.3.2",
+    "dotenv": "^16.0.3",
     "esbuild-sass-plugin": "^2.4.4",
     "express": "^4.18.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "roughjs": "^4.5.2",
-    "simple-sync": "github:mwilliamson/simple-sync#93bfcdb0ed3258ce2f98c5457900c182d471edce",
+    "simple-sync": "github:mwilliamson/simple-sync#7dc125219ca81b67a58f3ca08065aed29963abdb",
     "uuid": "^9.0.0"
   },
   "volta": {
