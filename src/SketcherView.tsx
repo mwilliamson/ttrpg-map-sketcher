@@ -48,7 +48,7 @@ export default function SketcherView(props: SketcherViewProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [tool])
+  }, [tool]);
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {

@@ -23,11 +23,11 @@ export default function ObjectView(props: ObjectViewProps) {
       </PropertiesTable>
 
       <button
-          className="btn btn-secondary btn-variant-solid btn-sm mt-md"
-          onClick={() => onDeselect()}
-        >
+        className="btn btn-secondary btn-variant-solid btn-sm mt-md"
+        onClick={() => onDeselect()}
+      >
           Deselect
-        </button>
+      </button>
     </>
   );
 }

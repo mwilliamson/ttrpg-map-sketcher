@@ -51,7 +51,7 @@ export default function PagesView(props: PagesViewProps) {
         ) : (
           <PageView page={selectedPage} sendUpdate={sendUpdate} />
         )}
-        </div>
+      </div>
     </div>
   );
 }

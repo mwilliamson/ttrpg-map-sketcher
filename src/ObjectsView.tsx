@@ -54,7 +54,7 @@ export default function ObjectsView(props: ObjectsViewProps) {
             sendUpdate={sendUpdate}
           />
         )}
-        </div>
       </div>
+    </div>
   );
 }

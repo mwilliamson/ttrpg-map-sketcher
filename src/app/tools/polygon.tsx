@@ -34,7 +34,7 @@ class PolygonTool implements Tool<"Polygon"> {
       return new PolygonTool({
         ...this.state,
         points: [],
-      })
+      });
     }
   }
 

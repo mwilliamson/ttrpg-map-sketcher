@@ -63,7 +63,7 @@ export default function MapView(props: MapViewProps) {
     squareWidth: renderArea.squareWidth,
   };
 
-  let highlightedObject: NumberedMapObject | null = null
+  let highlightedObject: NumberedMapObject | null = null;
   const standardObjects: Array<NumberedMapObject> = [];
   const tokenObjects: Array<NumberedMapObject> = [];
   const annotationObjects: Array<NumberedMapObject> = [];
