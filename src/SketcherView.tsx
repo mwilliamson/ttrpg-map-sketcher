@@ -26,7 +26,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const [selectedPageId, setSelectedPageId] = useState<string | null>(state.pages.length === 0 ? null : state.pages[0].id);
   const [tool, setTool] = useState<Tool>(panTool);
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
-  const [hoveredObjectId, setHoveredObjectId] = useState<string | null>(null);
+  const [highlightedObjectId, setHighlightedObjectId] = useState<string | null>(null);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
@@ -107,7 +107,7 @@ export default function SketcherView(props: SketcherViewProps) {
             sendUpdate={handleSendUpdate}
             tool={tool}
             onToolChange={newTool => setTool(newTool)}
-            highlightObjectId={hoveredObjectId}
+            highlightedObjectId={highlightedObjectId}
             selectedColor={selectedColor}
           />
         )}
@@ -133,7 +133,7 @@ export default function SketcherView(props: SketcherViewProps) {
                 <p>No page selected.</p>
               ) : (
                 <ObjectsView
-                  onHighlightObject={objectId => setHoveredObjectId(objectId)}
+                  onHighlightObject={objectId => setHighlightedObjectId(objectId)}
                   onSelectObject={objectId => setSelectedObjectId(objectId)}
                   page={page}
                   selectedObjectId={selectedObjectId}

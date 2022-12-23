@@ -18,7 +18,7 @@ interface MapViewProps {
   sendUpdate: (update: AppUpdate) => void;
   tool: Tool;
   onToolChange: (newTool: Tool) => void;
-  highlightObjectId: string | null;
+  highlightedObjectId: string | null;
   selectedColor: string;
 }
 
@@ -29,7 +29,7 @@ const zoomLevels = {
 };
 
 export default function MapView(props: MapViewProps) {
-  const { page, sendUpdate, tool, onToolChange, highlightObjectId, selectedColor } = props;
+  const { page, sendUpdate, tool, onToolChange, highlightedObjectId, selectedColor } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -63,14 +63,14 @@ export default function MapView(props: MapViewProps) {
     squareWidth: renderArea.squareWidth,
   };
 
-  let highlightObject: NumberedMapObject | null = null
+  let highlightedObject: NumberedMapObject | null = null
   const standardObjects: Array<NumberedMapObject> = [];
   const tokenObjects: Array<NumberedMapObject> = [];
   const annotationObjects: Array<NumberedMapObject> = [];
 
   page.objects.forEach(object => {
-    if (highlightObjectId !== null && object.id === highlightObjectId) {
-      highlightObject = object;
+    if (highlightedObjectId !== null && object.id === highlightedObjectId) {
+      highlightedObject = object;
       return;
     }
     switch (object.shape.type) {
@@ -224,13 +224,13 @@ export default function MapView(props: MapViewProps) {
             ))}
           </g>
 
-          {highlightObject !== null && (
+          {highlightedObject !== null && (
             <g>
               <HighlightedObjectView
-                object={highlightObject}
+                object={highlightedObject}
                 renderArea={renderArea}
               />
-              <ObjectView object={highlightObject} renderArea={renderArea} />
+              <ObjectView object={highlightedObject} renderArea={renderArea} />
             </g>
           )}
 
