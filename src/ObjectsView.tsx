@@ -20,8 +20,6 @@ export default function ObjectsView(props: ObjectsViewProps) {
           isSelected={lineObject.id === selectedObjectId}
           onDelete={() => {
             sendUpdate(updates.deleteObject({pageId: page.id, objectId: lineObject.id}));
-            // TODO: more elegant way of dealing with hovered object?
-            onHighlightObject(null);
           }}
           onMouseEnter={() => onHighlightObject(lineObject.id)}
           onMouseLeave={() => onHighlightObject(null)}
