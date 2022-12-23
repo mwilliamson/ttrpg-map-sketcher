@@ -27,17 +27,15 @@ export default function ObjectView(props: ObjectViewProps) {
       </PropertiesTable>
 
       {color !== null && (
-        <div style={{width: 90}}>
-          <ColorPicker
-            onChange={(newColor) => sendUpdate(updates.setObjectColor({
-              pageId,
-              objectId: object.id,
-              previousColor: color,
-              color: newColor,
-            }))}
-            value={color}
-          />
-        </div>
+        <ColorPicker.Horizontal
+          onChange={(newColor) => sendUpdate(updates.setObjectColor({
+            pageId,
+            objectId: object.id,
+            previousColor: color,
+            color: newColor,
+          }))}
+          value={color}
+        />
       )}
 
       <button

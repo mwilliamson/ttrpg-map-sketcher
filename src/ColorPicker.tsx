@@ -26,3 +26,33 @@ export default function ColorPicker(props: ColorPickerProps) {
     </div>
   );
 }
+
+function ColorPickerHorizontal(props: ColorPickerProps) {
+  const { onChange, value } = props;
+
+  return (
+    <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, 30px)", gridAutoRows: 30, gap: 5}}>
+      <div style={{
+        backgroundColor: value,
+        border: "1px solid #000",
+        gridColumn: "1 / span 2",
+        gridRow: "1 / span 2"
+      }}>
+      </div>
+
+      {fillColors.map(fillColor => (
+        <div
+          key={fillColor}
+          style={{
+            backgroundColor: fillColor,
+            border: "1px solid #000",
+          }}
+          onClick={() => onChange(fillColor)}
+        >
+        </div>
+      ))}
+    </div>
+  );
+}
+
+ColorPicker.Horizontal = ColorPickerHorizontal;
