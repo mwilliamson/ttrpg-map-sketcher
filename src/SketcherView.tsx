@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, createUpdateToRedo } from "./app";
 import { defaultFillColor } from "./app/colors";
@@ -30,6 +30,20 @@ export default function SketcherView(props: SketcherViewProps) {
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedObjectId(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [])
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {
