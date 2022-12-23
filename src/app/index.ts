@@ -92,6 +92,7 @@ export type AppUpdate =
   | {type: "addObject", updateId: string, pageId: string, object: MapObject}
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
+  | {type: "setObjectColor", updateId: string, pageId: string, objectId: string, previousColor: string, color: string}
   | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: Point, center: Point};
 
 export const updates = {
@@ -166,6 +167,17 @@ export const updates = {
     };
   },
 
+  setObjectColor({pageId, objectId, previousColor, color}: {pageId: string, objectId: string, previousColor: string, color: string}): AppUpdate {
+    return {
+      type: "setObjectColor",
+      updateId: generateUpdateId(),
+      pageId,
+      objectId,
+      previousColor,
+      color,
+    };
+  },
+
   moveToken({pageId, objectId, previousCenter, center}: {pageId: string, objectId: string, previousCenter: Point, center: Point}): AppUpdate {
     return {
       type: "moveToken",
@@ -219,6 +231,11 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
         update.pageId,
         page => page.undeleteObject(update.objectId),
       );
+    case "setObjectColor":
+      return state.updatePage(
+        update.pageId,
+        page => page.setObjectColor(update.objectId, update.color),
+      );
     case "moveToken":
       return state.updatePage(
         update.pageId,
@@ -267,6 +284,13 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
       return updates.deleteObject({
         pageId: update.pageId,
         objectId: update.objectId,
+      });
+    case "setObjectColor":
+      return updates.setObjectColor({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousColor: update.color,
+        color: update.previousColor,
       });
     case "moveToken":
       return updates.moveToken({
@@ -318,6 +342,13 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
       return updates.undeleteObject({
         pageId: update.pageId,
         objectId: update.objectId,
+      });
+    case "setObjectColor":
+      return updates.setObjectColor({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousColor: update.previousColor,
+        color: update.color,
       });
     case "moveToken":
       return updates.moveToken({
@@ -406,6 +437,14 @@ export class Page {
     return new Page(this.id, this.name, this.dimensions, this.allObjects, deletedObjectIds);
   }
 
+  public setObjectColor(objectId: string, color: string): Page {
+    const allObjects = this.allObjects.map(
+      object => object.id === objectId ? {...object, shape: shapeSetColor(object.shape, color)} : object
+    );
+
+    return new Page(this.id, this.name, this.dimensions, allObjects, this.deletedObjectIds);
+  }
+
   public hasObjectId(objectId: string): boolean {
     return this.objects.some(object => object.id === objectId);
   }
@@ -447,6 +486,41 @@ export type Shape =
   | {type: "line", line: Line}
   | {type: "polygon", polygon: Polygon}
   | {type: "token", token: Token};
+
+export function shapeColor(shape: Shape): string | null {
+  switch (shape.type) {
+    case "cross":
+      return shape.cross.color;
+    case "line":
+      return null;
+    case "polygon":
+      return shape.polygon.fillColor;
+    case "token":
+      return shape.token.color;
+  }
+}
+
+function shapeSetColor(shape: Shape, color: string): Shape {
+  switch (shape.type) {
+    case "cross":
+      return {
+        type: "cross",
+        cross: shape.cross.withColor(color),
+      };
+    case "line":
+      return shape;
+    case "polygon":
+      return {
+        type: "polygon",
+        polygon: shape.polygon.withFillColor(color),
+      };
+    case "token":
+      return {
+        type: "token",
+        token: shape.token.withColor(color),
+      };
+  }
+}
 
 export { Cross, Distance, Line, Point, Polygon, Token };
 export { RenderArea, Scale };

@@ -116,6 +116,10 @@ export class Polygon {
     this.points = points;
     this.fillColor = fillColor;
   }
+
+  public withFillColor(fillColor: string): Polygon {
+    return new Polygon(this.points, fillColor);
+  }
 }
 
 export class Cross {
@@ -129,6 +133,10 @@ export class Cross {
   private constructor(center: Point, color: string) {
     this.center = center;
     this.color = color;
+  }
+
+  public withColor(color: string): Cross {
+    return new Cross(this.center, color);
   }
 }
 
@@ -147,5 +155,9 @@ export class Token {
 
   public move(center: Point): Token {
     return new Token(center, this.color);
+  }
+
+  public withColor(color: string): Token {
+    return new Token(this.center, color);
   }
 }
