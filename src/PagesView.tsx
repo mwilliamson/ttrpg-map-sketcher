@@ -18,13 +18,10 @@ export default function PagesView(props: PagesViewProps) {
           <ItemList.Item
             key={page.id}
             onDelete={() => sendUpdate(updates.deletePage({pageId: page.id}))}
+            onSelect={() => onSelectPage(page.id)}
             isSelected={page.id === selectedPageId}
           >
-            <button
-              onClick={() => onSelectPage(page.id)}
-            >
-              {page.name}
-            </button>
+            {page.name}
           </ItemList.Item>
         ))}
       </ItemList>

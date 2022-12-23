@@ -22,10 +22,11 @@ interface ItemProps {
   onDelete?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onSelect?: () => void;
 }
 
 function Item(props: ItemProps) {
-  const {children, isSelected = false, onDelete, onMouseEnter, onMouseLeave} = props;
+  const {children, isSelected = false, onDelete, onMouseEnter, onMouseLeave, onSelect} = props;
 
   return (
     <div
@@ -44,7 +45,11 @@ function Item(props: ItemProps) {
         className="widgets-ItemList_contents"
       >
         <div>
-          {children}
+          {onSelect === undefined ? children : (
+            <button onClick={onSelect}>
+              {children}
+            </button>
+          )}
         </div>
         {onDelete !== undefined && (
           <button
