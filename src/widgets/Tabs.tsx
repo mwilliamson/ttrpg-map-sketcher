@@ -61,7 +61,7 @@ function FlexTabs(props: TabsProps) {
   return (
     <Tabs
       containerClassName={classNames("flex-item-fill h-100 flex-container-column", containerClassName)}
-      panelClassName={classNames("h-100 overflow-y-scroll", panelClassName)}
+      panelClassName={classNames("flex-item-fill overflow-y-scroll", panelClassName)}
       {...restProps}
     />
   );

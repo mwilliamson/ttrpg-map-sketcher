@@ -1,6 +1,7 @@
 @use "./colors";
 @use "./flex";
 @use "./forms";
+@use "./spacing";
 @use "./text";
 
 *,
@@ -17,6 +18,14 @@ body {
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     font-size: 1rem;
+}
+
+.heading-section {
+    // TODO: remove duplication with tab styling
+    border-bottom: 2px solid colors.$border-light;
+    font-weight: normal;
+    margin-bottom: spacing.$md;
+    padding: 0.6rem 1rem;
 }
 
 .h-100 {

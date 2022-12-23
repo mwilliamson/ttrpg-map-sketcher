@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, NumberedMapObject, createUpdateToRedo } from "./app";
+import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, createUpdateToRedo } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
-import PageView from "./PageView";
 import ToolsView from "./ToolsView";
 import Tabs from "./widgets/Tabs";
 
@@ -112,7 +111,7 @@ export default function SketcherView(props: SketcherViewProps) {
           />
         )}
       </div>
-      <div className="flex-item-static flex-container-column ml-md" style={{width: 400}}>
+      <div className="flex-item-static ml-md" style={{width: 400}}>
         <Tabs.Flex
           defaultIndex={1}
           tabs={[
@@ -120,6 +119,7 @@ export default function SketcherView(props: SketcherViewProps) {
               title: "Pages",
               render: () => (
                 <PagesView
+                  className="h-100"
                   onSelectPage={pageId => setSelectedPageId(pageId)}
                   pages={state.pages}
                   selectedPageId={selectedPageId}
@@ -141,18 +141,6 @@ export default function SketcherView(props: SketcherViewProps) {
                 />
               )
             },
-          ]}
-        />
-        <Tabs.Flex
-          tabs={[
-            {
-              title: "Page",
-              render: () => page === null ? (
-                <p>No page selected.</p>
-              ) : (
-                <PageView page={page} sendUpdate={handleSendUpdate} />
-              )
-            }
           ]}
         />
       </div>
