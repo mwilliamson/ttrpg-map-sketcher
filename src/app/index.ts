@@ -406,6 +406,10 @@ export class Page {
     return new Page(this.id, this.name, this.dimensions, this.allObjects, deletedObjectIds);
   }
 
+  public hasObjectId(objectId: string): boolean {
+    return this.objects.some(object => object.id === objectId);
+  }
+
   public rename(name: string): Page {
     return new Page(this.id, name, this.dimensions, this.allObjects, this.deletedObjectIds);
   }

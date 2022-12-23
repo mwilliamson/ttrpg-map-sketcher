@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, createUpdateToRedo } from "./app";
+import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, createUpdateToRedo, updates } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
 import MapView from "./MapView";
@@ -41,6 +41,14 @@ export default function SketcherView(props: SketcherViewProps) {
           setTool(newTool);
         }
       }
+
+      if (event.key === "Delete" || event.key === "Backspace") {
+        const target = event.target as Node;
+        const isInput = target.nodeType === Node.ELEMENT_NODE && (target.nodeName === "INPUT" || target.nodeName === "SELECT");
+        if (!isInput && page !== null && selectedObjectId !== null && page.hasObjectId(selectedObjectId)) {
+          sendUpdate(updates.deleteObject({pageId: page.id, objectId: selectedObjectId}));
+        }
+      }
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -48,7 +56,7 @@ export default function SketcherView(props: SketcherViewProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [tool]);
+  }, [page, selectedObjectId, sendUpdate, tool]);
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {
