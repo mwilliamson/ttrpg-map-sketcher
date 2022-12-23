@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
@@ -39,9 +39,9 @@ export default function MapView(props: MapViewProps) {
 
   const [zoomLevel, setZoomLevel] = useState(zoomLevels.default);
 
-  function handleZoomChange(zoomDelta: number) {
+  const handleZoomChange = useCallback((zoomDelta: number) => {
     setZoomLevel(zoomLevel => clamp(zoomLevels.min, zoomLevel + zoomDelta / 100, zoomLevels.max));
-  }
+  }, []);
 
   function clamp(min: number, value: number, max: number): number {
     return Math.max(min, Math.min(max, value));
@@ -150,6 +150,12 @@ export default function MapView(props: MapViewProps) {
   }
 
   useEffect(() => {
+    const container = containerRef.current;
+
+    if (container === null) {
+      return;
+    }
+
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
       if (event.deltaY !== 0 && event.deltaMode === WheelEvent.DOM_DELTA_PIXEL && lastPagePosition.current !== null) {
@@ -161,10 +167,10 @@ export default function MapView(props: MapViewProps) {
       }
     }
 
-    containerRef.current?.addEventListener("wheel", handleWheel, {passive: false});
+    container.addEventListener("wheel", handleWheel, {passive: false});
 
     return () => {
-      containerRef.current?.removeEventListener("wheel", handleWheel);
+      container.removeEventListener("wheel", handleWheel);
     };
   }, [handleZoomChange]);
 
@@ -192,7 +198,7 @@ export default function MapView(props: MapViewProps) {
     });
 
     zoomPositionRef.current = null;
-  }, [zoomLevel]);
+  }, [renderArea, zoomLevel]);
 
   return (
     <div className="MapView" ref={containerRef}>
