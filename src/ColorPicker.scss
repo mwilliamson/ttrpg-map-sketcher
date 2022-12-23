@@ -1,0 +1,38 @@
+$border: 1px solid #000;
+$gap: 5px;
+
+.ColorPicker--vertical {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $gap;
+
+    .ColorPicker-selected {
+        aspect-ratio: 2;
+        border: $border;
+        grid-column: 1 / -1;
+    }
+
+    .ColorPicker-color {
+        aspect-ratio: 1;
+        border: $border;
+    }
+}
+
+$horizontal-width: 30px;
+
+.ColorPicker--horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, $horizontal-width);
+    grid-auto-rows: $horizontal-width;
+    gap: $gap;
+
+    .ColorPicker-selected {
+        border: $border;
+        grid-column: 1 / span 2;
+        grid-row: 1 / 3;
+    }
+
+    .ColorPicker-color {
+        border: $border;
+    }
+}

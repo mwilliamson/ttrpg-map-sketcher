@@ -1,5 +1,7 @@
 import { fillColors } from "./app/colors";
 
+import "./ColorPicker.scss";
+
 interface ColorPickerProps {
   onChange: (value: string) => void;
   value: string;
@@ -9,16 +11,13 @@ export default function ColorPicker(props: ColorPickerProps) {
   const { onChange, value } = props;
 
   return (
-    <div style={{display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5}}>
-      <div style={{height: 40, backgroundColor: value, border: "1px solid #000", gridColumn: "1 / span 3"}}></div>
+    <div className="ColorPicker--vertical">
+      <div className="ColorPicker-selected" style={{backgroundColor: value}}></div>
       {fillColors.map(fillColor => (
         <div
           key={fillColor}
-          style={{
-            backgroundColor: fillColor,
-            aspectRatio: 1,
-            border: "1px solid #000",
-          }}
+          className="ColorPicker-color"
+          style={{backgroundColor: fillColor}}
           onClick={() => onChange(fillColor)}
         >
         </div>
@@ -31,22 +30,14 @@ function ColorPickerHorizontal(props: ColorPickerProps) {
   const { onChange, value } = props;
 
   return (
-    <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, 30px)", gridAutoRows: 30, gap: 5}}>
-      <div style={{
-        backgroundColor: value,
-        border: "1px solid #000",
-        gridColumn: "1 / span 2",
-        gridRow: "1 / span 2"
-      }}>
-      </div>
+    <div className="ColorPicker--horizontal">
+      <div className="ColorPicker-selected" style={{backgroundColor: value}}></div>
 
       {fillColors.map(fillColor => (
         <div
           key={fillColor}
-          style={{
-            backgroundColor: fillColor,
-            border: "1px solid #000",
-          }}
+          className="ColorPicker-color"
+          style={{backgroundColor: fillColor}}
           onClick={() => onChange(fillColor)}
         >
         </div>
