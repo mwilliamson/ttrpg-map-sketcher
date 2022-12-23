@@ -3,15 +3,16 @@ import { fillColors } from "./app/colors";
 import "./ColorPicker.scss";
 
 interface ColorPickerProps {
+  layout: "horizontal" | "vertical";
   onChange: (value: string) => void;
   value: string;
 }
 
 export default function ColorPicker(props: ColorPickerProps) {
-  const { onChange, value } = props;
+  const { layout, onChange, value } = props;
 
   return (
-    <div className="ColorPicker--vertical">
+    <div className={`ColorPicker--${layout}`}>
       <div className="ColorPicker-selected" style={{backgroundColor: value}}></div>
       {fillColors.map(fillColor => (
         <div
@@ -25,25 +26,3 @@ export default function ColorPicker(props: ColorPickerProps) {
     </div>
   );
 }
-
-function ColorPickerHorizontal(props: ColorPickerProps) {
-  const { onChange, value } = props;
-
-  return (
-    <div className="ColorPicker--horizontal">
-      <div className="ColorPicker-selected" style={{backgroundColor: value}}></div>
-
-      {fillColors.map(fillColor => (
-        <div
-          key={fillColor}
-          className="ColorPicker-color"
-          style={{backgroundColor: fillColor}}
-          onClick={() => onChange(fillColor)}
-        >
-        </div>
-      ))}
-    </div>
-  );
-}
-
-ColorPicker.Horizontal = ColorPickerHorizontal;

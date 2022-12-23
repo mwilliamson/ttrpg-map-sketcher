@@ -27,7 +27,8 @@ export default function ObjectView(props: ObjectViewProps) {
       </PropertiesTable>
 
       {color !== null && (
-        <ColorPicker.Horizontal
+        <ColorPicker
+          layout="horizontal"
           onChange={(newColor) => sendUpdate(updates.setObjectColor({
             pageId,
             objectId: object.id,

@@ -38,7 +38,7 @@ export default function ToolsView(props: ToolsViewProps) {
       </div>
 
       <div className="m-sm mt-md">
-        <ColorPicker onChange={onSelectColor} value={selectedColor} />
+        <ColorPicker layout="vertical" onChange={onSelectColor} value={selectedColor} />
       </div>
 
       <div className="btn-stack m-sm mt-md">
