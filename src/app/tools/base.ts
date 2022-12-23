@@ -15,6 +15,7 @@ export interface ToolType<TName extends string = string> {
 
 export interface Tool<TName extends string = string> {
   type: ToolType<TName>;
+  onEscape?: () => Tool | null;
   onMouseMove: (mousePosition: Point, context: ToolContext) => Tool<TName>,
   onMouseLeave: (context: ToolContext) => Tool<TName>,
   onMouseLeftDown: (context: ToolContext) => Tool<TName>,

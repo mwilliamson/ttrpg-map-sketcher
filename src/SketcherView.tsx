@@ -34,7 +34,12 @@ export default function SketcherView(props: SketcherViewProps) {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setSelectedObjectId(null);
+        const newTool = tool.onEscape === undefined ? null : tool.onEscape();
+        if (newTool === null) {
+          setSelectedObjectId(null);
+        } else {
+          setTool(newTool);
+        }
       }
     }
 
@@ -43,7 +48,7 @@ export default function SketcherView(props: SketcherViewProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [])
+  }, [tool])
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === tool.type) {

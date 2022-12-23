@@ -27,6 +27,17 @@ class PolygonTool implements Tool<"Polygon"> {
     this.state = state;
   }
 
+  public onEscape(): PolygonTool | null {
+    if (this.state.points.length === 0) {
+      return null;
+    } else {
+      return new PolygonTool({
+        ...this.state,
+        points: [],
+      })
+    }
+  }
+
   public onMouseMove(mousePosition: Point, context: ToolContext): PolygonTool {
     const snapDistance = context.squareWidth;
     return new PolygonTool({
