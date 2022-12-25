@@ -1,6 +1,6 @@
 import { findLast } from "lodash";
 import React from "react";
-import { shapeIsSelectableAt } from "..";
+import { objectsInRenderOrder, shapeIsSelectableAt } from "..";
 
 import { Point } from "../geometry";
 import { Tool, ToolContext, ToolType } from "./base";
@@ -48,9 +48,8 @@ class SelectTool implements Tool<"Select"> {
       return this;
     }
     // TODO: allow cycling
-    // TODO: account for layers
     const objectToSelect = findLast(
-      context.objects,
+      objectsInRenderOrder(context.objects),
       object => shapeIsSelectableAt(object.shape, mousePosition, context),
     );
     context.selectObject(objectToSelect === undefined ? null : objectToSelect.id);
