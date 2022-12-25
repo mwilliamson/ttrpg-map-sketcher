@@ -1,6 +1,6 @@
 import * as uuid from "uuid";
 
-import { Cross, Distance, findClosestPointOnLine, Line, Point, Polygon, Token } from "./geometry";
+import { Cross, Distance, findClosestPointOnLine, Line, Point, Polygon, polygonContainsPoint, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
 import { crossWidth } from "./rendering/cross";
 import { tokenRadius } from "./rendering/token";
@@ -550,7 +550,7 @@ export function shapeIsSelectableAt(
       }
       return Line.from(closestPoint, point).length().lessThanOrEqualTo(squareWidth.divide(4));
     case "polygon":
-      return false;
+      return polygonContainsPoint(shape.polygon, point);
     case "token":
       const radius = tokenRadius({squareWidth});
       return Line.from(shape.token.center, point).isShorterThanOrEqualTo(radius);

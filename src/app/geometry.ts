@@ -187,3 +187,33 @@ export function findClosestPointOnLine(line: Line, point: Point): Point | null {
     start.y.add(startToEnd.y.multiply(distance)),
   );
 }
+
+export function polygonContainsPoint(
+  polygon: Polygon,
+  point: Point,
+): boolean {
+  let result = false;
+  const pointX = point.x.toMetres();
+  const pointY = point.y.toMetres();
+
+  for (let polygonPointIndex = 0; polygonPointIndex < polygon.points.length; polygonPointIndex++) {
+    const start = polygon.points[polygonPointIndex];
+    const end = polygon.points[(polygonPointIndex + 1) % polygon.points.length];
+
+    const startX = start.x.toMetres();
+    const startY = start.y.toMetres();
+    const endX = end.x.toMetres();
+    const endY = end.y.toMetres();
+
+    if (
+      ((pointY <= startY) != (pointY <= endY)) &&
+      (pointX < (
+        (endX - startX) * (pointY - startY) / (endY - startY) + startX
+      ))
+    ) {
+      result = !result;
+    }
+  }
+
+  return result;
+}
