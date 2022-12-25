@@ -559,18 +559,19 @@ export function shapeIsSelectableAt(
 }
 
 export function objectsInRenderOrder(objects: ReadonlyArray<NumberedMapObject>): ReadonlyArray<NumberedMapObject> {
-  const layerStandard = 0;
-  const layerToken = 1;
-  const layerAnnotation = 2;
+  const layerPolygon = 0;
+  const layerLine = 1;
+  const layerToken = 2;
+  const layerCross = 3;
 
   return orderBy(objects, object => {
     switch (object.shape.type) {
       case "cross":
-        return layerAnnotation;
+        return layerCross;
       case "line":
-        return layerStandard;
+        return layerLine;
       case "polygon":
-        return layerStandard;
+        return layerPolygon;
       case "token":
         return layerToken;
     }
