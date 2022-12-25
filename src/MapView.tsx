@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, Page, ToolContext } from "./app";
+import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, Page, ToolContext, objectsInRenderOrder } from "./app";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
@@ -12,6 +12,7 @@ import assertNever from "./util/assertNever";
 
 import "./MapView.scss";
 import { panToolType } from "./app/tools/pan";
+import { find } from "lodash";
 
 interface MapViewProps {
   page: Page;
@@ -65,33 +66,10 @@ export default function MapView(props: MapViewProps) {
     squareWidth: renderArea.squareWidth,
   };
 
-  let highlightedObject: NumberedMapObject | null = null;
-  const standardObjects: Array<NumberedMapObject> = [];
-  const tokenObjects: Array<NumberedMapObject> = [];
-  const annotationObjects: Array<NumberedMapObject> = [];
-
-  page.objects.forEach(object => {
-    if (highlightedObjectId !== null && object.id === highlightedObjectId) {
-      highlightedObject = object;
-      return;
-    }
-    switch (object.shape.type) {
-      case "cross":
-        annotationObjects.push(object);
-        return;
-      case "line":
-        standardObjects.push(object);
-        return;
-      case "polygon":
-        standardObjects.push(object);
-        return;
-      case "token":
-        tokenObjects.push(object);
-        return;
-      default:
-        return assertNever(object.shape, "unhandled shape type");
-    }
-  });
+  const highlightedObject = highlightedObjectId === null ? null : find(
+    page.objects,
+    object => object.id === highlightedObjectId,
+  ) ?? null;
 
   function handleContextMenu(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -217,17 +195,7 @@ export default function MapView(props: MapViewProps) {
         <RoughSvgProvider value={roughSvg}>
           <GridView renderArea={renderArea} />
           <g>
-            {standardObjects.map(object => (
-              <ObjectView key={object.id} object={object} renderArea={renderArea} />
-            ))}
-          </g>
-          <g>
-            {tokenObjects.map(object => (
-              <ObjectView key={object.id} object={object} renderArea={renderArea} />
-            ))}
-          </g>
-          <g>
-            {annotationObjects.map(object => (
+            {objectsInRenderOrder(page.objects).map(object => object.id === highlightedObjectId ? null : (
               <ObjectView key={object.id} object={object} renderArea={renderArea} />
             ))}
           </g>

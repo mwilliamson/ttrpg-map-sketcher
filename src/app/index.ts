@@ -1,3 +1,4 @@
+import { orderBy } from "lodash";
 import * as uuid from "uuid";
 
 import { Cross, Distance, findClosestPointOnLine, Line, Point, Polygon, polygonContainsPoint, Token } from "./geometry";
@@ -555,6 +556,25 @@ export function shapeIsSelectableAt(
       const radius = tokenRadius({squareWidth});
       return Line.from(shape.token.center, point).isShorterThanOrEqualTo(radius);
   }
+}
+
+export function objectsInRenderOrder(objects: ReadonlyArray<NumberedMapObject>): ReadonlyArray<NumberedMapObject> {
+  const layerStandard = 0;
+  const layerToken = 1;
+  const layerAnnotation = 2;
+
+  return orderBy(objects, object => {
+    switch (object.shape.type) {
+      case "cross":
+        return layerAnnotation;
+      case "line":
+        return layerStandard;
+      case "polygon":
+        return layerStandard;
+      case "token":
+        return layerToken;
+    }
+  });
 }
 
 export { Cross, Distance, Line, Point, Polygon, Token };
