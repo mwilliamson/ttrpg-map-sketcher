@@ -42,27 +42,34 @@ class LineTool implements Tool<"Line"> {
     });
   }
 
-  public onMouseLeftDown(): LineTool {
-    return new LineTool({
-      ...this.state,
-      lineStart: this.state.snapPoint,
-    });
+  public onMouseLeftDown(context: ToolContext): LineTool {
+    const { lineStart, snapPoint } = this.state;
+
+    if (snapPoint === null) {
+      return this;
+    } else if (lineStart === null) {
+      return new LineTool({
+        ...this.state,
+        lineStart: snapPoint,
+      });
+    } else {
+      if (!lineStart.equals(snapPoint)) {
+        const id = uuid.v4();
+        const line = Line.from(lineStart, snapPoint);
+        context.sendUpdate(updates.addObject({
+          pageId: context.pageId,
+          object: {id, shape: {type: "line", line}}
+        }));
+      }
+      return new LineTool({
+        ...this.state,
+        lineStart: null,
+      });
+    }
   }
 
-  public onMouseLeftUp(context: ToolContext): LineTool {
-    const { lineStart, snapPoint } = this.state;
-    if (lineStart !== null && snapPoint !== null && !lineStart.equals(snapPoint)) {
-      const id = uuid.v4();
-      const line = Line.from(lineStart, snapPoint);
-      context.sendUpdate(updates.addObject({
-        pageId: context.pageId,
-        object: {id, shape: {type: "line", line}}
-      }));
-    }
-    return new LineTool({
-      ...this.state,
-      lineStart: null,
-    });
+  public onMouseLeftUp(): LineTool {
+    return this;
   }
 
   public render(renderArea: RenderArea) {
