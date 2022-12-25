@@ -1,6 +1,6 @@
 import { RenderArea } from "..";
 import { draftColor, highlightColor } from "../colors";
-import { Cross, Line, Point } from "../geometry";
+import { Cross, Distance, Line, Point } from "../geometry";
 import { RoughLine } from "../rough";
 
 interface CrossViewProps {
@@ -79,30 +79,34 @@ export function CrossDraftView(props: CrossDraftViewProps) {
 }
 
 function crossLines(center: Point, renderArea: RenderArea): ReadonlyArray<Line> {
-  const radius = renderArea.squareWidth.divide(2);
+  const halfWidth = crossWidth(renderArea).divide(2);
 
   return [
     Line.from(
       Point.from(
-        center.x.subtract(radius),
-        center.y.subtract(radius),
+        center.x.subtract(halfWidth),
+        center.y.subtract(halfWidth),
       ),
       Point.from(
-        center.x.add(radius),
-        center.y.add(radius),
+        center.x.add(halfWidth),
+        center.y.add(halfWidth),
       ),
     ),
     Line.from(
       Point.from(
-        center.x.subtract(radius),
-        center.y.add(radius),
+        center.x.subtract(halfWidth),
+        center.y.add(halfWidth),
       ),
       Point.from(
-        center.x.add(radius),
-        center.y.subtract(radius),
+        center.x.add(halfWidth),
+        center.y.subtract(halfWidth),
       ),
     ),
   ];
+}
+
+export function crossWidth({squareWidth}: {squareWidth: Distance}): Distance {
+  return squareWidth;
 }
 
 const crossStrokeWidth = 3;

@@ -2,6 +2,7 @@ import * as uuid from "uuid";
 
 import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
+import { crossWidth } from "./rendering/cross";
 import { tokenRadius } from "./rendering/token";
 import { Tool, ToolContext, allToolTypes, panTool } from "./tools";
 
@@ -530,7 +531,18 @@ export function shapeIsSelectableAt(
 ): boolean {
   switch (shape.type) {
     case "cross":
-      return false;
+      const { center } = shape.cross;
+      const halfWidth = crossWidth({squareWidth}).divide(2);
+      const left = center.x.subtract(halfWidth);
+      const right = center.x.add(halfWidth);
+      const top = center.y.subtract(halfWidth);
+      const bottom = center.y.add(halfWidth);
+      return (
+        left.lessThanOrEqualTo(point.x) &&
+        point.x.lessThanOrEqualTo(right) &&
+        top.lessThanOrEqualTo(point.y) &&
+        point.y.lessThanOrEqualTo(bottom)
+      );
     case "line":
       return false;
     case "polygon":

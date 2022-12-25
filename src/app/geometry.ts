@@ -46,6 +46,10 @@ export class Distance {
   public equals(other: Distance): boolean {
     return this.metres === other.metres;
   }
+  
+  public lessThanOrEqualTo(other: Distance): boolean {
+    return this.metres <= other.metres;
+  }
 
   public toString(): string {
     return `${this.metres}m`;
