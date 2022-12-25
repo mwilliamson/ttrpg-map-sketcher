@@ -129,7 +129,7 @@ class MoveTool implements Tool<"Move"> {
     const {position} = this.state;
     const movingToken = this.movingToken(context);
 
-    if (position !== null && movingToken !== null) {
+    if (position !== null && movingToken !== null && !movingToken.center.equals(position.token)) {
       context.sendUpdate(updates.moveToken({
         pageId: context.pageId,
         objectId: this.state.movingTokenId!,
