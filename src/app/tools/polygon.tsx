@@ -1,3 +1,4 @@
+import { last } from "lodash";
 import * as uuid from "uuid";
 import { updates } from "..";
 
@@ -55,6 +56,12 @@ class PolygonTool implements Tool<"Polygon"> {
 
   public onMouseLeftDown(context: ToolContext): PolygonTool {
     if (this.state.snapPoint === null) {
+      return this;
+    }
+
+    const lastPoint = last(this.state.points);
+  
+    if (lastPoint !== undefined && this.state.snapPoint.equals(lastPoint)) {
       return this;
     } else if (this.state.points.length > 0 && this.state.snapPoint.equals(this.state.points[0])) {
       const id = uuid.v4();
