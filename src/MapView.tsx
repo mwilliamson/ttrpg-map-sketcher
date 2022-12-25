@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import rough from "roughjs";
 import { RoughSVG } from "roughjs/bin/svg";
 
-import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, Page } from "./app";
+import { AppUpdate, Distance, NumberedMapObject, MapObject, Point, RenderArea, Tool, Page, ToolContext } from "./app";
 import { CrossHighlightView, CrossView } from "./app/rendering/cross";
 import { LineHighlightView, LineView } from "./app/rendering/line";
 import { PolygonHighlightView, PolygonView } from "./app/rendering/polygon";
@@ -19,6 +19,7 @@ interface MapViewProps {
   tool: Tool;
   onToolChange: (newTool: Tool) => void;
   highlightedObjectId: string | null;
+  onSelectObject: (objectId: string | null) => void;
   selectedColor: string;
 }
 
@@ -29,7 +30,7 @@ const zoomLevels = {
 };
 
 export default function MapView(props: MapViewProps) {
-  const { page, sendUpdate, tool, onToolChange, highlightedObjectId, selectedColor } = props;
+  const { page, sendUpdate, tool, onToolChange, highlightedObjectId, onSelectObject, selectedColor } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -55,10 +56,11 @@ export default function MapView(props: MapViewProps) {
     zoomLevel,
   });
 
-  const toolContext = {
+  const toolContext: ToolContext = {
     objects: page.objects,
     pageId: page.id,
     selectedColor: selectedColor,
+    selectObject: onSelectObject,
     sendUpdate,
     squareWidth: renderArea.squareWidth,
   };

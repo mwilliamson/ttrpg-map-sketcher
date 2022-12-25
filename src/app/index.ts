@@ -2,6 +2,7 @@ import * as uuid from "uuid";
 
 import { Cross, Distance, Line, Point, Polygon, Token } from "./geometry";
 import { RenderArea, Scale } from "./rendering";
+import { tokenRadius } from "./rendering/token";
 import { Tool, ToolContext, allToolTypes, panTool } from "./tools";
 
 export class AppState {
@@ -519,6 +520,24 @@ function shapeSetColor(shape: Shape, color: string): Shape {
         type: "token",
         token: shape.token.withColor(color),
       };
+  }
+}
+
+export function shapeIsSelectableAt(
+  shape: Shape,
+  point: Point,
+  {squareWidth}: {squareWidth: Distance},
+): boolean {
+  switch (shape.type) {
+    case "cross":
+      return false;
+    case "line":
+      return false;
+    case "polygon":
+      return false;
+    case "token":
+      const radius = tokenRadius({squareWidth});
+      return Line.from(shape.token.center, point).isShorterThanOrEqualTo(radius);
   }
 }
 

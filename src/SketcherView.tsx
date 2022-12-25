@@ -134,6 +134,7 @@ export default function SketcherView(props: SketcherViewProps) {
             tool={tool}
             onToolChange={newTool => setTool(newTool)}
             highlightedObjectId={highlightedObjectId ?? selectedObjectId}
+            onSelectObject={newSelectedObjectId => setSelectedObjectId(newSelectedObjectId)}
             selectedColor={selectedColor}
           />
         )}
