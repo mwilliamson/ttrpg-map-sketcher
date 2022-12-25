@@ -165,3 +165,25 @@ export class Token {
     return new Token(this.center, color);
   }
 }
+
+export function findClosestPointOnLine(line: Line, point: Point): Point | null {
+  const { start, end } = line;
+  const startToPoint = {
+    x: point.x.subtract(start.x),
+    y: point.y.subtract(start.y),
+  };
+  const startToEnd = {
+    x: end.x.subtract(start.x),
+    y: end.y.subtract(start.y),
+  };
+  const startToEndSquared = startToEnd.x.toMetres() ** 2 + startToEnd.y.toMetres() ** 2;
+  const dotProduct = startToPoint.x.toMetres() * startToEnd.x.toMetres() + startToPoint.y.toMetres() * startToEnd.y.toMetres();
+  const distance = dotProduct / startToEndSquared;
+  if (distance < 0 || distance > 1) {
+    return null;
+  }
+  return Point.from(
+    start.x.add(startToEnd.x.multiply(distance)),
+    start.y.add(startToEnd.y.multiply(distance)),
+  );
+}
