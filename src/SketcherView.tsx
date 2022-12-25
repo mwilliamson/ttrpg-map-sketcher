@@ -136,6 +136,7 @@ export default function SketcherView(props: SketcherViewProps) {
             highlightedObjectId={highlightedObjectId ?? selectedObjectId}
             onSelectObject={newSelectedObjectId => setSelectedObjectId(newSelectedObjectId)}
             selectedColor={selectedColor}
+            selectedObjectId={selectedObjectId}
           />
         )}
       </div>

@@ -1,4 +1,3 @@
-import { findLast } from "lodash";
 import React from "react";
 import { objectsInRenderOrder, shapeIsSelectableAt } from "..";
 
@@ -47,12 +46,17 @@ class SelectTool implements Tool<"Select"> {
     if (mousePosition === null) {
       return this;
     }
-    // TODO: allow cycling
-    const objectToSelect = findLast(
-      objectsInRenderOrder(context.objects),
+
+    const selectables = objectsInRenderOrder(context.objects).filter(
       object => shapeIsSelectableAt(object.shape, mousePosition, context),
     );
-    context.selectObject(objectToSelect === undefined ? null : objectToSelect.id);
+    const currentSelectionIndex = selectables.findIndex(selectable => selectable.id === context.selectedObjectId);
+    const objectToSelect =
+      selectables.length === 0 ? null :
+      currentSelectionIndex <= 0 ? selectables[selectables.length - 1] :
+      selectables[currentSelectionIndex - 1];
+
+    context.selectObject(objectToSelect === null ? null : objectToSelect.id);
     return this;
   }
 

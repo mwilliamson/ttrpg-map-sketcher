@@ -22,6 +22,7 @@ interface MapViewProps {
   highlightedObjectId: string | null;
   onSelectObject: (objectId: string | null) => void;
   selectedColor: string;
+  selectedObjectId: string | null;
 }
 
 const zoomLevels = {
@@ -31,7 +32,7 @@ const zoomLevels = {
 };
 
 export default function MapView(props: MapViewProps) {
-  const { page, sendUpdate, tool, onToolChange, highlightedObjectId, onSelectObject, selectedColor } = props;
+  const { page, sendUpdate, tool, onToolChange, highlightedObjectId, onSelectObject, selectedColor, selectedObjectId } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +62,7 @@ export default function MapView(props: MapViewProps) {
     objects: page.objects,
     pageId: page.id,
     selectedColor: selectedColor,
+    selectedObjectId,
     selectObject: onSelectObject,
     sendUpdate,
     squareWidth: renderArea.squareWidth,

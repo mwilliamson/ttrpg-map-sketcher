@@ -4,6 +4,7 @@ export interface ToolContext {
   objects: ReadonlyArray<NumberedMapObject>;
   pageId: string;
   selectedColor: string;
+  selectedObjectId: string | null;
   selectObject: (objectId: string | null) => void;
   sendUpdate: (update: AppUpdate) => void;
   squareWidth: Distance,
