@@ -2,6 +2,7 @@ import { useId, useState } from "react";
 
 import { AppUpdate, Distance, Page, PageDimensions, updates } from "./app";
 import PropertiesTable from "./PropertiesTable";
+import Input from "./widgets/Input";
 
 interface PageViewProps {
   page: Page;
@@ -184,29 +185,6 @@ function FloatInput(props: FloatInputProps) {
       id={id}
       onChange={onChange}
       pattern="[+-]?([0-9]*[.])?[0-9]+"
-      value={value}
-    />
-  );
-}
-
-interface InputProps {
-  className?: string;
-  id: string;
-  onChange: (value: string) => void;
-  pattern?: string;
-  value: string;
-}
-
-function Input(props: InputProps) {
-  const { className, id, onChange, pattern, value } = props;
-
-  return (
-    <input
-      type="text"
-      className={className}
-      id={id}
-      onChange={event => onChange(event.target.value)}
-      pattern={pattern}
       value={value}
     />
   );
