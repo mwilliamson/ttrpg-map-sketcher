@@ -299,8 +299,8 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
       return updates.moveToken({
         pageId: update.pageId,
         objectId: update.objectId,
-        previousCenter: update.previousCenter,
-        center: update.center,
+        previousCenter: update.center,
+        center: update.previousCenter,
       });
   }
 }
