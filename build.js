@@ -16,7 +16,17 @@ esbuild.build({
   bundle: true,
   outfile: "public/bundle.js",
   mainFields: ["module", "browser", "main"],
-  plugins: [sassPlugin()],
+  plugins: [
+    {
+      name: "woff2",
+      setup(build) {
+        build.onResolve({filter: /fonts\/.*woff2$/}, ({path}) => {
+          return {path, external: true, namespace: "provided"};
+        });
+      }
+    },
+    sassPlugin(),
+  ],
   watch: args.values.watch ? {
     onRebuild(error) {
       if (error) {
