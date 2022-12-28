@@ -1,5 +1,7 @@
+import tinycolor from "tinycolor2";
+
 import { RenderArea } from ".";
-import { draftColor, highlightColor } from "../colors";
+import { draftColor, fillColors, highlightColor } from "../colors";
 import { Distance, Point, Token } from "../geometry";
 
 interface TokenViewProps {
@@ -13,6 +15,8 @@ export function TokenView(props: TokenViewProps) {
 
   const x = renderArea.toPixelCoordinate(token.center.x);
   const y = renderArea.toPixelCoordinate(token.center.y);
+
+  const textColor = textColors.get(token.color) ?? "#fff";
 
   return (
     <>
@@ -32,7 +36,7 @@ export function TokenView(props: TokenViewProps) {
         dominantBaseline="central"
         fontFamily="AnnieUseYourTelescope"
         fontWeight="bold"
-        fill="white"
+        fill={textColor}
         fontSize={1.6 * renderArea.distanceToPixels(tokenRadius(renderArea))}
       >
         {token.text}
@@ -40,6 +44,11 @@ export function TokenView(props: TokenViewProps) {
     </>
   );
 }
+
+const textColors: Map<string, string> = new Map(fillColors.map(color => [
+  color,
+  tinycolor.mostReadable(color, ["#fff", "#000"]).toHexString(),
+]));
 
 interface TokenHighlightViewProps {
   renderArea: RenderArea;

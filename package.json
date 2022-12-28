@@ -10,6 +10,7 @@
   "devDependencies": {
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
+    "@types/tinycolor2": "^1.4.3",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
@@ -30,6 +31,7 @@
     "react-dom": "^18.2.0",
     "roughjs": "^4.5.2",
     "simple-sync": "github:mwilliamson/simple-sync#7dc125219ca81b67a58f3ca08065aed29963abdb",
+    "tinycolor2": "^1.5.1",
     "uuid": "^9.0.0"
   },
   "volta": {
