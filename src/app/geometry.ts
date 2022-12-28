@@ -166,6 +166,10 @@ export class Token {
   public withColor(color: string): Token {
     return new Token(this.center, color, this.text);
   }
+
+  public withText(text: string): Token {
+    return new Token(this.center, this.color, text);
+  }
 }
 
 export function findClosestPointOnLine(line: Line, point: Point): Point | null {

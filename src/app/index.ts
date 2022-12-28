@@ -96,7 +96,8 @@ export type AppUpdate =
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "setObjectColor", updateId: string, pageId: string, objectId: string, previousColor: string, color: string}
-  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: Point, center: Point};
+  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: Point, center: Point}
+  | {type: "setTokenText", updateId: string, pageId: string, objectId: string, previousText: string, text: string};
 
 export const updates = {
   addPage(): AppUpdate {
@@ -191,6 +192,17 @@ export const updates = {
       center,
     };
   },
+
+  setTokenText({pageId, objectId, previousText, text}: {pageId: string, objectId: string, previousText: string, text: string}): AppUpdate {
+    return {
+      type: "setTokenText",
+      updateId: generateUpdateId(),
+      pageId,
+      objectId,
+      previousText,
+      text,
+    };
+  },
 };
 
 function generateUpdateId(): string {
@@ -243,6 +255,14 @@ function applyAppUpdateInner(state: AppState, update: AppUpdate): AppState {
       return state.updatePage(
         update.pageId,
         page => page.moveToken(update),
+      );
+    case "setTokenText":
+      return state.updatePage(
+        update.pageId,
+        page => page.updateToken(
+          update.objectId,
+          token => token.text === update.previousText ? token.withText(update.text) : token,
+        ),
       );
   }
 }
@@ -302,6 +322,13 @@ export function createUpdateToUndo(state: AppState, update: AppUpdate): AppUpdat
         previousCenter: update.center,
         center: update.previousCenter,
       });
+    case "setTokenText":
+      return updates.setTokenText({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousText: update.text,
+        text: update.previousText,
+      });
   }
 }
 
@@ -360,7 +387,14 @@ export function createUpdateToRedo(state: AppState, update: AppUpdate): AppUpdat
         previousCenter: update.previousCenter,
         center: update.center,
       });
-  }
+    case "setTokenText":
+      return updates.setTokenText({
+        pageId: update.pageId,
+        objectId: update.objectId,
+        previousText: update.previousText,
+        text: update.text,
+      });
+}
 }
 
 export class PageDimensions {
@@ -460,18 +494,25 @@ export class Page {
     return new Page(this.id, this.name, dimensions, this.allObjects, this.deletedObjectIds);
   }
 
-  public moveToken(update: {objectId: string, previousCenter: Point, center: Point}): Page {
+  public updateToken(objectId: string, func: (token: Token) => Token): Page {
     const allObjects = this.allObjects.map(
-      object => object.id === update.objectId && object.shape.type === "token" && object.shape.token.center.equals(update.previousCenter) ? {
+      object => object.id === objectId && object.shape.type === "token" ? {
         ...object,
         shape: {
           type: "token" as const,
-          token: object.shape.token.move(update.center)
+          token: func(object.shape.token)
         }
       } : object
     );
 
     return new Page(this.id, this.name, this.dimensions, allObjects, this.deletedObjectIds);
+  }
+
+  public moveToken(update: {objectId: string, previousCenter: Point, center: Point}): Page {
+    return this.updateToken(
+      update.objectId,
+      token => token.center.equals(update.previousCenter) ? token.move(update.center) : token,
+    );
   }
 }
 

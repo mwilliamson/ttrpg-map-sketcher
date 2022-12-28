@@ -11,7 +11,8 @@ type SerializedAppUpdate =
   | {type: "deleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "undeleteObject", updateId: string, pageId: string, objectId: string}
   | {type: "setObjectColor", updateId: string, pageId: string, objectId: string, previousColor: string, color: string}
-  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: SerializedPoint, center: SerializedPoint};
+  | {type: "moveToken", updateId: string, pageId: string, objectId: string, previousCenter: SerializedPoint, center: SerializedPoint}
+  | {type: "setTokenText", updateId: string, pageId: string, objectId: string, previousText: string, text: string};
 
 interface SerializedMapObject {
   id: string;
@@ -98,6 +99,8 @@ export function serializeAppUpdate(update: AppUpdate): SerializedAppUpdate {
         previousCenter: serializePoint(update.previousCenter),
         center: serializePoint(update.center),
       };
+    case "setTokenText":
+      return update;
   }
 }
 
@@ -142,6 +145,8 @@ export function deserializeAppUpdate(untypedUpdate: unknown): AppUpdate {
         previousCenter: deserializePoint(update.previousCenter),
         center: deserializePoint(update.center),
       };
+    case "setTokenText":
+      return update;
   }
 }
 
