@@ -46,7 +46,7 @@ export class Distance {
   public equals(other: Distance): boolean {
     return this.metres === other.metres;
   }
-  
+
   public lessThanOrEqualTo(other: Distance): boolean {
     return this.metres <= other.metres;
   }
@@ -145,24 +145,26 @@ export class Cross {
 }
 
 export class Token {
-  public static from(center: Point, color: string) {
-    return new Token(center, color);
+  public static from(center: Point, color: string, text: string) {
+    return new Token(center, color, text);
   }
 
   public readonly center: Point;
   public readonly color: string;
+  public readonly text: string;
 
-  private constructor(center: Point, color: string) {
+  private constructor(center: Point, color: string, text: string) {
     this.center = center;
     this.color = color;
+    this.text = text;
   }
 
   public move(center: Point): Token {
-    return new Token(center, this.color);
+    return new Token(center, this.color, this.text);
   }
 
   public withColor(color: string): Token {
-    return new Token(this.center, color);
+    return new Token(this.center, color, this.text);
   }
 }
 

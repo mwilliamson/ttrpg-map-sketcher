@@ -42,6 +42,7 @@ interface SerializedPolygon {
 interface SerializedToken {
   center: SerializedPoint;
   color: string;
+  text: string;
 }
 
 interface SerializedPageDimensions {
@@ -258,6 +259,7 @@ function serializeToken(token: Token): SerializedToken {
   return {
     center: serializePoint(token.center),
     color: token.color,
+    text: token.text,
   };
 }
 
@@ -265,6 +267,7 @@ function deserializeToken(token: SerializedToken): Token {
   return Token.from(
     deserializePoint(token.center),
     token.color,
+    token.text,
   );
 }
 

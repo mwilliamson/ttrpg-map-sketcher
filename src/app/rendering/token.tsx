@@ -11,16 +11,33 @@ interface TokenViewProps {
 export function TokenView(props: TokenViewProps) {
   const { opacity, renderArea, token } = props;
 
+  const x = renderArea.toPixelCoordinate(token.center.x);
+  const y = renderArea.toPixelCoordinate(token.center.y);
+
   return (
-    <circle
-      opacity={opacity}
-      stroke="#000"
-      strokeWidth="3"
-      fill={token.color}
-      cx={renderArea.toPixelCoordinate(token.center.x)}
-      cy={renderArea.toPixelCoordinate(token.center.y)}
-      r={renderArea.distanceToPixels(tokenRadius(renderArea))}
-    />
+    <>
+      <circle
+        opacity={opacity}
+        stroke="#000"
+        strokeWidth="3"
+        fill={token.color}
+        cx={x}
+        cy={y}
+        r={renderArea.distanceToPixels(tokenRadius(renderArea))}
+      />
+      <text
+        x={x}
+        y={y}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="AnnieUseYourTelescope"
+        fontWeight="bold"
+        fill="white"
+        fontSize={1.6 * renderArea.distanceToPixels(tokenRadius(renderArea))}
+      >
+        {token.text}
+      </text>
+    </>
   );
 }
 
