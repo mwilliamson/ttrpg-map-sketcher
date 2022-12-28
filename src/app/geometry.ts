@@ -145,6 +145,8 @@ export class Cross {
 }
 
 export class Token {
+  public static readonly textChoices = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
   public static from(center: Point, color: string, text: string) {
     return new Token(center, color, text);
   }
