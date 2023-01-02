@@ -34,6 +34,10 @@ export default function SketcherView(props: SketcherViewProps) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
+      if (isInputEvent(event)) {
+        return;
+      }
+
       if (event.key === "Escape") {
         const newTool = selectedTool.onEscape === undefined ? null : selectedTool.onEscape();
         if (newTool === null) {
@@ -44,7 +48,7 @@ export default function SketcherView(props: SketcherViewProps) {
       }
 
       if (event.key === "Delete" || event.key === "Backspace") {
-        if (!isInputEvent(event) && page !== null && selectedObjectId !== null && page.hasObjectId(selectedObjectId)) {
+        if (page !== null && selectedObjectId !== null && page.hasObjectId(selectedObjectId)) {
           sendUpdate(updates.deleteObject({pageId: page.id, objectId: selectedObjectId}));
         }
       }
