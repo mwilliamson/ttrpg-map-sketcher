@@ -1,5 +1,39 @@
 # TTRPG Map Sketcher
 
+## Usage
+
+Pan around the map by dragging with the right mouse button.
+
+Zoom in and out using the scroll wheel on the map.
+
+Tools:
+
+* Pan: Pan around the map by dragging with the left mouse button.
+
+* Select: Left click to select an object on the map.
+  If there is more than one object at the same location,
+  click multiple times to cycle through the objects.
+  To deselect an object, press Escape or left click an area of the map without any objects.
+  Press Delete or Backspace to delete a selected object.
+
+* Line: Draw a line on the map.
+  Left click once to start the line,
+  left click again to end the line.
+  Press Escape to cancel a line in progress.
+
+* Polygon: Draw a polygon on the map.
+  Left click to indicate the corners of the polygon.
+  Click on the starting corner to finish the polygon.
+  Press Escape to cancel a polygon in progress.
+
+* Cross: Draw a cross on the map.
+
+* Token: Place a token  on the map.
+
+* Move: Left click and drag a token to move it around the map.
+
+* Ruler: Left click and drag to measure distance on the map.
+
 ## Running the server
 
 * Run `npm install`.
