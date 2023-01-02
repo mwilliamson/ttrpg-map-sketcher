@@ -16,6 +16,9 @@ Tools:
   To deselect an object, press Escape or left click an area of the map without any objects.
   Press Delete or Backspace to delete a selected object.
 
+  Regardless of which tool is currently selected,
+  holding down Ctrl will temporarily set the active tool to the Select tool.
+
 * Line: Draw a line on the map.
   Left click once to start the line,
   left click again to end the line.

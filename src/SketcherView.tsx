@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AppState, AppUpdate, Tool, panTool, createUpdateToUndo, createUpdateToRedo, updates } from "./app";
 import { defaultFillColor } from "./app/colors";
 import { ToolType } from "./app/tools/base";
+import { selectToolType } from "./app/tools/select";
 import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
@@ -29,8 +30,22 @@ export default function SketcherView(props: SketcherViewProps) {
   const [highlightedObjectId, setHighlightedObjectId] = useState<string | null>(null);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<UndoStack>({index: 0, updates: []});
+  const [selectToolOverride, setSelectToolOverride] = useState<Tool | null>(null);
 
   const page = selectedPageId === null ? null : state.findPage(selectedPageId);
+
+  const activeTool = selectToolOverride ?? selectedTool;
+
+  function handleActiveToolChange(newTool: Tool) {
+    // TODO: there's probably a more elegant way of doing this,
+    // for instance, so that when releasing control the selected tool has the right mouse position.
+    // Perhaps don't store mouse position in tool state?
+    if (selectToolOverride === null) {
+      setSelectedTool(newTool);
+    } else {
+      setSelectToolOverride(newTool);
+    }
+  }
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -39,7 +54,7 @@ export default function SketcherView(props: SketcherViewProps) {
       }
 
       if (event.key === "Escape") {
-        const newTool = selectedTool.onEscape === undefined ? null : selectedTool.onEscape();
+        const newTool = activeTool.onEscape === undefined ? null : activeTool.onEscape();
         if (newTool === null) {
           setSelectedObjectId(null);
         } else {
@@ -52,14 +67,26 @@ export default function SketcherView(props: SketcherViewProps) {
           sendUpdate(updates.deleteObject({pageId: page.id, objectId: selectedObjectId}));
         }
       }
+
+      if (event.key === "Control") {
+        setSelectToolOverride(selectToolType.create());
+      }
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+      if (event.key === "Control") {
+        setSelectToolOverride(null);
+      }
     }
 
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [page, selectedObjectId, sendUpdate, selectedTool]);
+  }, [page, selectedObjectId, sendUpdate, activeTool]);
 
   function handleSelectToolType(newToolType: ToolType) {
     if (newToolType === selectedTool.type) {
@@ -134,8 +161,8 @@ export default function SketcherView(props: SketcherViewProps) {
           <MapView
             page={page}
             sendUpdate={handleSendUpdate}
-            tool={selectedTool}
-            onToolChange={newTool => setSelectedTool(newTool)}
+            tool={activeTool}
+            onToolChange={newTool => handleActiveToolChange(newTool)}
             highlightedObjectId={highlightedObjectId ?? selectedObjectId}
             onSelectObject={newSelectedObjectId => setSelectedObjectId(newSelectedObjectId)}
             selectedColor={selectedColor}
