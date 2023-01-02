@@ -23,7 +23,7 @@ export default function SketcherView(props: SketcherViewProps) {
   const {state, sendUpdate} = props;
 
   const [selectedPageId, setSelectedPageId] = useState<string | null>(state.pages.length === 0 ? null : state.pages[0].id);
-  const [tool, setTool] = useState<Tool>(panTool);
+  const [selectedTool, setSelectedTool] = useState<Tool>(panTool);
   const [selectedColor, setSelectedColor] = useState(defaultFillColor);
   const [highlightedObjectId, setHighlightedObjectId] = useState<string | null>(null);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
@@ -34,11 +34,11 @@ export default function SketcherView(props: SketcherViewProps) {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        const newTool = tool.onEscape === undefined ? null : tool.onEscape();
+        const newTool = selectedTool.onEscape === undefined ? null : selectedTool.onEscape();
         if (newTool === null) {
           setSelectedObjectId(null);
         } else {
-          setTool(newTool);
+          setSelectedTool(newTool);
         }
       }
 
@@ -56,14 +56,14 @@ export default function SketcherView(props: SketcherViewProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [page, selectedObjectId, sendUpdate, tool]);
+  }, [page, selectedObjectId, sendUpdate, selectedTool]);
 
   function handleSelectToolType(newToolType: ToolType) {
-    if (newToolType === tool.type) {
+    if (newToolType === selectedTool.type) {
       return;
     }
     const newTool = newToolType.create();
-    setTool(newTool);
+    setSelectedTool(newTool);
   }
 
   function handleSelectColor(newColor: string) {
@@ -119,7 +119,7 @@ export default function SketcherView(props: SketcherViewProps) {
           onRedo={updateToRedo() === null ? null : handleRedo}
           onUndo={updateToUndo() === null ? null : handleUndo}
 
-          selectedToolType={tool.type}
+          selectedToolType={selectedTool.type}
           onSelectToolType={newToolType => handleSelectToolType(newToolType)}
 
           selectedColor={selectedColor}
@@ -131,8 +131,8 @@ export default function SketcherView(props: SketcherViewProps) {
           <MapView
             page={page}
             sendUpdate={handleSendUpdate}
-            tool={tool}
-            onToolChange={newTool => setTool(newTool)}
+            tool={selectedTool}
+            onToolChange={newTool => setSelectedTool(newTool)}
             highlightedObjectId={highlightedObjectId ?? selectedObjectId}
             onSelectObject={newSelectedObjectId => setSelectedObjectId(newSelectedObjectId)}
             selectedColor={selectedColor}
