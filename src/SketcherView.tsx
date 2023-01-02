@@ -7,6 +7,7 @@ import MapView from "./MapView";
 import ObjectsView from "./ObjectsView";
 import PagesView from "./PagesView";
 import ToolsView from "./ToolsView";
+import isInputEvent from "./util/isInputEvent";
 import Tabs from "./widgets/Tabs";
 
 interface SketcherViewProps {
@@ -43,9 +44,7 @@ export default function SketcherView(props: SketcherViewProps) {
       }
 
       if (event.key === "Delete" || event.key === "Backspace") {
-        const target = event.target as Node;
-        const isInput = target.nodeType === Node.ELEMENT_NODE && (target.nodeName === "INPUT" || target.nodeName === "SELECT");
-        if (!isInput && page !== null && selectedObjectId !== null && page.hasObjectId(selectedObjectId)) {
+        if (!isInputEvent(event) && page !== null && selectedObjectId !== null && page.hasObjectId(selectedObjectId)) {
           sendUpdate(updates.deleteObject({pageId: page.id, objectId: selectedObjectId}));
         }
       }
