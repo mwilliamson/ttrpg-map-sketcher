@@ -1,12 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { useSimpleSync } from "simple-sync/lib/react";
+import ClientStateView from "./ClientStateView";
 
 import { applyAppUpdate, initialAppState } from "./app";
 import { deserializeAppUpdate, serializeAppUpdate } from "./serialization";
-import SketcherView from "./SketcherView";
-
-import "./scss/style.scss";
 
 function webSocketUri() {
   const location = window.location;
@@ -30,24 +28,9 @@ function Client() {
     deserializeAppUpdate,
   });
 
-  switch (state.type) {
-    case "connecting":
-      return (
-        <p>Connecting...</p>
-      );
-    case "connected":
-      return (
-        <SketcherView sendUpdate={state.sendAppUpdate} state={state.appState} />
-      );
-    case "connection-error":
-      return (
-        <p>Connection error, please reload the page.</p>
-      );
-    case "sync-error":
-      return (
-        <p>Synchronisation error, please reload the page.</p>
-      );
-  }
+  return (
+    <ClientStateView clientState={state} />
+  );
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
