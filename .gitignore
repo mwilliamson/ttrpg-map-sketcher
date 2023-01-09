@@ -1,4 +1,4 @@
 /.env
 /node_modules
-/public/bundle.css
-/public/bundle.js
+/public/*.css
+/public/*.js

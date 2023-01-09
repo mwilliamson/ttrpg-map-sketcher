@@ -11,6 +11,8 @@ import ToolsView from "./ToolsView";
 import isInputEvent from "./util/isInputEvent";
 import Tabs from "./widgets/Tabs";
 
+import "./scss/style.scss";
+
 interface SketcherViewProps {
   sendUpdate: (update: AppUpdate) => void;
   state: AppState;

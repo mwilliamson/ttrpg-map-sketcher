@@ -12,9 +12,9 @@ const args = util.parseArgs({
 });
 
 esbuild.build({
-  entryPoints: ["src/client.tsx"],
+  entryPoints: ["src/client.tsx", "src/demo.tsx"],
   bundle: true,
-  outfile: "public/bundle.js",
+  outdir: "public/",
   mainFields: ["module", "browser", "main"],
   plugins: [
     {

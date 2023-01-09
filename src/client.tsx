@@ -6,8 +6,6 @@ import { applyAppUpdate, initialAppState } from "./app";
 import { deserializeAppUpdate, serializeAppUpdate } from "./serialization";
 import SketcherView from "./SketcherView";
 
-import "./scss/style.scss";
-
 function webSocketUri() {
   const location = window.location;
   const webSocketProtocol = location.protocol === "https:" ? "wss" : "ws";
