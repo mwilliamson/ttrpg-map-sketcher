@@ -1,5 +1,10 @@
 # TTRPG Map Sketcher
 
+[Live demo](https://mwilliamson.github.io/ttrpg-map-sketcher/)
+
+Note that the live demo stores the entire state of the map in memory.
+See below for instructions on running a server to support persistence and collaboration.
+
 ## Usage
 
 Pan around the map by dragging with the right mouse button.
