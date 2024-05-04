@@ -31,7 +31,7 @@ jobs:
 
       - run: mkdir _site
 
-      - run: cp public/demo.{css,js} _site
+      - run: cp -r public/demo.{css,js} public/fonts _site
 
       - run: cp public/demo.html _site/index.html
 
